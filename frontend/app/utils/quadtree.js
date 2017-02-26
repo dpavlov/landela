@@ -1,5 +1,5 @@
 export default class Quadtree {
-	constructor(bounds, sizeLookupFn, max_objects, max_levels, level) {
+	constructor(bounds, boundsLookupFn, max_objects, max_levels, level) {
 		this.max_objects	= max_objects || 10;
 		this.max_levels		= max_levels || 4;
 
@@ -8,7 +8,7 @@ export default class Quadtree {
 
 		this.objects 		= [];
 		this.nodes 		    = [];
-		this.sizeLookupFn = sizeLookupFn;
+		this.boundsLookupFn = boundsLookupFn;
 	}
 
 	split() {
@@ -78,8 +78,7 @@ export default class Quadtree {
 	}
 
 	_toRect(node) {
-		let {width, height} = this.sizeLookupFn(node);
-		return { x: node.center.x - width / 2, y: node.center.y - height / 2, width: width, height: height };
+		return this.boundsLookupFn(node);
 	}
 
 	insert(node) {

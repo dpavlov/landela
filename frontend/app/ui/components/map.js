@@ -17,7 +17,7 @@ import Render from '../../render/render';
 import Zoomer from './zoomer';
 import Navigator from './navigator'
 
-import CoordinateNodesIndex from '../../map/indexes/coordinate-nodes-index';
+import CoordinateIndex from '../../map/indexes/coordinate-index';
 
 export class Map extends React.Component {
 
@@ -35,16 +35,19 @@ export class Map extends React.Component {
 	constructor() {
     	super();
     	this.network = new NetworkMap('m1', 'Network', [
-				new Node('1', 'n1', 'router', new Point(100, 100), [
-					new Port('1', 'p1', new Point(50, 50)),
-					new Port('2', 'p2', new Point(-50, -50))
-				]),
+				new Node('1', 'n1', 'router', new Point(100, 100)).withPorts(
+					[
+						{id: '1', name: 'p1', center: new Point(50, 50)},
+						{id: '2', name: 'p2', center: new Point(-50, -50)}
+					]
+				),
 				new Node('2', 'n2', 'router', new Point(100, 300)),
 				new Node('3', 'n3', 'router', new Point(300, 100)),
 				new Node('4', 'n4', 'router', new Point(300, 300))
 			] );
 			this.selectedSet = new NodeSet();
-			this.index = null;
+			this.nodesIndex = null;
+			this.portsIndex = null;
   	}
 		componentDidMount() {
 	    window.addEventListener('resize', this.onResize.bind(this), false);
@@ -56,7 +59,8 @@ export class Map extends React.Component {
 
 			viewport.resize(width, height);
 
-			this.index = new CoordinateNodesIndex(this.network, this._nodeSize.bind(this));
+			this.nodesIndex = new CoordinateIndex(this.network.nodes, node => node.bounds(this.props.settings.sizes[node.type]));
+			this.portsIndex = new CoordinateIndex(this.network.ports(), port => port.bounds());
 
 			this.props.onViewportStateChanged && this.props.onViewportStateChanged(viewport.state());
 
@@ -67,10 +71,6 @@ export class Map extends React.Component {
   	componentDidUpdate() {
   		this.state.render.render(this.network, (delay) => console.log(delay));
   	}
-		_nodeSize(node) {
-			let nSize = this.props.settings.sizes[node.type];
-			return nSize ? {width: nSize[0], height: nSize[1]} : {width: 128, height: 128};
-		}
   	onResize() {
   		let width = this.state.container ? DomUtils.width(this.state.container) : 500;
       let height = this.state.container ? DomUtils.height(this.state.container) : 500;
@@ -111,22 +111,32 @@ export class Map extends React.Component {
 
 		onMouseClick(e) {
 			if (this.state.movingState !== 'moving') {
-		 		if (this.index && this.state.viewport) {
+		 		if (this.nodesIndex && this.state.viewport) {
 					let xOffset = DomUtils.offsetLeft(this.refs.stage);
 					let yOffset = DomUtils.offsetTop(this.refs.stage);
 					let clickPos = new Point(e.nativeEvent.clientX - xOffset, e.nativeEvent.clientY - yOffset);
-					let node = this.index.find(this.state.viewport.toRealPosition(clickPos));
-					if (node) {
-						if (node.isSelected()) {
-							node.deselect();
-							this.selectedSet.remove(node);
-							this.props.onSelect(this.selectedSet.nodes());
+					let port = this.portsIndex.find(this.state.viewport.toRealPosition(clickPos));
+					if (port) {
+						if (port.isSelected()) {
+							port.deselect();
 						} else {
-							node.select();
-							this.selectedSet.add(node);
-							this.props.onSelect(this.selectedSet.nodes());
+							port.select();
 						}
 						this.forceUpdate();
+					} else {
+						let node = this.nodesIndex.find(this.state.viewport.toRealPosition(clickPos));
+						if (node) {
+							if (node.isSelected()) {
+								node.deselect();
+								this.selectedSet.remove(node);
+								this.props.onSelect(this.selectedSet.nodes());
+							} else {
+								node.select();
+								this.selectedSet.add(node);
+								this.props.onSelect(this.selectedSet.nodes());
+							}
+							this.forceUpdate();
+						}
 					}
 				}
 			}
@@ -137,11 +147,16 @@ export class Map extends React.Component {
 		let xOffset = DomUtils.offsetLeft(this.refs.stage);
 		let yOffset = DomUtils.offsetTop(this.refs.stage);
 		let clickPos = new Point(e.nativeEvent.clientX - xOffset, e.nativeEvent.clientY - yOffset);
-		let node = this.index.find(this.state.viewport.toRealPosition(clickPos));
-		if (node) {
-			this.setState({movingState: 'init', movingTarget: node, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
+		let port = this.portsIndex.find(this.state.viewport.toRealPosition(clickPos));
+		if (port) {
+			this.setState({movingState: 'init', movingTarget: port, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
 		} else {
- 			this.setState({movingState: 'init', movingTarget: 'map', xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
+			let node = this.nodesIndex.find(this.state.viewport.toRealPosition(clickPos));
+			if (node) {
+				this.setState({movingState: 'init', movingTarget: node, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
+			} else {
+	 			this.setState({movingState: 'init', movingTarget: 'map', xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
+			}
 		}
  	}
 
@@ -153,7 +168,7 @@ export class Map extends React.Component {
  					this.state.viewport.move(offset);
  				}
 			} else {
-				this.state.movingTarget.move(offset.withReverseMultiplier(this.state.viewport.scale());
+				this.state.movingTarget.move(offset.withReverseMultiplier(this.state.viewport.scale()));
 			}
  			this.setState({movingState: 'moving', xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY})
  		}
