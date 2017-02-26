@@ -1,0 +1,38 @@
+{
+  "name": "brunch-app",
+  "description": "Brunch.io application",
+  "private": true,
+  "author": "Brunch",
+  "version": "0.0.1",
+  "repository": "",
+  "scripts": {
+    "start": "brunch watch --server",
+    "build": "brunch build --production",
+    "lint": "eslint --cache src",
+    "typecheck": "flow check"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.23.0",
+    "js-yaml": "^3.8.1",
+    "material-ui": "^0.17.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-redux": "^5.0.2",
+    "react-tap-event-plugin": "^2.0.1",
+    "redux": "^3.6.0",
+    "redux-saga": "^0.14.3",
+    "whatwg-fetch": "^2.0.2"
+  },
+  "devDependencies": {
+    "auto-reload-brunch": "^2",
+    "babel-brunch": "~6.0",
+    "babel-preset-latest": "^6",
+    "babel-preset-react": "^6.23.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "brunch": "^2",
+    "clean-css-brunch": "^2",
+    "eslint": "^3.16.0",
+    "flow-bin": "^0.39.0",
+    "uglify-js-brunch": "^2"
+  }
+}

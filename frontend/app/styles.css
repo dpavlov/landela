@@ -1,0 +1,100 @@
+/*
+:root {
+
+    --atomic: #374953;
+
+    --hoki: #5F7D8C;
+
+    --snow: #FCFCFC;
+
+    --oyster-bay: #D6E8E8;
+
+    --link-water: #CFD0D1;
+
+    --gull-grey: #A5ADB1;
+
+}
+
+*/
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  color: #c0e2f7;
+}
+
+body {
+  background-color: #375A70;
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+}
+
+#layout {
+  height: 100%;
+}
+
+.toolbar {
+  position: relative;
+  z-index: 1;
+}
+
+.map {
+  margin-top: -56px;
+  position: relative;
+  height: 100%;
+  z-index: 0;
+}
+
+#map-zoomer.without-left-panel {
+  position: absolute;
+  left: 100%;
+  top: 70px;
+  margin-left: -50px;
+  z-index: 1;
+}
+
+#map-zoomer.with-left-panel {
+  position: absolute;
+  left: 100%;
+  top: 70px;
+  margin-left: -450px;
+  z-index: 1;
+}
+
+#map-navigator {
+  position: absolute;
+  left: 10px;
+  top: 70px;
+  z-index: 1;
+}
+
+#map-navigator .top-row, #map-navigator .bottom-row, #map-navigator .middle-row {
+  text-align: center;
+}
+
+#map-navigator .arrow-right {
+  margin-left: 30px;
+}
+
+#stage {
+  border: 1px solid #c0e2f7;
+  background-color: #375A70;
+  position: absolute;
+}
+
+input[type=button] {
+  background: none;
+  border: 1px solid #c0e2f7;
+  padding: 2px 5px;
+  border-radius: 3px;
+  color: #c0e2f7;
+}
