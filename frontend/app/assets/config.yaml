@@ -1,5 +1,11 @@
 settings:
   map:
+    zoomer:
+      min: 0.2
+      max: 3
+      step: 0.25
+    sizes:
+      router: [128, 128]
     icons:
       router:
         normal:

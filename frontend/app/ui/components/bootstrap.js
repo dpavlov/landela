@@ -11,8 +11,8 @@ export class Bootstrap extends React.Component {
 	}
 	componentDidUpdate(nextProps) {
 		if (this.props.isConfigLoaded && !this.props.isIconsLoaded) {
-			this.props.loadIcons(this.props.settings.map.icons);
-		} 
+			this.props.loadIcons(this.props.settings);
+		}
 	}
 	render() {
 		if (this.props.icons.state !== 'Done') {

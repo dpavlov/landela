@@ -2,7 +2,9 @@ import React from 'react';
 import Drawer from 'material-ui/Drawer';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
+import Avatar from 'material-ui/Avatar';
 import FlatButton from 'material-ui/FlatButton';
+import { purple500 } from 'material-ui/styles/colors';
 
 export default class LeftPanel extends React.Component {
 
@@ -18,6 +20,10 @@ export default class LeftPanel extends React.Component {
     return "Properties for " + target.name;
   }
 
+  icon = (target) => {
+    return <Avatar size={50} backgroundColor={purple500}>R</Avatar>;
+  }
+
   onTargetNameChanged = (target) => {
     return (e) => {
       target.name = e.target.value;
@@ -30,6 +36,7 @@ export default class LeftPanel extends React.Component {
           <CardHeader
             title={this.title(t)}
             subtitle={this.description(t)}
+            avatar={this.icon(t)}
             actAsExpander={true}
             showExpandableButton={true}
           />

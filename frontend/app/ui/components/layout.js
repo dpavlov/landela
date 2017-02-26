@@ -8,7 +8,7 @@ export default class Layout extends React.Component {
 		isLeftPanelOpen: false,
 		leftPanelTargets: []
 	}
-	onLeftPanelStateChanged = (selected) => {
+	handleLeftPanelStateChanged = (selected) => {
 		let isLeftPanelOpen = selected.length > 0;
 		this.setState({leftPanelTargets: selected, isLeftPanelOpen: isLeftPanelOpen});
 	}
@@ -16,7 +16,9 @@ export default class Layout extends React.Component {
 		return (
 			<div id='layout'>
 			    <Toolbar/>
-			    <Map onSelect={this.onLeftPanelStateChanged} isLeftPanelOpen={this.state.isLeftPanelOpen}/>
+			    <Map
+						onSelect={this.handleLeftPanelStateChanged}
+						isLeftPanelOpen={this.state.isLeftPanelOpen}/>
 					<LeftPanel open={this.state.isLeftPanelOpen} targets={this.state.leftPanelTargets}/>
 			</div>
 		);

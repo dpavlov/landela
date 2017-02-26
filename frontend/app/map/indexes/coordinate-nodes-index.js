@@ -1,9 +1,9 @@
 import Quadtree from '../../utils/quadtree';
 
 export default class CoordinateNodesIndex {
-	constructor(map) {
+	constructor(map, sizeLookupFn) {
 		let bounds = this._bounds(map);
-		this.quadtree = new Quadtree(bounds);
+		this.quadtree = new Quadtree(bounds, sizeLookupFn);
 		for (var index = 0; index < map.nodes.length; index ++) {
 			this.quadtree.insert(map.nodes[index]);
 		}
@@ -26,7 +26,7 @@ export default class CoordinateNodesIndex {
 		}
 		return { x: area.xMin, y: area.yMin, width: area.xMax - area.xMin, height: area.yMax - area.yMin };
 	}
-	find(point, scale) {
-		return this.quadtree.find(point, scale);
+	find(point) {
+		return this.quadtree.find(point);
 	}
 }

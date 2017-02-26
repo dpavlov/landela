@@ -14,6 +14,7 @@ export default class Viewport {
     bounds() { return { width: this.width, height: this.height}; }
     offset() { return this._offset; }
     scale() { return this._scale; }
+    state() { return { bounds: this.bounds(), scale: this.scale(), offset: this.offset() }; }
     isScaleInRange(range) { return range[0] <= this._scale && range[1] >= this._scale; }
     subscribe(handler) {
       this.onZoomHandlers.push(handler);

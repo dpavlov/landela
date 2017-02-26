@@ -1,5 +1,5 @@
 export default class Quadtree {
-	constructor(bounds, max_objects, max_levels, level) {
+	constructor(bounds, sizeLookupFn, max_objects, max_levels, level) {
 		this.max_objects	= max_objects || 10;
 		this.max_levels		= max_levels || 4;
 
@@ -8,6 +8,7 @@ export default class Quadtree {
 
 		this.objects 		= [];
 		this.nodes 		    = [];
+		this.sizeLookupFn = sizeLookupFn;
 	}
 
 	split() {
@@ -76,9 +77,9 @@ export default class Quadtree {
 		return index;
 	}
 
-	_toRect(node, scale) {
-		let _scale = scale || 1;
-		return { x: node.center.x - 64 * _scale, y: node.center.y - 64 * _scale, width: 128 * _scale, height: 128 * _scale };
+	_toRect(node) {
+		let {width, height} = this.sizeLookupFn(node);
+		return { x: node.center.x - width / 2, y: node.center.y - height / 2, width: width, height: height };
 	}
 
 	insert(node) {
@@ -134,17 +135,17 @@ export default class Quadtree {
 		return returnObjects;
 	};
 
-	find( point, scale ){
+	find( point ){
 
 		for( var i = 0; i < this.objects.length; i = i + 1 ) {
-			if (this.intersection(point, this._toRect(this.objects[i], scale))) {
+			if (this.intersection(point, this._toRect(this.objects[i]))) {
 				return this.objects[i];
 			}
 		}
 
 		if( typeof this.nodes[0] !== 'undefined' ) {
 			for( var i = 0; i < this.nodes.length; i = i + 1 ) {
-				if (this.intersection(point, this._toRect(this.objects[i], scale))) {
+				if (this.intersection(point, this._toRect(this.objects[i]))) {
 					return this.node[i].find(point);
 				}
 			}

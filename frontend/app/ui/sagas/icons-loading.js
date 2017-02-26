@@ -5,18 +5,23 @@ import IconLoader from '../utils/icon-loader'
 
 function* loadIcons(action) {
    try {
+      let settings = action.payload;
       let parsedIcons = [];
-      Object.keys(action.payload).map(function(iconType){
-        let stateIcons = action.payload[iconType];
+      Object.keys(settings.map.icons).map(function(iconType){
+        let stateIcons = settings.map.icons[iconType];
         Object.keys(stateIcons).map(function(iconState){
            Object.keys(stateIcons[iconState]).map(function(iconSrc) {
-            let parts = stateIcons[iconState][iconSrc].split(/-|,/);
+            let props = stateIcons[iconState][iconSrc]
+            let parts = (props || settings.map.zoomer.min + "-" + settings.map.zoomer.max + ",1").split(/-|,/);
+            let sRange = parseFloat(parts[0]) || settings.map.zoomer.min;
+            let eRange = parseFloat(parts[1]) || settings.map.zoomer.max;
+            let rescale = parseFloat(parts[2]) || 1;
             parsedIcons.push({
               iconSrc: iconSrc,
               iconType: iconType,
               iconState: iconState,
-              scaleRange: [parseFloat(parts[0]), parseFloat(parts[1])],
-              rescale: parseFloat(parts[2])
+              scaleRange: [sRange, eRange],
+              rescale: rescale
             });
            });
         });

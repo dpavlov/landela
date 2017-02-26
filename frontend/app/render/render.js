@@ -20,7 +20,6 @@ export default class Render {
   			throw "Canvas is not supported"
   		}
     }
-
     render(map, delayFn) {
     	var sTs = Date.now();
     	this.clean();
