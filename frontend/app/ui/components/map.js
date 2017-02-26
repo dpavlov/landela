@@ -153,7 +153,7 @@ export class Map extends React.Component {
  					this.state.viewport.move(offset);
  				}
 			} else {
-				this.state.movingTarget.move(offset);
+				this.state.movingTarget.move(offset.withReverseMultiplier(this.state.viewport.scale());
 			}
  			this.setState({movingState: 'moving', xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY})
  		}
