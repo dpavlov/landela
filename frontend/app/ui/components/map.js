@@ -25,7 +25,8 @@ export class Map extends React.Component {
 		container: null,
 		render: null,
 		viewport: null,
-		moving: false,
+		movingState: null,
+		movingTarget: null,
 		xMove: 0,
 		yMove: 0,
 		renderDelay: 0
@@ -109,49 +110,53 @@ export class Map extends React.Component {
   	}
 
 		onMouseClick(e) {
-	 		if (this.index && this.state.viewport) {
-				let xOffset = DomUtils.offsetLeft(this.refs.stage);
-				let yOffset = DomUtils.offsetTop(this.refs.stage);
-				let clickPos = new Point(e.nativeEvent.clientX - xOffset, e.nativeEvent.clientY - yOffset);
-				let node = this.index.find(this.state.viewport.toRealPosition(clickPos));
-				if (node) {
-					if (node.isSelected()) {
-						node.deselect();
-						this.selectedSet.remove(node);
-						this.props.onSelect(this.selectedSet.nodes());
-					} else {
-						node.select();
-						this.selectedSet.add(node);
-						this.props.onSelect(this.selectedSet.nodes());
+			if (this.state.movingState !== 'moving') {
+		 		if (this.index && this.state.viewport) {
+					let xOffset = DomUtils.offsetLeft(this.refs.stage);
+					let yOffset = DomUtils.offsetTop(this.refs.stage);
+					let clickPos = new Point(e.nativeEvent.clientX - xOffset, e.nativeEvent.clientY - yOffset);
+					let node = this.index.find(this.state.viewport.toRealPosition(clickPos));
+					if (node) {
+						if (node.isSelected()) {
+							node.deselect();
+							this.selectedSet.remove(node);
+							this.props.onSelect(this.selectedSet.nodes());
+						} else {
+							node.select();
+							this.selectedSet.add(node);
+							this.props.onSelect(this.selectedSet.nodes());
+						}
+						this.forceUpdate();
 					}
-					this.forceUpdate();
 				}
 			}
+			this.setState({movingState: null, xMove: 0, yMove: 0});
 	 	}
 
  	onMouseDown(e) {
- 		this.setState({moving: true, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY})
+		let xOffset = DomUtils.offsetLeft(this.refs.stage);
+		let yOffset = DomUtils.offsetTop(this.refs.stage);
+		let clickPos = new Point(e.nativeEvent.clientX - xOffset, e.nativeEvent.clientY - yOffset);
+		let node = this.index.find(this.state.viewport.toRealPosition(clickPos));
+		if (node) {
+			this.setState({movingState: 'init', movingTarget: node, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
+		} else {
+ 			this.setState({movingState: 'init', movingTarget: 'map', xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
+		}
  	}
 
  	onMouseMove(e) {
-		let xOffset = DomUtils.offsetLeft(this.refs.stage);
-		let yOffset = DomUtils.offsetTop(this.refs.stage);
-
-		let dispPos = new Point(e.nativeEvent.clientX - xOffset, e.nativeEvent.clientY - yOffset);
-		let realPos = this.state.viewport.toRealPosition(dispPos);
-
-		this.props.onPosition && this.props.onPosition(dispPos, realPos);
-
- 		if (this.state.moving) {
- 			if (this.state.viewport) {
- 				this.state.viewport.move(new Offset(e.nativeEvent.screenX - this.state.xMove,  e.nativeEvent.screenY - this.state.yMove));
- 			}
- 			this.setState({xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY})
+ 		if (this.state.movingState === 'init' || this.state.movingState === 'moving') {
+			let offset = new Offset(e.nativeEvent.screenX - this.state.xMove,  e.nativeEvent.screenY - this.state.yMove)
+			if (this.state.movingTarget === 'map') {
+ 				if (this.state.viewport) {
+ 					this.state.viewport.move(offset);
+ 				}
+			} else {
+				this.state.movingTarget.move(offset);
+			}
+ 			this.setState({movingState: 'moving', xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY})
  		}
- 	}
-
- 	onMouseUp(e) {
- 		this.setState({moving: false, xMove: 0, yMove: 0})
  	}
 
 	render() {
@@ -164,8 +169,7 @@ export class Map extends React.Component {
 				<canvas id="stage" width={width} height={height} ref="stage"
 					onClick={this.onMouseClick.bind(this)}
 					onMouseDown={this.onMouseDown.bind(this)}
-					onMouseMove={this.onMouseMove.bind(this)}
-					onMouseUp={this.onMouseUp.bind(this)}/>
+					onMouseMove={this.onMouseMove.bind(this)}/>
 			</div>
 		);
 	}

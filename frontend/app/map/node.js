@@ -16,6 +16,9 @@ export default class Node {
     deselect() {
       this.state = NodeState.NORMAL;
     }
+    move(offset) {
+      this.center = this.center.shift(offset.yInverse());
+    }
 };
 
 export class NodeState {
