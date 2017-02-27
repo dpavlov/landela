@@ -12,9 +12,37 @@ settings:
           'icons/network/router/router-32x32.png': 0 - 0.25, 4
           'icons/network/router/router-64x64.png': 0.25 - 0.5, 2
           'icons/network/router/router-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/router/router-128x128.png': 0.75 - 5, 1
+          'icons/network/router/router-128x128.png': 0.75 - 2, 1
+          'icons/network/router/router-256x256.png': 2 - 5, 0.5
         selected:
-          'icons/network/router/router.selected-32x32.png': 0 - 0.25, 4
-          'icons/network/router/router.selected-64x64.png': 0.25 - 0.5, 2
-          'icons/network/router/router.selected-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/router/router.selected-128x128.png': 0.75 - 5, 1
+          'icons/network/router/router-32x32.png': 0 - 0.25, 4
+          'icons/network/router/router-64x64.png': 0.25 - 0.5, 2
+          'icons/network/router/router-96x96.png': 0.5 - 0.75, 1.5
+          'icons/network/router/router-128x128.png': 0.75 - 2, 1
+          'icons/network/router/router-256x256.png': 2 - 5, 0.5
+      switch:
+        normal:
+          'icons/network/switch/switch-32x32.png': 0 - 0.25, 4
+          'icons/network/switch/switch-64x64.png': 0.25 - 0.5, 2
+          'icons/network/switch/switch-96x96.png': 0.5 - 0.75, 1.5
+          'icons/network/switch/switch-128x128.png': 0.75 - 2, 1
+          'icons/network/switch/switch-256x256.png': 2 - 5, 0.5
+        selected:
+          'icons/network/switch/switch-32x32.png': 0 - 0.25, 4
+          'icons/network/switch/switch-64x64.png': 0.25 - 0.5, 2
+          'icons/network/switch/switch-96x96.png': 0.5 - 0.75, 1.5
+          'icons/network/switch/switch-128x128.png': 0.75 - 2, 1
+          'icons/network/switch/switch-256x256.png': 2 - 5, 0.5
+      host:
+        normal:
+          'icons/network/host/host-32x32.png': 0 - 0.25, 4
+          'icons/network/host/host-64x64.png': 0.25 - 0.5, 2
+          'icons/network/host/host-96x96.png': 0.5 - 0.75, 1.5
+          'icons/network/host/host-128x128.png': 0.75 - 2, 1
+          'icons/network/host/host-256x256.png': 2 - 5, 0.5
+        selected:
+          'icons/network/host/host-32x32.png': 0 - 0.25, 4
+          'icons/network/host/host-64x64.png': 0.25 - 0.5, 2
+          'icons/network/host/host-96x96.png': 0.5 - 0.75, 1.5
+          'icons/network/host/host-128x128.png': 0.75 - 2, 1
+          'icons/network/host/host-256x256.png': 2 - 5, 0.5

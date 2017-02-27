@@ -41,9 +41,9 @@ export class Map extends React.Component {
 						{id: '2', name: 'p2', center: new Point(-50, -50)}
 					]
 				),
-				new Node('2', 'n2', 'router', new Point(100, 300)),
-				new Node('3', 'n3', 'router', new Point(300, 100)),
-				new Node('4', 'n4', 'router', new Point(300, 300))
+				new Node('2', 'n2', 'switch', new Point(100, 300)),
+				new Node('3', 'n3', 'host', new Point(300, 100)),
+				new Node('4', 'n4', 'host', new Point(300, 300))
 			] );
 			this.selectedSet = new NodeSet();
 			this.nodesIndex = null;
