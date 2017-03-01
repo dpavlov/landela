@@ -6,18 +6,31 @@ export default class Node {
         this.name = name;
         this.type = type;
         this.center = center;
+        this.site = null;
         this.state = NodeState.NORMAL;
         this.ports = [];
     }
-    withPorts(ports) {
-      this.ports = this.ports.concat(ports.map(function(p) {
-        return new Port(p.id, p.name, p.center, this)
-      }.bind(this)));
+    attachPorts(ports) {
+      ports.forEach(p => this.attachPort(p))
+      this.ports = this.ports.concat(ports);
+      return this;
+    }
+    attachPort(port) {
+      port.attachNode(this);
+      this.ports.push(port);
+      return this;
+    }
+    attachSite(site) {
+      this.site = site;
       return this;
     }
     bounds(size) {
       let nSize = size || [128, 128];
-			return { x: this.center.x - nSize[0]/2, y: this.center.y - nSize[1] / 2, width: nSize[0], height: nSize[1] };
+      if (this.site) {
+           return { x: this.site.center.x + this.center.x - nSize[0]/2, y: this.site.center.y + this.center.y - nSize[1] / 2, width: nSize[0], height: nSize[1] };
+      } else {
+			     return { x: this.center.x - nSize[0]/2, y: this.center.y - nSize[1] / 2, width: nSize[0], height: nSize[1] };
+      }
     }
     isSelected() {
       return this.state === NodeState.SELECTED;

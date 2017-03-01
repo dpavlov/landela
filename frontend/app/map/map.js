@@ -1,7 +1,8 @@
 export default class Map {
-    constructor(id, name, nodes) {
+    constructor(id, name, sites, nodes) {
         this.id = id;
         this.name = name;
+        this.sites = sites;
         this.nodes = nodes;
     }
     ports() {
@@ -13,5 +14,15 @@ export default class Map {
         }
       }
       return ports;
+    }
+    siteNodes() {
+      let nodes = [];
+      for (var sIndex = 0; sIndex < this.sites.length; sIndex ++) {
+        let site = this.sites[sIndex];
+        for (var nIndex = 0; nIndex < site.nodes.length; nIndex ++) {
+          nodes.push(site.nodes[nIndex]);
+        }
+      }
+      return nodes;
     }
 };

@@ -1,10 +1,14 @@
 export default class Port {
-    constructor(id, name, center, node) {
+    constructor(id, name, center) {
         this.id = id;
         this.name = name;
         this.center = center;
-        this.node = node;
+        this.node = null;
         this.state = PortState.NORMAL;
+    }
+    attachNode(node) {
+      this.node = node;
+      return this;
     }
     bounds(size) {
       let center = this.node.center.add(this.center);

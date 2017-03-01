@@ -6,6 +6,7 @@ import DomUtils from '../utils/dom-utils';
 
 import NetworkMap from '../../map/map';
 import Node from '../../map/node';
+import Site from '../../map/site';
 import Port from '../../map/port';
 import NodeSet from '../../map/node-set';
 
@@ -34,11 +35,19 @@ export class Map extends React.Component {
 
 	constructor() {
     	super();
-    	this.network = new NetworkMap('m1', 'Network', [
-				new Node('1', 'n1', 'router2', new Point(100, 100)).withPorts(
+    	this.network = new NetworkMap('m1', 'Network',
+			[
+				new Site('1', 'site-1', new Point(600, 500), 300, 400).attachNodes([
+					new Node('12', 'n12', 'router2', new Point(0, 0))
+				]),
+				new Site('2', 'site-2', new Point(-500, 350), 300, 250).attachNodes([
+					new Node('21', 'n21', 'router2', new Point(50, 50))
+				])
+			], [
+				new Node('1', 'n1', 'router2', new Point(100, 100)).attachPorts(
 					[
-						{id: '1', name: 'p1', center: new Point(50, 50)},
-						{id: '2', name: 'p2', center: new Point(-50, -50)}
+						new Port('1', 'p1', new Point(50, 50)),
+						new Port('1', 'p1', new Point(-50, -50))
 					]
 				),
 				new Node('2', 'n2', 'router2', new Point(100, 300)),
@@ -46,6 +55,7 @@ export class Map extends React.Component {
 				new Node('4', 'n4', 'router2', new Point(300, 300))
 			] );
 			this.selectedSet = new NodeSet();
+			this.sitesIndex = null;
 			this.nodesIndex = null;
 			this.portsIndex = null;
   	}
@@ -59,7 +69,8 @@ export class Map extends React.Component {
 
 			viewport.resize(width, height);
 
-			this.nodesIndex = new CoordinateIndex(this.network.nodes, node => node.bounds(this.props.settings.sizes[node.type]));
+			this.sitesIndex = new CoordinateIndex(this.network.sites, site => site.bounds());
+			this.nodesIndex = new CoordinateIndex(this.network.nodes.concat(this.network.siteNodes()), node => node.bounds(this.props.settings.sizes[node.type]));
 			this.portsIndex = new CoordinateIndex(this.network.ports(), port => port.bounds());
 
 			this.props.onViewportStateChanged && this.props.onViewportStateChanged(viewport.state());
@@ -136,6 +147,16 @@ export class Map extends React.Component {
 								this.props.onSelect(this.selectedSet.nodes());
 							}
 							this.forceUpdate();
+						} else {
+							let site = this.sitesIndex.find(this.state.viewport.toRealPosition(clickPos));
+							if (site) {
+								if (site.isSelected()) {
+									site.deselect();
+								} else {
+									site.select();
+								}
+								this.forceUpdate();
+							}
 						}
 					}
 				}
@@ -155,7 +176,12 @@ export class Map extends React.Component {
 			if (node) {
 				this.setState({movingState: 'init', movingTarget: node, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
 			} else {
-	 			this.setState({movingState: 'init', movingTarget: 'map', xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
+				let site = this.sitesIndex.find(this.state.viewport.toRealPosition(clickPos));
+				if (site) {
+					this.setState({movingState: 'init', movingTarget: site, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
+				} else {
+	 				this.setState({movingState: 'init', movingTarget: 'map', xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
+				}
 			}
 		}
  	}

@@ -1,5 +1,6 @@
 import Grid from './grid';
 import MapRender from './map-render';
+import SiteRender from './site-render';
 import NodeRender from './node-render';
 
 export default class Render {
@@ -15,8 +16,9 @@ export default class Render {
           this.grid.scale(scale);
           this.grid.offset(offset);
         }.bind(this));
-
-		    this.mapRender = new MapRender(this.viewport, this.ctx, new NodeRender(this.viewport, this.ctx, icons));
+        let nodeRender = new NodeRender(this.viewport, this.ctx, icons);
+        let siteRender = new SiteRender(settings.site, this.viewport, this.ctx, nodeRender);
+		    this.mapRender = new MapRender(this.viewport, this.ctx, siteRender, nodeRender);
   		} else {
   			throw "Canvas is not supported"
   		}

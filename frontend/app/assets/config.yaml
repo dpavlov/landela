@@ -58,4 +58,4 @@ settings:
           'icons/network/host/host-128x128.png': 0.75 - 2, 1
           'icons/network/host/host-256x256.png': 2 - 5, 0.5
     render:
-      grid: false
+      grid: true

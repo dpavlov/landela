@@ -75,20 +75,25 @@ export default class Viewport {
     toRealPosition(point) {
       return this.coordinateSystem.realCoordinates(point);
     }
-    nodeDisplayCenter(node) {
-      return this.coordinateSystem.displayCoordinates(node.center);
+    siteDisplayCenter(site) {
+      return this.coordinateSystem.displayCoordinates(site.center);
     }
-
+    nodeDisplayCenter(node) {
+      if (node.site) {
+        let siteCoordinateSystem = new CoordinateSystem(node.site.center.x, node.site.center.y, this.coordinateSystem);
+        return siteCoordinateSystem.displayCoordinates(node.center);
+      } else {
+        return this.coordinateSystem.displayCoordinates(node.center);
+      }
+    }
     nodeDisplayBounds(node) {
       let center = this.nodeDisplayCenter(node);
       return { x: center.x - this.withScale(64), y: center.y - this.withScale(64), width: this.withScale(128), height: this.withScale(128) };
     }
-
-    portDisplayCenter(node, port) {
-      let nodeCoordinateSystem = new CoordinateSystem(node.center.x, node.center.y, this.coordinateSystem);
+    portDisplayCenter(port) {
+      let nodeCoordinateSystem = new CoordinateSystem(port.node.center.x, port.node.center.y, this.coordinateSystem);
       return nodeCoordinateSystem.displayCoordinates(port.center);
     }
-
     withScale(value) {
       return this.coordinateSystem.withScale(value);
     }
