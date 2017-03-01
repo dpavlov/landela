@@ -25,7 +25,6 @@ export default class CoordinateIndex {
 				area.yMax = objBounds.y;
 			}
 		}
-		console.log("Area ", area);
 		return { x: area.xMin, y: area.yMin, width: area.xMax - area.xMin, height: area.yMax - area.yMin };
 	}
 	find(point) {

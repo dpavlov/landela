@@ -23,28 +23,28 @@ export default class Quadtree {
 			y	: y,
 			width	: subWidth,
 			height	: subHeight
-		}, this.max_objects, this.max_levels, nextLevel);
+		}, this.boundsLookupFn, this.max_objects, this.max_levels, nextLevel);
 
 		this.nodes[1] = new Quadtree({
 			x	: x,
 			y	: y,
 			width	: subWidth,
 			height	: subHeight
-		}, this.max_objects, this.max_levels, nextLevel);
+		}, this.boundsLookupFn, this.max_objects, this.max_levels, nextLevel);
 
 		this.nodes[2] = new Quadtree({
 			x	: x,
 			y	: y + subHeight,
 			width	: subWidth,
 			height	: subHeight
-		}, this.max_objects, this.max_levels, nextLevel);
+		}, this.boundsLookupFn, this.max_objects, this.max_levels, nextLevel);
 
 		this.nodes[3] = new Quadtree({
 			x	: x + subWidth,
 			y	: y + subHeight,
 			width	: subWidth,
 			height	: subHeight
-		}, this.max_objects, this.max_levels, nextLevel);
+		}, this.boundsLookupFn, this.max_objects, this.max_levels, nextLevel);
 	}
 
 	getIndex(pRect) {
@@ -135,7 +135,7 @@ export default class Quadtree {
 	};
 
 	find( point ){
-
+    var index = this.getIndex( {x: point.x, y: point.y, width: 0, height: 0} );
 		for( var i = 0; i < this.objects.length; i = i + 1 ) {
 			if (this.intersection(point, this._toRect(this.objects[i]))) {
 				return this.objects[i];
@@ -143,11 +143,7 @@ export default class Quadtree {
 		}
 
 		if( typeof this.nodes[0] !== 'undefined' ) {
-			for( var i = 0; i < this.nodes.length; i = i + 1 ) {
-				if (this.intersection(point, this._toRect(this.objects[i]))) {
-					return this.node[i].find(point);
-				}
-			}
+			return this.nodes[index].find(point);
 		}
 
 		return null;

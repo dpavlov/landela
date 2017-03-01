@@ -51,9 +51,17 @@ export class Map extends React.Component {
 					]
 				),
 				new Node('2', 'n2', 'router2', new Point(100, 300)),
-				new Node('3', 'n3', 'router2', new Point(300, 100)),
-				new Node('4', 'n4', 'router2', new Point(300, 300))
-			] );
+				new Node('3', 'n3', 'router2', new Point(350, 100)),
+				new Node('4', 'n4', 'router2', new Point(400, 400)),
+				new Node('5', 'n4', 'router2', new Point(450, 500)),
+				new Node('6', 'n4', 'router2', new Point(500, 600)),
+				new Node('7', 'n4', 'router2', new Point(550, 700)),
+				new Node('8', 'n4', 'router2', new Point(600, 800)),
+				new Node('9', 'n4', 'router2', new Point(350, 900)),
+				new Node('10', 'n4', 'router2', new Point(400, 700)),
+				new Node('11', 'n4', 'router2', new Point(450, 900)),
+				new Node('12', 'n4', 'router2', new Point(500, -600))
+			]);
 			this.selectedSet = new NodeSet();
 			this.sitesIndex = null;
 			this.nodesIndex = null;
