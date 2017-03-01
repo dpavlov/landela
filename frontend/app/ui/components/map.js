@@ -53,7 +53,7 @@ export class Map extends React.Component {
 	    window.addEventListener('resize', this.onResize.bind(this), false);
 
 			let viewport = new Viewport(this.refs.stage.width, this.refs.stage.height);
-	    let render = new Render(viewport, this.refs.stage, this.props.icons.icons);
+	    let render = new Render(this.props.settings.render, viewport, this.refs.stage, this.props.icons.icons);
 			let width = DomUtils.width(this.refs.mapContainer);
 			let height = DomUtils.height(this.refs.mapContainer);
 

@@ -3,7 +3,8 @@ import MapRender from './map-render';
 import NodeRender from './node-render';
 
 export default class Render {
-    constructor(viewport, canvas, icons) {
+    constructor(settings, viewport, canvas, icons) {
+      this.settings = settings;
       this.viewport = viewport;
     	this.canvas = canvas;
       if (canvas.getContext){
@@ -23,7 +24,9 @@ export default class Render {
     render(map, delayFn) {
     	var sTs = Date.now();
     	this.clean();
-      this._layer0(this.grid);
+      if (this.settings.grid) {
+        this._layer0(this.grid);
+      }
       this._layer1(map);
       delayFn && delayFn(Date.now() - sTs);
     }
