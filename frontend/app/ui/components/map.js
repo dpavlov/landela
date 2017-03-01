@@ -35,15 +35,15 @@ export class Map extends React.Component {
 	constructor() {
     	super();
     	this.network = new NetworkMap('m1', 'Network', [
-				new Node('1', 'n1', 'router', new Point(100, 100)).withPorts(
+				new Node('1', 'n1', 'router2', new Point(100, 100)).withPorts(
 					[
 						{id: '1', name: 'p1', center: new Point(50, 50)},
 						{id: '2', name: 'p2', center: new Point(-50, -50)}
 					]
 				),
-				new Node('2', 'n2', 'switch', new Point(100, 300)),
-				new Node('3', 'n3', 'host', new Point(300, 100)),
-				new Node('4', 'n4', 'host', new Point(300, 300))
+				new Node('2', 'n2', 'router2', new Point(100, 300)),
+				new Node('3', 'n3', 'router2', new Point(300, 100)),
+				new Node('4', 'n4', 'router2', new Point(300, 300))
 			] );
 			this.selectedSet = new NodeSet();
 			this.nodesIndex = null;

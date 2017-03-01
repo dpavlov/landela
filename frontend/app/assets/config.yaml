@@ -20,6 +20,17 @@ settings:
           'icons/network/router/router-96x96.png': 0.5 - 0.75, 1.5
           'icons/network/router/router-128x128.png': 0.75 - 2, 1
           'icons/network/router/router-256x256.png': 2 - 5, 0.5
+      router2:
+        normal:
+          'icons/network/router-2/router-32x32.png': 0 - 0.25, 4
+          'icons/network/router-2/router-64x64.png': 0.25 - 0.5, 2
+          'icons/network/router-2/router-96x96.png': 0.5 - 0.75, 1.5
+          'icons/network/router-2/router-128x128.png': 0.75 - 5, 1
+        selected:
+          'icons/network/router-2/router.selected-32x32.png': 0 - 0.25, 4
+          'icons/network/router-2/router.selected-64x64.png': 0.25 - 0.5, 2
+          'icons/network/router-2/router.selected-96x96.png': 0.5 - 0.75, 1.5
+          'icons/network/router-2/router.selected-128x128.png': 0.75 - 5, 1
       switch:
         normal:
           'icons/network/switch/switch-32x32.png': 0 - 0.25, 4
