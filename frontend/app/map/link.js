@@ -1,8 +1,11 @@
+import Point from '../geometry/point';
 export default class Link {
     constructor(id, sPort, ePort) {
         this.id = id;
         this.sPort = sPort;
         this.ePort = ePort;
+        this.sControlPoint = new Point(50, 50);
+        this.eControlPoint = new Point(50, 50);
         this.state = LinkState.NORMAL;
     }
     isSelected() {

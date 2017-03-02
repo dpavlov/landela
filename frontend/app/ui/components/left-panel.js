@@ -5,6 +5,9 @@ import TextField from 'material-ui/TextField';
 import Avatar from 'material-ui/Avatar';
 import FlatButton from 'material-ui/FlatButton';
 import { purple500 } from 'material-ui/styles/colors';
+import {List, ListItem} from 'material-ui/List';
+
+import Node from '../../map/node';
 
 export default class LeftPanel extends React.Component {
 
@@ -46,9 +49,26 @@ export default class LeftPanel extends React.Component {
           </CardActions>
           <CardText expandable={true}>
             <TextField hintText="Name" floatingLabelText="Name" defaultValue={t.name} onChange={this.onTargetNameChanged(t)}/>
+            {
+              this.renderTargetProperties(t)
+            }
           </CardText>
         </Card>
     );
+  }
+
+  renderTargetProperties = (t) => {
+    if (t instanceof Node) {
+      return (
+        <List>
+        {
+          t.ports.map(port => <ListItem key={port.id} primaryText={port.name}/>)
+        }
+        </List>
+      )
+    } else {
+      return null;
+    }
   }
 
 	render() {

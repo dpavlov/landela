@@ -12,7 +12,6 @@ export default class Node {
     }
     attachPorts(ports) {
       ports.forEach(p => this.attachPort(p))
-      this.ports = this.ports.concat(ports);
       return this;
     }
     attachPort(port) {

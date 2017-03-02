@@ -10,7 +10,6 @@ export default class Site {
     }
     attachNodes(nodes) {
       nodes.forEach(n => this.attachNode(n))
-      this.nodes = this.nodes.concat(nodes);
       return this;
     }
     attachNode(node) {
