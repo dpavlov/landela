@@ -16,6 +16,8 @@ import Offset from '../../geometry/offset';
 import Viewport from '../../viewport/viewport';
 import Render from '../../render/render';
 
+import Bezier from '../../utils/bezier';
+
 import Zoomer from './zoomer';
 import Navigator from './navigator'
 
@@ -66,6 +68,7 @@ export class Map extends React.Component {
 			this.sitesIndex = null;
 			this.nodesIndex = null;
 			this.portsIndex = null;
+			this.linksIndex = null;
   	}
 		componentDidMount() {
 	    window.addEventListener('resize', this.onResize.bind(this), false);
@@ -80,6 +83,22 @@ export class Map extends React.Component {
 			this.sitesIndex = new CoordinateIndex(this.network.sites, site => site.bounds());
 			this.nodesIndex = new CoordinateIndex(this.network.nodes.concat(this.network.siteNodes()), node => node.bounds(this.props.settings.sizes[node.type]));
 			this.portsIndex = new CoordinateIndex(this.network.ports(), port => port.bounds());
+			this.linksIndex = new CoordinateIndex(this.network.links, link => {
+				let sPortCenter = viewport.portDisplayCenter(link.sPort);
+	      let ePortCenter = viewport.portDisplayCenter(link.ePort);
+				let cp1 = new Point(sPortCenter.x + link.sControlPoint.x, sPortCenter.y + link.sControlPoint.y);
+        let cp2 = new Point(ePortCenter.x + link.eControlPoint.x, ePortCenter.y + link.eControlPoint.y);
+				let curve = new Bezier(sPortCenter, cp1, cp2, ePortCenter);
+				return curve.bounds();
+			}, (point, link) => {
+				let sPortCenter = viewport.portDisplayCenter(link.sPort);
+	      let ePortCenter = viewport.portDisplayCenter(link.ePort);
+				let cp1 = new Point(sPortCenter.x + link.sControlPoint.x, sPortCenter.y + link.sControlPoint.y);
+        let cp2 = new Point(ePortCenter.x + link.eControlPoint.x, ePortCenter.y + link.eControlPoint.y);
+				let curve = new Bezier(sPortCenter, cp1, cp2, ePortCenter);
+				var p = curve.project(point);
+				return Math.abs(p.x - point.x) < 5 && Math.abs(p.y - point.y) < 5;
+			});
 
 			this.props.onViewportStateChanged && this.props.onViewportStateChanged(viewport.state());
 
@@ -127,13 +146,25 @@ export class Map extends React.Component {
 				this.forceUpdate();
   		}
   	}
-
+		checkLinks(point) {
+			for (var lIndex = 0; lIndex < this.network.links.length; lIndex ++) {
+				let link = this.network.links[lIndex];
+				var sPortCenter = this.state.viewport.portDisplayCenter(link.sPort);
+	      var ePortCenter = this.state.viewport.portDisplayCenter(link.ePort);
+				let cp1 = new Point(sPortCenter.x + link.sControlPoint.x, sPortCenter.y + link.sControlPoint.y);
+        let cp2 = new Point(ePortCenter.x + link.eControlPoint.x, ePortCenter.y + link.eControlPoint.y);
+				let curve = new Bezier(sPortCenter, cp1, cp2, ePortCenter);
+				var p = curve.project(point);
+				console.log(p.x - point.x, p.y - point.y, curve.bounds());
+			}
+		}
 		onMouseClick(e) {
 			if (this.state.movingState !== 'moving') {
 		 		if (this.nodesIndex && this.state.viewport) {
 					let xOffset = DomUtils.offsetLeft(this.refs.stage);
 					let yOffset = DomUtils.offsetTop(this.refs.stage);
 					let clickPos = new Point(e.nativeEvent.clientX - xOffset, e.nativeEvent.clientY - yOffset);
+					this.checkLinks(clickPos);
 					let port = this.portsIndex.find(this.state.viewport.toRealPosition(clickPos));
 					if (port) {
 						if (port.isSelected()) {
@@ -156,14 +187,24 @@ export class Map extends React.Component {
 							}
 							this.forceUpdate();
 						} else {
-							let site = this.sitesIndex.find(this.state.viewport.toRealPosition(clickPos));
-							if (site) {
-								if (site.isSelected()) {
-									site.deselect();
+							let link = this.linksIndex.find(clickPos);
+							if (link) {
+								if (link.isSelected()) {
+									link.deselect();
 								} else {
-									site.select();
+									link.select();
 								}
 								this.forceUpdate();
+							} else {
+								let site = this.sitesIndex.find(this.state.viewport.toRealPosition(clickPos));
+								if (site) {
+									if (site.isSelected()) {
+										site.deselect();
+									} else {
+										site.select();
+									}
+									this.forceUpdate();
+								}
 							}
 						}
 					}

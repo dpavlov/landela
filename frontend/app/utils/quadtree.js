@@ -1,5 +1,5 @@
 export default class Quadtree {
-	constructor(bounds, boundsLookupFn, max_objects, max_levels, level) {
+	constructor(bounds, boundsLookupFn, checkIntersectionFn, max_objects, max_levels, level) {
 		this.max_objects	= max_objects || 10;
 		this.max_levels		= max_levels || 4;
 
@@ -9,6 +9,7 @@ export default class Quadtree {
 		this.objects 		= [];
 		this.nodes 		    = [];
 		this.boundsLookupFn = boundsLookupFn;
+		this.checkIntersectionFn = checkIntersectionFn ? checkIntersectionFn : this.innerCheckIntersection
 	}
 
 	split() {
@@ -23,28 +24,28 @@ export default class Quadtree {
 			y	: y,
 			width	: subWidth,
 			height	: subHeight
-		}, this.boundsLookupFn, this.max_objects, this.max_levels, nextLevel);
+		}, this.boundsLookupFn, this.max_objects, this.max_levels, nextLevel, this.checkIntersectionFn);
 
 		this.nodes[1] = new Quadtree({
 			x	: x,
 			y	: y,
 			width	: subWidth,
 			height	: subHeight
-		}, this.boundsLookupFn, this.max_objects, this.max_levels, nextLevel);
+		}, this.boundsLookupFn, this.max_objects, this.max_levels, nextLevel, this.checkIntersectionFn);
 
 		this.nodes[2] = new Quadtree({
 			x	: x,
 			y	: y + subHeight,
 			width	: subWidth,
 			height	: subHeight
-		}, this.boundsLookupFn, this.max_objects, this.max_levels, nextLevel);
+		}, this.boundsLookupFn, this.max_objects, this.max_levels, nextLevel, this.checkIntersectionFn);
 
 		this.nodes[3] = new Quadtree({
 			x	: x + subWidth,
 			y	: y + subHeight,
 			width	: subWidth,
 			height	: subHeight
-		}, this.boundsLookupFn, this.max_objects, this.max_levels, nextLevel);
+		}, this.boundsLookupFn, this.max_objects, this.max_levels, nextLevel, this.checkIntersectionFn);
 	}
 
 	getIndex(pRect) {
@@ -137,7 +138,7 @@ export default class Quadtree {
 	find( point ){
     var index = this.getIndex( {x: point.x, y: point.y, width: 0, height: 0} );
 		for( var i = 0; i < this.objects.length; i = i + 1 ) {
-			if (this.intersection(point, this._toRect(this.objects[i]))) {
+			if (this.checkIntersectionFn(point, this.objects[i])) {
 				return this.objects[i];
 			}
 		}
@@ -148,6 +149,10 @@ export default class Quadtree {
 
 		return null;
 	};
+
+	innerCheckIntersection(point, obj) {
+		return this.intersection(point, this._toRect(obj))
+	}
 
 	intersection(point, rect) {
     	return point.x >= rect.x && point.x <= rect.x + rect.width && point.y >= rect.y && point.y <= rect.y + rect.height;

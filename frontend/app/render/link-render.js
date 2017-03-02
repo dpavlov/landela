@@ -8,6 +8,7 @@ export default class LinkRender {
       var sPortCenter = this.viewport.portDisplayCenter(link.sPort);
       var ePortCenter = this.viewport.portDisplayCenter(link.ePort);
       this.curve(
+        link.isSelected(),
         sPortCenter.x, sPortCenter.y,
         ePortCenter.x, ePortCenter.y,
         link.sControlPoint.x, link.sControlPoint.y,
@@ -32,10 +33,10 @@ export default class LinkRender {
       this.ctx.lineTo(x2, y2);
       this.ctx.stroke();
   }
-  curve(x1, y1, x2, y2, cpx1, cpy1, cpx2, cpy2) {
+  curve(isSelected, x1, y1, x2, y2, cpx1, cpy1, cpx2, cpy2) {
       this.ctx.beginPath();
       this.ctx.lineWidth = 1;
-      this.ctx.strokeStyle = '#c0e2f7';
+      this.ctx.strokeStyle = isSelected ? 'yellow' : '#c0e2f7';
       this.ctx.moveTo(x1, y1);
       this.ctx.bezierCurveTo(x1 + cpx1, y1 + cpy1, x2 + cpx2, y2 + cpy2, x2, y2);
       this.ctx.stroke();

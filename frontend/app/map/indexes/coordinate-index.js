@@ -1,9 +1,9 @@
 import Quadtree from '../../utils/quadtree';
 
 export default class CoordinateIndex {
-	constructor(objs, boundsLookupFn) {
+	constructor(objs, boundsLookupFn, checkIntersectionFn) {
 		let bounds = this._bounds(objs, boundsLookupFn);
-		this.quadtree = new Quadtree(bounds, boundsLookupFn);
+		this.quadtree = new Quadtree(bounds, boundsLookupFn, checkIntersectionFn);
 		for (var index = 0; index < objs.length; index ++) {
 			this.quadtree.insert(objs[index]);
 		}
