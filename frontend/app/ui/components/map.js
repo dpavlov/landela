@@ -8,6 +8,7 @@ import NetworkMap from '../../map/map';
 import Node from '../../map/node';
 import Site from '../../map/site';
 import Port from '../../map/port';
+import Link from '../../map/link';
 import NodeSet from '../../map/node-set';
 
 import Point from '../../geometry/point';
@@ -35,6 +36,8 @@ export class Map extends React.Component {
 
 	constructor() {
     	super();
+			let sPort = new Port('11', 'p1', new Point(50, 50));
+			let ePort = new Port('41', 'p1', new Point(-50, -50));
     	this.network = new NetworkMap('m1', 'Network',
 			[
 				new Site('1', 'site-1', new Point(600, 500), 300, 400).attachNodes([
@@ -46,13 +49,18 @@ export class Map extends React.Component {
 			], [
 				new Node('1', 'n1', 'router2', new Point(100, 100)).attachPorts(
 					[
-						new Port('1', 'p1', new Point(50, 50)),
-						new Port('1', 'p1', new Point(-50, -50))
+						sPort,
+						new Port('12', 'p2', new Point(-50, -50))
 					]
 				),
 				new Node('2', 'n2', 'router2', new Point(100, 300)),
 				new Node('3', 'n3', 'router2', new Point(350, 100)),
-				new Node('4', 'n4', 'router2', new Point(400, 400))
+				new Node('4', 'n4', 'router2', new Point(400, 400)).attachPorts([
+					new Port('42', 'p2', new Point(50, 50)),
+					ePort
+				])
+			], [
+				new Link('l1', sPort, ePort)
 			]);
 			this.selectedSet = new NodeSet();
 			this.sitesIndex = null;

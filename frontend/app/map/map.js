@@ -1,9 +1,10 @@
 export default class Map {
-    constructor(id, name, sites, nodes) {
+    constructor(id, name, sites, nodes, links) {
         this.id = id;
         this.name = name;
         this.sites = sites;
         this.nodes = nodes;
+        this.links = links;
     }
     ports() {
       let ports = [];

@@ -2,6 +2,7 @@ import Grid from './grid';
 import MapRender from './map-render';
 import SiteRender from './site-render';
 import NodeRender from './node-render';
+import LinkRender from './link-render';
 
 export default class Render {
     constructor(settings, viewport, canvas, icons) {
@@ -18,7 +19,8 @@ export default class Render {
         }.bind(this));
         let nodeRender = new NodeRender(this.viewport, this.ctx, icons);
         let siteRender = new SiteRender(settings.site, this.viewport, this.ctx, nodeRender);
-		    this.mapRender = new MapRender(this.viewport, this.ctx, siteRender, nodeRender);
+        let linkRender = new LinkRender(settings.link, this.viewport, this.ctx);
+		    this.mapRender = new MapRender(this.viewport, this.ctx, siteRender, nodeRender, linkRender);
   		} else {
   			throw "Canvas is not supported"
   		}
