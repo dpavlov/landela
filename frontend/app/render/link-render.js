@@ -5,21 +5,25 @@ export default class LinkRender {
     this.viewport = viewport;
   }
   render(link) {
-      var sPortCenter = this.viewport.portDisplayCenter(link.sPort);
-      var ePortCenter = this.viewport.portDisplayCenter(link.ePort);
+      let sPortCenter = this.viewport.portDisplayCenter(link.sPort);
+      let ePortCenter = this.viewport.portDisplayCenter(link.ePort);
+      let scpCenter = link.sControlPoint.center.withMultiplier(this.viewport.scale());
+      let ecpCenter = link.eControlPoint.center.withMultiplier(this.viewport.scale());
       this.curve(
         link.isSelected(),
         sPortCenter.x, sPortCenter.y,
         ePortCenter.x, ePortCenter.y,
-        link.sControlPoint.x, link.sControlPoint.y,
-        link.eControlPoint.x, link.eControlPoint.y
+        scpCenter.x, scpCenter.y,
+        ecpCenter.x, ecpCenter.y
       );
-      let wControlPoint = 10;
-      let hControlPoint = 10;
-      this.line(sPortCenter.x, sPortCenter.y, sPortCenter.x + link.sControlPoint.x, sPortCenter.y + link.sControlPoint.y);
-      this.rectangle(sPortCenter.x + link.sControlPoint.x - wControlPoint / 2, sPortCenter.y + link.sControlPoint.y - hControlPoint / 2, wControlPoint, hControlPoint);
-      this.line(ePortCenter.x, ePortCenter.y, ePortCenter.x + link.eControlPoint.x, ePortCenter.y + link.eControlPoint.y);
-      this.rectangle(ePortCenter.x + link.eControlPoint.x - wControlPoint / 2, ePortCenter.y + link.eControlPoint.y - hControlPoint / 2, wControlPoint, hControlPoint);
+      if (link.isSelected()) {
+        let wControlPoint = this.viewport.withScale(10);
+        let hControlPoint = this.viewport.withScale(10);
+        this.line(sPortCenter.x, sPortCenter.y, sPortCenter.x + scpCenter.x, sPortCenter.y - scpCenter.y);
+        this.rectangle(sPortCenter.x + scpCenter.x - wControlPoint / 2, sPortCenter.y - scpCenter.y - hControlPoint / 2, wControlPoint, hControlPoint);
+        this.line(ePortCenter.x, ePortCenter.y, ePortCenter.x + ecpCenter.x, ePortCenter.y - ecpCenter.y);
+        this.rectangle(ePortCenter.x + ecpCenter.x - wControlPoint / 2, ePortCenter.y - ecpCenter.y - hControlPoint / 2, wControlPoint, hControlPoint);
+      }
   }
   rectangle(x, y, w, h) {
     this.ctx.fillStyle = "#222222";
@@ -38,7 +42,7 @@ export default class LinkRender {
       this.ctx.lineWidth = 1;
       this.ctx.strokeStyle = isSelected ? 'yellow' : '#c0e2f7';
       this.ctx.moveTo(x1, y1);
-      this.ctx.bezierCurveTo(x1 + cpx1, y1 + cpy1, x2 + cpx2, y2 + cpy2, x2, y2);
+      this.ctx.bezierCurveTo(x1 + cpx1, y1 - cpy1, x2 + cpx2, y2 - cpy2, x2, y2);
       this.ctx.stroke();
   }
 };

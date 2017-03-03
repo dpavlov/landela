@@ -26,4 +26,13 @@ export default class Map {
       }
       return nodes;
     }
+    linkControls() {
+      let controls = [];
+      for (var lIndex = 0; lIndex < this.links.length; lIndex ++) {
+        let link = this.links[lIndex];
+        controls.push(link.sControlPoint);
+        controls.push(link.eControlPoint);
+      }
+      return controls;
+    }
 };

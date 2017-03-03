@@ -11,9 +11,12 @@ export default class Port {
       return this;
     }
     bounds(size) {
-      let center = this.node.center.add(this.center);
-      let nSize = size || [20, 20];
+      let center = this.absCenter();
+      let nSize = size || [14, 14];
 			return { x: center.x - nSize[0]/2, y: center.y - nSize[1] / 2, width: nSize[0], height: nSize[1] };
+    }
+    absCenter() {
+      return this.node.center.add(this.center);
     }
     isSelected() {
       return this.state === PortState.SELECTED;

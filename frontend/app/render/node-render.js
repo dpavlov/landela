@@ -20,7 +20,7 @@ export default class NodeRender {
     for (var iNodePort = 0; iNodePort < node.ports.length; iNodePort++) {
       var port = node.ports[iNodePort];
       var portCenter = this.viewport.portDisplayCenter(port);
-      let pSide = this.viewport.withScale(20)
+      let pSide = this.viewport.withScale(14)
       this.roundRect(port, portCenter.x - pSide / 2, portCenter.y - pSide / 2, pSide, pSide, this.viewport.withScale(3));
     }
 

@@ -4,8 +4,8 @@ export default class Link {
         this.id = id;
         this.sPort = sPort;
         this.ePort = ePort;
-        this.sControlPoint = new Point(50, 50);
-        this.eControlPoint = new Point(50, 50);
+        this.sControlPoint = new LinkControl(sPort, new Point(50, 50));
+        this.eControlPoint = new LinkControl(ePort, new Point(-50, -50));
         this.state = LinkState.NORMAL;
     }
     isSelected() {
@@ -18,6 +18,16 @@ export default class Link {
       this.state = LinkState.NORMAL;
     }
 };
+
+export class LinkControl {
+  constructor(port, center) {
+      this.port = port;
+      this.center = center;
+  }
+  move(offset) {
+    this.center = this.center.shift(offset.yInverse());
+  }
+}
 
 export class LinkState {
   static NORMAL = {value: 0, name: "Normal", code: "N"}

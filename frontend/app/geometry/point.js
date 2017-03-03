@@ -1,4 +1,4 @@
-export default class Point { 
+export default class Point {
     constructor(x, y) {
         this.x = x;
         this.y = y;
@@ -17,6 +17,9 @@ export default class Point {
     }
     yShift(offset) {
     	return new Point(this.x, this.y + offset.yOffset);
+    }
+    withMultiplier(k) {
+        return new Point(this.x * k, this.y * k);
     }
     toString() {
         return "[" + (this.x | 0) + " x " + (this.y | 0) + "]";
