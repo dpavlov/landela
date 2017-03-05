@@ -21,7 +21,7 @@ export default class NodeRender {
       var port = node.ports[iNodePort];
       var portCenter = this.viewport.portDisplayCenter(port);
       let pSide = this.viewport.withScale(14)
-      this.roundRect(port, portCenter.x - pSide / 2, portCenter.y - pSide / 2, pSide, pSide, this.viewport.withScale(3));
+      this.roundRect(port, portCenter.x - pSide / 2, portCenter.y - pSide / 2, pSide, pSide, this.viewport.withScale(4));
     }
 
   }
@@ -62,7 +62,8 @@ export default class NodeRender {
     this.ctx.quadraticCurveTo(x, y, x + radius.tl, y);
     this.ctx.closePath();
     this.ctx.lineWidth = 1;
+    this.ctx.fillStyle = port.isSelected() ? '#FFCC03' : '#000000';
     this.ctx.strokeStyle = port.isSelected() ? '#FFCC03' : '#c0e2f7';
-    this.ctx.stroke();
+    this.ctx.fill();
   }
 };
