@@ -6,58 +6,54 @@ settings:
       step: 0.25
     sizes:
       router: [128, 128]
+      switch: [128, 128]
     icons:
       router:
         normal:
           'icons/network/router/router-32x32.png': 0 - 0.25, 4
           'icons/network/router/router-64x64.png': 0.25 - 0.5, 2
           'icons/network/router/router-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/router/router-128x128.png': 0.75 - 2, 1
-          'icons/network/router/router-256x256.png': 2 - 5, 0.5
+          'icons/network/router/router-128x128.png': 0.75 - 5, 1
         selected:
-          'icons/network/router/router-32x32.png': 0 - 0.25, 4
-          'icons/network/router/router-64x64.png': 0.25 - 0.5, 2
-          'icons/network/router/router-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/router/router-128x128.png': 0.75 - 2, 1
-          'icons/network/router/router-256x256.png': 2 - 5, 0.5
-      router2:
-        normal:
-          'icons/network/router-2/router-32x32.png': 0 - 0.25, 4
-          'icons/network/router-2/router-64x64.png': 0.25 - 0.5, 2
-          'icons/network/router-2/router-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/router-2/router-128x128.png': 0.75 - 5, 1
-        selected:
-          'icons/network/router-2/router.selected-32x32.png': 0 - 0.25, 4
-          'icons/network/router-2/router.selected-64x64.png': 0.25 - 0.5, 2
-          'icons/network/router-2/router.selected-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/router-2/router.selected-128x128.png': 0.75 - 5, 1
+          'icons/network/router/router.selected-32x32.png': 0 - 0.25, 4
+          'icons/network/router/router.selected-64x64.png': 0.25 - 0.5, 2
+          'icons/network/router/router.selected-96x96.png': 0.5 - 0.75, 1.5
+          'icons/network/router/router.selected-128x128.png': 0.75 - 5, 1
       switch:
         normal:
           'icons/network/switch/switch-32x32.png': 0 - 0.25, 4
           'icons/network/switch/switch-64x64.png': 0.25 - 0.5, 2
           'icons/network/switch/switch-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/switch/switch-128x128.png': 0.75 - 2, 1
-          'icons/network/switch/switch-256x256.png': 2 - 5, 0.5
+          'icons/network/switch/switch-128x128.png': 0.75 - 5, 1
         selected:
-          'icons/network/switch/switch-32x32.png': 0 - 0.25, 4
-          'icons/network/switch/switch-64x64.png': 0.25 - 0.5, 2
-          'icons/network/switch/switch-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/switch/switch-128x128.png': 0.75 - 2, 1
-          'icons/network/switch/switch-256x256.png': 2 - 5, 0.5
-      host:
-        normal:
-          'icons/network/host/host-32x32.png': 0 - 0.25, 4
-          'icons/network/host/host-64x64.png': 0.25 - 0.5, 2
-          'icons/network/host/host-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/host/host-128x128.png': 0.75 - 2, 1
-          'icons/network/host/host-256x256.png': 2 - 5, 0.5
-        selected:
-          'icons/network/host/host-32x32.png': 0 - 0.25, 4
-          'icons/network/host/host-64x64.png': 0.25 - 0.5, 2
-          'icons/network/host/host-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/host/host-128x128.png': 0.75 - 2, 1
-          'icons/network/host/host-256x256.png': 2 - 5, 0.5
+          'icons/network/switch/switch.selected-32x32.png': 0 - 0.25, 4
+          'icons/network/switch/switch.selected-64x64.png': 0.25 - 0.5, 2
+          'icons/network/switch/switch.selected-96x96.png': 0.5 - 0.75, 1.5
+          'icons/network/switch/switch.selected-128x128.png': 0.75 - 5, 1
     render:
-      grid: true
+      grid:
+        step: 150
+        display: true
+        x-axis:
+          text-align: 'left'
+          font-size: 10
+          font-family: 'Tahoma'
+          text-color: 'rgba(255,255,255,0.3)'
+        y-axis:
+          text-align: 'left'
+          font-size: 10
+          font-family: 'Tahoma'
+          text-color: 'rgba(255,255,255,0.3)'
+    draw-marker:
+      node-types:
+        router:
+          name: 'Router'
+          code: 'R'
+        switch:
+          name: 'Switch'
+          code: 'SW'
+      slots-allocation:
+        router: 1
+        switch: 2
     site:
-    link:    
+    link:

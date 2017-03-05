@@ -46,6 +46,7 @@ function* loadIcons(action) {
 
       yield put(iconsLoaded(icons));
    } catch (e) {
+      console.log(e);
       yield put({type: "LOAD_ICONS_FAILED", message: e.message});
    }
 }

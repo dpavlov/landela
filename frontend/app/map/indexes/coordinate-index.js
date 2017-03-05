@@ -27,6 +27,12 @@ export default class CoordinateIndex {
 		}
 		return { x: area.xMin, y: area.yMin, width: area.xMax - area.xMin, height: area.yMax - area.yMin };
 	}
+	insert(obj) {
+		return this.quadtree.insert(obj);
+	}
+	remove(obj) {
+		return this.quadtree.remove(obj);
+	}
 	find(point) {
 		return this.quadtree.find(point);
 	}

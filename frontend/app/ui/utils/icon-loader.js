@@ -5,6 +5,9 @@ export default class IconLoader {
 	        image.onload = function(){
 	            resolve({ ... icon, iconImg: image });
 	        }.bind(this);
+					image.onerror = function(){
+	            reject({message: "Can't load image with src " + icon.iconSrc});
+	        }.bind(this)
 	        image.src = icon.iconSrc;
 		});
 	}

@@ -3,6 +3,7 @@ import MapRender from './map-render';
 import SiteRender from './site-render';
 import NodeRender from './node-render';
 import LinkRender from './link-render';
+import IOCanvas from './io-canvas';
 
 export default class Render {
     constructor(settings, viewport, canvas, icons) {
@@ -11,7 +12,8 @@ export default class Render {
     	this.canvas = canvas;
       if (canvas.getContext){
 		    this.ctx = canvas.getContext('2d');
-		    this.grid = new Grid(this.ctx);
+        this.ioCanvas = new IOCanvas(this.ctx);
+		    this.grid = new Grid(this.settings.grid, this.ioCanvas);
 
         this.viewport.subscribe(function(scale, offset) {
           this.grid.scale(scale);
@@ -28,7 +30,7 @@ export default class Render {
     render(map, delayFn) {
     	var sTs = Date.now();
     	this.clean();
-      if (this.settings.grid) {
+      if (this.settings.grid.display) {
         this._layer0(this.grid);
       }
       this._layer1(map);

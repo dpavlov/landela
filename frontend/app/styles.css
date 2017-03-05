@@ -32,6 +32,7 @@ html {
 body {
   background-color: #375A70;
   height: 100%;
+  overflow: hidden;
 }
 
 #app {
@@ -88,6 +89,53 @@ body {
 #stage {
   background-color: #375A70;
   position: absolute;
+}
+
+#draw-marker {
+  position: relative;
+  z-index: 3;
+}
+
+#draw-marker .circle{
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 80px;
+  top: -80px;
+  left: -80px;
+  width: 160px;
+  height: 160px;
+  position: absolute;
+}
+
+.draw-marker-button {
+  position: absolute;
+}
+
+#draw-marker .vline {
+  position: absolute;
+  width: 2px;
+  height: 16px;
+  background-color: #FCFCFC;
+}
+
+#draw-marker .hline {
+  position: absolute;
+  background-color: #FCFCFC;
+  width: 16px;
+  height: 2px;
+}
+
+#draw-marker .slot {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 23px;
+  padding: 2px;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+}
+
+#draw-marker .allocated-slot {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
 }
 
 input[type=button] {

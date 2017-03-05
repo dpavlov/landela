@@ -22,6 +22,9 @@ export default class Offset {
     add(offset) {
         return new Offset(this.xOffset + offset.xOffset, this.yOffset + offset.yOffset);
     }
+    subtract(offset) {
+        return new Offset(this.xOffset - offset.xOffset, this.yOffset - offset.yOffset);
+    }
     toString() {
         return "[" + this.xOffset + " x " + this.yOffset + "]";
     }

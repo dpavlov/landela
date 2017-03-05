@@ -21,6 +21,12 @@ export default class Point {
     withMultiplier(k) {
         return new Point(this.x * k, this.y * k);
     }
+    static random(min, max) {
+      return new Point(
+        Math.random() * (max - min) + min, 
+        Math.random() * (max - min) + min
+      );
+    }
     toString() {
         return "[" + (this.x | 0) + " x " + (this.y | 0) + "]";
     }
