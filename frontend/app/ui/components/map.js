@@ -164,7 +164,7 @@ export class Map extends React.Component {
 				this.state.viewport.right(delta);
 				break;
 				default:
-				throw new Error("Unexpected direction: " + direction)
+				throw new Error("Unexpected map move direction: " + direction)
 				break;
 			}
 			this.props.onViewportStateChanged && this.props.onViewportStateChanged(this.state.viewport.state());
