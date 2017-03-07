@@ -33,14 +33,6 @@ export default class LinkRender {
     this.ctx.fillStyle = "#222222";
     this.ctx.fillRect(x, y, w, h);
   }
-  line(x1, y1, x2, y2) {
-      this.ctx.beginPath();
-      this.ctx.lineWidth = 2;
-      this.ctx.strokeStyle = '#000000';
-      this.ctx.moveTo(x1, y1);
-      this.ctx.lineTo(x2, y2);
-      this.ctx.stroke();
-  }
   curve(isSelected, x1, y1, x2, y2, cpx1, cpy1, cpx2, cpy2) {
       this.ctx.beginPath();
       this.ctx.lineWidth = 1;
