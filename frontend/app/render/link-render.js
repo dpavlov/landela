@@ -21,9 +21,11 @@ export default class LinkRender {
       if (link.isSelected()) {
         let wControlPoint = this.viewport.withScale(10);
         let hControlPoint = this.viewport.withScale(10);
-        this.ioCanvas.line(sPortCenter, new Point(sPortCenter.x + scpCenter.x, sPortCenter.y - scpCenter.y), '#000000');
+        let scpePoint = new Point(sPortCenter.x + scpCenter.x, sPortCenter.y - scpCenter.y);
+        let ecpePoint = new Point(ePortCenter.x + ecpCenter.x, ePortCenter.y - ecpCenter.y);
+        this.ioCanvas.line(sPortCenter, scpePoint, '#000000');
         this.rectangle(sPortCenter.x + scpCenter.x - wControlPoint / 2, sPortCenter.y - scpCenter.y - hControlPoint / 2, wControlPoint, hControlPoint);
-        this.ioCanvas.line(ePortCenter, new Point(ePortCenter.x + ecpCenter.x, ePortCenter.y - ecpCenter.y), '#000000');
+        this.ioCanvas.line(ePortCenter, ecpePoint, '#000000');
         this.rectangle(ePortCenter.x + ecpCenter.x - wControlPoint / 2, ePortCenter.y - ecpCenter.y - hControlPoint / 2, wControlPoint, hControlPoint);
       }
   }
