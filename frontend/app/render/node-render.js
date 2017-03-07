@@ -20,6 +20,13 @@ export default class NodeRender {
 
     this.text(node.name, nodeCenter.shift(new Offset(0, scaledHeight / 2 + this.viewport.withScale(15))))
 
+    for (var iNodePort = 0; iNodePort < node.ports.length; iNodePort++) {
+      var port = node.ports[iNodePort];
+      var portCenter = this.viewport.portDisplayCenter(port);
+      let pSide = this.viewport.withScale(14)
+      this.roundRect(port, portCenter.x - pSide / 2, portCenter.y - pSide / 2, pSide, pSide, this.viewport.withScale(4));
+    }
+
     if (node.isSelected()) {
       let halfWidth = scaledWidth / 2;
       let underlinePos = nodeCenter.add(new Point(0, halfWidth));
@@ -27,13 +34,6 @@ export default class NodeRender {
         underlinePos.subtract(new Point(halfWidth, 0)),
         underlinePos.add(new Point(halfWidth, 0))
       );
-    }
-
-    for (var iNodePort = 0; iNodePort < node.ports.length; iNodePort++) {
-      var port = node.ports[iNodePort];
-      var portCenter = this.viewport.portDisplayCenter(port);
-      let pSide = this.viewport.withScale(14)
-      this.roundRect(port, portCenter.x - pSide / 2, portCenter.y - pSide / 2, pSide, pSide, this.viewport.withScale(4));
     }
 
   }
@@ -55,7 +55,7 @@ export default class NodeRender {
           underlinePos.add(new Point(halfWidth * (1 - progress), 0))
         );
       },
-      100,
+      500,
       done
     );
   }
@@ -74,7 +74,7 @@ export default class NodeRender {
           underlinePos.add(new Point(halfWidth * progress, 0))
         );
       },
-      100,
+      500,
       done
     );
   }
@@ -104,7 +104,7 @@ export default class NodeRender {
     this.ctx.stroke();
   }
   text(t, s) {
-    this.ctx.font= this.viewport.withScale(16) + "px Tahoma";
+    this.ctx.font= this.viewport.withScale(16) + "px Times";
     this.ctx.fillStyle = "#c0e2f7";
     this.ctx.textAlign="center";
     this.ctx.fillText(t, s.x, s.y);
