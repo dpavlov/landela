@@ -21,7 +21,7 @@ export default class Render {
         }.bind(this));
         let nodeRender = new NodeRender(this.viewport, this.ctx, icons);
         let siteRender = new SiteRender(settings.site, this.viewport, this.ctx, nodeRender);
-        let linkRender = new LinkRender(settings.link, this.viewport, this.ctx);
+        let linkRender = new LinkRender(settings.link, this.viewport, this.ctx, this.ioCanvas);
 		    this.mapRender = new MapRender(this.viewport, this.ctx, siteRender, nodeRender, linkRender);
   		} else {
   			throw "Canvas is not supported"
