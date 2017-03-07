@@ -211,7 +211,6 @@ export class Map extends React.Component {
 								this.props.onSelect(this.selectedSet.nodes());
 							});
 						}
-						this.forceUpdate();
 					} else {
 						let link = this.linksIndex.find(clickPos);
 						if (link) {
