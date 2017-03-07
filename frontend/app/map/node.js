@@ -1,4 +1,5 @@
 import Port from './port';
+import Point from '../geometry/point';
 
 export default class Node {
     constructor(id, name, type, center) {
@@ -42,6 +43,9 @@ export default class Node {
     }
     move(offset) {
       this.center = this.center.shift(offset.yInverse());
+    }
+    moveTo(x, y) {
+      this.center = new Point(x, y);
     }
 };
 

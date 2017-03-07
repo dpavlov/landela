@@ -27,6 +27,12 @@ export default class Render {
   			throw "Canvas is not supported"
   		}
     }
+    animateNodeDeselect(node, update, done) {
+      this.mapRender.nodeRender.animateNodeDeselect(node, update, done);
+    }
+    animateNodeSelect(node, update, done) {
+      this.mapRender.nodeRender.animateNodeSelect(node, update, done);
+    }
     render(map, delayFn) {
     	var sTs = Date.now();
     	this.clean();

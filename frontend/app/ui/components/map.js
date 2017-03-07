@@ -43,7 +43,7 @@ export class Map extends React.Component {
 		let ePort = new Port('41', 'port-1', new Point(-50, -50));
 		this.network = new NetworkMap('m1', 'Network',
 		[
-			new Site('1', 'site-1', new Point(600, 500), 300, 400).attachNodes([
+			new Site('1', 'site-1', new Point(650, 500), 300, 400).attachNodes([
 				new Node('12', 'n12', 'router', new Point(0, 0))
 			]),
 			new Site('2', 'site-2', new Point(-500, 350), 300, 250).attachNodes([
@@ -200,12 +200,16 @@ export class Map extends React.Component {
 					if (node) {
 						if (node.isSelected()) {
 							node.deselect();
-							this.selectedSet.remove(node);
-							this.props.onSelect(this.selectedSet.nodes());
+							this.state.render.animateNodeDeselect(node, () => this.forceUpdate(), () => {
+								this.selectedSet.remove(node);
+								this.props.onSelect(this.selectedSet.nodes());
+							});
 						} else {
-							node.select();
-							this.selectedSet.add(node);
-							this.props.onSelect(this.selectedSet.nodes());
+							this.state.render.animateNodeSelect(node, () => this.forceUpdate(), () => {
+								node.select();
+								this.selectedSet.add(node);
+								this.props.onSelect(this.selectedSet.nodes());
+							});
 						}
 						this.forceUpdate();
 					} else {

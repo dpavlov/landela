@@ -1,4 +1,7 @@
 import Offset from '../geometry/offset';
+import Point from '../geometry/point';
+
+import Animation from '../utils/animation';
 
 export default class NodeRender {
   constructor(viewport, ctx, icons) {
@@ -15,7 +18,16 @@ export default class NodeRender {
 
     this.ctx.drawImage(icon.image, nodeCenter.x - scaledWidth / 2, nodeCenter.y - scaledHeight / 2, scaledWidth, scaledHeight);
 
-    this.text(node.name, nodeCenter.shift(new Offset(0, scaledHeight / 2 + 5)))
+    this.text(node.name, nodeCenter.shift(new Offset(0, scaledHeight / 2 + this.viewport.withScale(15))))
+
+    if (node.isSelected()) {
+      let halfWidth = scaledWidth / 2;
+      let underlinePos = nodeCenter.add(new Point(0, halfWidth));
+      this.line(
+        underlinePos.subtract(new Point(halfWidth, 0)),
+        underlinePos.add(new Point(halfWidth, 0))
+      );
+    }
 
     for (var iNodePort = 0; iNodePort < node.ports.length; iNodePort++) {
       var port = node.ports[iNodePort];
@@ -25,8 +37,49 @@ export default class NodeRender {
     }
 
   }
+  animateNodeDeselect(node, update, done) {
+    let nodeCenter = this.viewport.nodeDisplayCenter(node);
+    let icon = this._selectIcon(node);
+    let { scaledWidth, scaledHeight } = this.viewport.scaledImageSize(icon.image, icon.rescale);
+    let halfWidth = scaledWidth / 2;
+    let underlinePos = nodeCenter.add(new Point(0, scaledHeight / 2));
+    this.line(
+      underlinePos.subtract(new Point(halfWidth, 0)),
+      underlinePos.add(new Point(halfWidth, 0))
+    );
+    Animation.animate(
+      (progress) => {
+        update();
+        this.line(
+          underlinePos.subtract(new Point(halfWidth * (1 - progress), 0)),
+          underlinePos.add(new Point(halfWidth * (1 - progress), 0))
+        );
+      },
+      100,
+      done
+    );
+  }
+  animateNodeSelect(node, update, done) {
+    let nodeCenter = this.viewport.nodeDisplayCenter(node);
+    let icon = this._selectIcon(node);
+    let { scaledWidth, scaledHeight } = this.viewport.scaledImageSize(icon.image, icon.rescale);
+    let halfWidth = scaledWidth / 2;
+    let underlinePos = nodeCenter.add(new Point(0, scaledHeight / 2));
+    this.line(underlinePos, underlinePos);
+    Animation.animate(
+      (progress) => {
+        update();
+        this.line(
+          underlinePos.subtract(new Point(halfWidth * progress, 0)),
+          underlinePos.add(new Point(halfWidth * progress, 0))
+        );
+      },
+      100,
+      done
+    );
+  }
   _selectIcon(node) {
-    if (node.isSelected()) {
+    if (node.isSelected() && this.icons[node.type + ".selected"]) {
       return this._selectIconForCurrentScale(this.icons[node.type + ".selected"]);
     } else {
       return this._selectIconForCurrentScale(this.icons[node.type + ".normal"]);
@@ -41,6 +94,14 @@ export default class NodeRender {
       }
     }
     return icons[src[0]];
+  }
+  line(s, e) {
+    this.ctx.beginPath();
+    this.ctx.moveTo(s.x, s.y);
+    this.ctx.lineTo(e.x, e.y);
+    this.ctx.lineWidth = 3;
+    this.ctx.strokeStyle = 'yellow';
+    this.ctx.stroke();
   }
   text(t, s) {
     this.ctx.font= this.viewport.withScale(16) + "px Tahoma";

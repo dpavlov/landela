@@ -16,6 +16,7 @@ export default class IOCanvas {
   }
   line(sPoint, ePoint, color) {
     this.ctx.beginPath();
+    this.ctx.lineWidth = 1;
     this.ctx.moveTo(sPoint.x, sPoint.y);
     this.ctx.lineTo(ePoint.x, ePoint.y);
     if (color) {

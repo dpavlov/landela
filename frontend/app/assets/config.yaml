@@ -5,34 +5,59 @@ settings:
       max: 3
       step: 0.25
     sizes:
-      router: [128, 128]
-      switch: [128, 128]
+      router: [96, 96]
+      switch: [96, 96]
+      host: [96, 96]
+      notebook: [96, 96]
+      firewall: [96, 96]
+      database: [96, 96]
+      basestation: [96, 96]
     icons:
       router:
         normal:
-          'icons/network/router/router-32x32.png': 0 - 0.25, 4
-          'icons/network/router/router-64x64.png': 0.25 - 0.5, 2
-          'icons/network/router/router-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/router/router-128x128.png': 0.75 - 5, 1
-        selected:
-          'icons/network/router/router.selected-32x32.png': 0 - 0.25, 4
-          'icons/network/router/router.selected-64x64.png': 0.25 - 0.5, 2
-          'icons/network/router/router.selected-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/router/router.selected-128x128.png': 0.75 - 5, 1
+          'icons/network/router/router-48x48.png': 0 - 0.5, 2
+          'icons/network/router/router-72x72.png': 0.5 - 0.75, 1.5
+          'icons/network/router/router-96x96.png': 0.75 - 1.5, 1
+          'icons/network/router/router-128x128.png': 1.5 - 5, 0.5
       switch:
         normal:
-          'icons/network/switch/switch-32x32.png': 0 - 0.25, 4
-          'icons/network/switch/switch-64x64.png': 0.25 - 0.5, 2
-          'icons/network/switch/switch-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/switch/switch-128x128.png': 0.75 - 5, 1
-        selected:
-          'icons/network/switch/switch.selected-32x32.png': 0 - 0.25, 4
-          'icons/network/switch/switch.selected-64x64.png': 0.25 - 0.5, 2
-          'icons/network/switch/switch.selected-96x96.png': 0.5 - 0.75, 1.5
-          'icons/network/switch/switch.selected-128x128.png': 0.75 - 5, 1
+          'icons/network/switch/switch-48x48.png': 0 - 0.5, 2
+          'icons/network/switch/switch-72x72.png': 0.5 - 0.75, 1.5
+          'icons/network/switch/switch-96x96.png': 0.75 - 1.5, 1
+          'icons/network/switch/switch-128x128.png': 1.5 - 5, 0.5
+      host:
+        normal:
+          'icons/network/host/host-48x48.png': 0 - 0.5, 2
+          'icons/network/host/host-72x72.png': 0.5 - 0.75, 1.5
+          'icons/network/host/host-96x96.png': 0.75 - 1.5, 1
+          'icons/network/host/host-128x128.png': 1.5 - 5, 0.5
+      notebook:
+        normal:
+          'icons/network/notebook/notebook-48x48.png': 0 - 0.5, 2
+          'icons/network/notebook/notebook-72x72.png': 0.5 - 0.75, 1.5
+          'icons/network/notebook/notebook-96x96.png': 0.75 - 1.5, 1
+          'icons/network/notebook/notebook-128x128.png': 1.5 - 5, 0.5
+      firewall:
+        normal:
+          'icons/network/firewall/firewall-48x48.png': 0 - 0.5, 2
+          'icons/network/firewall/firewall-72x72.png': 0.5 - 0.75, 1.5
+          'icons/network/firewall/firewall-96x96.png': 0.75 - 1.5, 1
+          'icons/network/firewall/firewall-128x128.png': 1.5 - 5, 0.5
+      database:
+        normal:
+          'icons/network/database/database-48x48.png': 0 - 0.5, 2
+          'icons/network/database/database-72x72.png': 0.5 - 0.75, 1.5
+          'icons/network/database/database-96x96.png': 0.75 - 1.5, 1
+          'icons/network/database/database-128x128.png': 1.5 - 5, 0.5
+      basestation:
+        normal:
+          'icons/network/basestation/basestation-48x48.png': 0 - 0.5, 2
+          'icons/network/basestation/basestation-72x72.png': 0.5 - 0.75, 1.5
+          'icons/network/basestation/basestation-96x96.png': 0.75 - 1.5, 1
+          'icons/network/basestation/basestation-128x128.png': 1.5 - 5, 0.5
     render:
       grid:
-        step: 150
+        step: 50
         display: true
         x-axis:
           text-align: 'left'
@@ -52,8 +77,28 @@ settings:
         switch:
           name: 'Switch'
           code: 'SW'
+        host:
+          name: 'Host'
+          code: 'HOST'
+        notebook:
+          name: 'Notebook'
+          code: 'NB'
+        firewall:
+          name: 'Firewall'
+          code: 'FW'
+        database:
+          name: 'Database'
+          code: 'DB'
+        basestation:
+          name: 'Basestation'
+          code: 'BS'
       slots-allocation:
         router: 1
         switch: 2
+        host: 3
+        notebook: 4
+        firewall: 5
+        database: 6
+        basestation: 7
     site:
     link:
