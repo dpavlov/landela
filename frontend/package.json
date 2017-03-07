@@ -1,8 +1,8 @@
 {
-  "name": "brunch-app",
-  "description": "Brunch.io application",
+  "name": "landela",
+  "description": "Landela application",
   "private": true,
-  "author": "Brunch",
+  "author": "Dmitry Pavlov <dm.pavlov@inbox.ru>",
   "version": "0.0.1",
   "repository": "",
   "scripts": {
