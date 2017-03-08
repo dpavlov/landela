@@ -22,12 +22,12 @@ export default class Selection {
     } else if (target instanceof Node) {
       if (target.isSelected()) {
         target.deselect();
-        this.render.deselectNode(target, updateCallback, () => {
+        this.render.deselect(target, updateCallback, () => {
           this.selectedSet.remove(target);
           doneCallback(this.selectedSet);
         });
       } else {
-        this.render.selectNode(target, updateCallback, () => {
+        this.render.select(target, updateCallback, () => {
           target.select();
           this.selectedSet.add(target);
           doneCallback(this.selectedSet);
@@ -43,8 +43,14 @@ export default class Selection {
     }	else if (target instanceof Site) {
       if (target.isSelected()) {
         target.deselect();
+        this.render.deselect(target, updateCallback, () => {
+          doneCallback(this.selectedSet);
+        });
       } else {
-        target.select();
+        this.render.select(target, updateCallback, () => {
+          target.select();
+          doneCallback(this.selectedSet);
+        });
       }
       doneCallback(this.selectedSet);
     }

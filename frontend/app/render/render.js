@@ -30,11 +30,11 @@ export default class Render {
   			throw "Canvas is not supported"
   		}
     }
-    selectNode(node, updateCallback, doneCallback) {
-      this.selectionAnimation.selectNode(node, updateCallback, doneCallback);
+    select(target, updateCallback, doneCallback) {
+      this.selectionAnimation.select(target, updateCallback, doneCallback);
     }
-    deselectNode(node, updateCallback, doneCallback) {
-      this.selectionAnimation.deselectNode(node, updateCallback, doneCallback);
+    deselect(target, updateCallback, doneCallback) {
+      this.selectionAnimation.deselect(target, updateCallback, doneCallback);
     }
     render(map, delayFn) {
     	var sTs = Date.now();

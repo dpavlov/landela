@@ -41,5 +41,15 @@ export default class SiteRender {
         var node = site.nodes[iNode];
         this.nodeRender.render(node);
     }
+
+    if (site.isSelected()) {
+      let halfWidth = w / 2;
+      let halfHeight = h / 2;
+      let paddingBottom = this.viewport.withScale(5);
+      let sUnderlinePoint = siteCenter.shift(new Offset(- halfWidth, halfHeight + paddingBottom));
+      let eUnderlinePoint = siteCenter.shift(new Offset(halfWidth, halfHeight + paddingBottom))
+      let underlineStyle = { lineWidth: 3, strokeStyle: 'yellow' };
+      this.ioCanvas.line(sUnderlinePoint, eUnderlinePoint, underlineStyle);
+    }
   }
 };
