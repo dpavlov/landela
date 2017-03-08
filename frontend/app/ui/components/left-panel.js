@@ -1,5 +1,4 @@
 import React from 'react';
-import Drawer from 'material-ui/Drawer';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import Avatar from 'material-ui/Avatar';
@@ -12,7 +11,18 @@ import Node from '../../map/node';
 export default class LeftPanel extends React.Component {
 
   static defaultProps = {
+    open: false,
     targets: []
+  }
+  constructor(props) {
+    super(props);
+    this.state = {
+      style: { display: props.open ? 'block' : 'none' }
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({style : { ...this.state.style, display: nextProps.open ? 'block' : 'none' }});
   }
 
   title = (target) => {
@@ -35,7 +45,7 @@ export default class LeftPanel extends React.Component {
 
   renderTarget = (t) => {
     return (
-        <Card key={t.id}>
+        <Card key={t.id} style={{marginBottom: '10px'}}>
           <CardHeader
             title={this.title(t)}
             subtitle={this.description(t)}
@@ -73,12 +83,10 @@ export default class LeftPanel extends React.Component {
 
 	render() {
 		return (
-			<div id='left-panel'>
-					<Drawer width={400} openSecondary={true} open={this.props.open} >
-          {
-            this.props.targets.map(function(t){ return this.renderTarget(t); }.bind(this))
-          }
-        	</Drawer>
+			<div id='left-panel' style={this.state.style}>
+      {
+        this.props.targets.map(function(t){ return this.renderTarget(t); }.bind(this))
+      }
 			</div>
 		);
 	}
