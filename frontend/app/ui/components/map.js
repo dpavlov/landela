@@ -44,21 +44,21 @@ export class Map extends React.Component {
 		this.network = new NetworkMap('m1', 'Network',
 		[
 			new Site('1', '2079 Hart Country Lane', new Point(650, 500), 300, 400).attachNodes([
-				new Node('12', 'n12', 'router', new Point(0, 0))
+				new Node('12', 'r1.example.com', 'router', new Point(0, 0))
 			]),
 			new Site('2', '1783 Romrog Way', new Point(-500, 350), 300, 250).attachNodes([
-				new Node('21', 'n21', 'router', new Point(50, 50))
+				new Node('21', 'r2.example.com', 'router', new Point(50, 50))
 			])
 		], [
-			new Node('1', 'n1', 'router', new Point(100, 100)).attachPorts(
+			new Node('1', 'r3.example.com', 'router', new Point(100, 100)).attachPorts(
 				[
 					sPort,
 					new Port('12', 'port-2', new Point(-50, -50))
 				]
 			),
-			new Node('2', 'n2', 'router', new Point(100, 300)),
-			new Node('3', 'n3', 'router', new Point(350, 100)),
-			new Node('4', 'n4', 'router', new Point(400, 400)).attachPorts([
+			new Node('2', 'r4.example.com', 'router', new Point(100, 300)),
+			new Node('3', 'r5.example.com', 'router', new Point(350, 100)),
+			new Node('4', 'r6.example.com', 'router', new Point(400, 400)).attachPorts([
 				new Port('42', 'port-2', new Point(50, 50)),
 				ePort
 			])

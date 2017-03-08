@@ -2,6 +2,7 @@ import Grid from './grid';
 import MapRender from './map-render';
 import SiteRender from './site-render';
 import NodeRender from './node-render';
+import PortRender from './port-render';
 import LinkRender from './link-render';
 import IOCanvas from './io-canvas';
 
@@ -19,10 +20,11 @@ export default class Render {
           this.grid.scale(scale);
           this.grid.offset(offset);
         }.bind(this));
-        let nodeRender = new NodeRender(this.viewport, this.ctx, icons);
-        let siteRender = new SiteRender(settings.site, this.viewport, this.ctx, nodeRender);
-        let linkRender = new LinkRender(settings.link, this.viewport, this.ctx, this.ioCanvas);
-		    this.mapRender = new MapRender(this.viewport, this.ctx, siteRender, nodeRender, linkRender);
+        let portRender = new PortRender(this.viewport, this.ioCanvas);
+        let nodeRender = new NodeRender(this.viewport, icons, this.ioCanvas, portRender);
+        let siteRender = new SiteRender(settings.site, this.viewport, this.ioCanvas, nodeRender);
+        let linkRender = new LinkRender(settings.link, this.viewport, this.ioCanvas);
+		    this.mapRender = new MapRender(this.viewport, siteRender, nodeRender, linkRender);
   		} else {
   			throw "Canvas is not supported"
   		}

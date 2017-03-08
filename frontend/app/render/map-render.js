@@ -1,6 +1,5 @@
 export default class MapRender {
-    constructor(viewport, ctx, siteRender, nodeRender, linkRender) {
-        this.ctx = ctx;
+    constructor(viewport, siteRender, nodeRender, linkRender) {
         this.viewport = viewport;
         this.siteRender = siteRender;
         this.nodeRender = nodeRender;

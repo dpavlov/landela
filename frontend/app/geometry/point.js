@@ -9,6 +9,12 @@ export default class Point {
     subtract(other) {
         return new Point(this.x - other.x, this.y - other.y);
     }
+    xInverse() {
+        return new Point(-this.x, this.y);
+    }
+    yInverse() {
+        return new Point(this.x, -this.y);
+    }
     shift(offset) {
     	return new Point(this.x + offset.xOffset, this.y + offset.yOffset);
     }
@@ -23,7 +29,7 @@ export default class Point {
     }
     static random(min, max) {
       return new Point(
-        Math.random() * (max - min) + min, 
+        Math.random() * (max - min) + min,
         Math.random() * (max - min) + min
       );
     }
