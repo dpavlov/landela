@@ -43,10 +43,10 @@ export class Map extends React.Component {
 		let ePort = new Port('41', 'port-1', new Point(-50, -50));
 		this.network = new NetworkMap('m1', 'Network',
 		[
-			new Site('1', 'site-1', new Point(650, 500), 300, 400).attachNodes([
+			new Site('1', '2079 Hart Country Lane', new Point(650, 500), 300, 400).attachNodes([
 				new Node('12', 'n12', 'router', new Point(0, 0))
 			]),
-			new Site('2', 'site-2', new Point(-500, 350), 300, 250).attachNodes([
+			new Site('2', '1783 Romrog Way', new Point(-500, 350), 300, 250).attachNodes([
 				new Node('21', 'n21', 'router', new Point(50, 50))
 			])
 		], [

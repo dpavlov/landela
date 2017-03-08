@@ -13,7 +13,14 @@ export default class SiteRender {
     let w = this.viewport.withScale(site.width);
     let h = this.viewport.withScale(site.height);
     this.roundRect(siteCenter.x - w / 2, siteCenter.y - h / 2, w, h, this.viewport.withScale(20));
-    this.text(site.name, new Point(siteCenter.x - w / 2 + this.viewport.withScale(20), siteCenter.y + h / 2 - this.viewport.withScale(10)));
+    let sTextPoint = new Point(
+      siteCenter.x - w / 2 + this.viewport.withScale(20),
+      siteCenter.y + h / 2 - this.viewport.withScale(10)
+    );
+    this.ctx.font = this.viewport.withScale(16) + "px Times";
+    let textWidth = Math.min(this.ctx.measureText(site.name).width + this.viewport.withScale(10), w  - this.viewport.withScale(35));
+    this.rectangle(sTextPoint.x - this.viewport.withScale(3), sTextPoint.y - this.viewport.withScale(22), textWidth, this.viewport.withScale(30));
+    this.text(site.name, sTextPoint);
     for (var iNode = 0; iNode < site.nodes.length; iNode++) {
         var node = site.nodes[iNode];
         this.nodeRender.render(node);
@@ -25,6 +32,10 @@ export default class SiteRender {
     this.ctx.fillStyle = "#c0e2f7";
     this.ctx.textAlign="left";
     this.ctx.fillText(t, s.x, s.y);
+  }
+  rectangle(x, y, w, h) {
+    this.ctx.fillStyle = "#9c27b0";
+    this.ctx.fillRect(x, y, w, h);
   }
   roundRect(x, y, width, height, r) {
     let radius = {tl: r, tr: r, br: r, bl: r};
