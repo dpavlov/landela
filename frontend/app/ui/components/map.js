@@ -5,22 +5,21 @@ import { connect } from 'react-redux'
 import DomUtils from '../utils/dom-utils';
 
 import MapGenerator from '../../map/gen/simple-map-generator';
-import Node from '../../map/node';
-import NodeSet from '../../map/node-set';
 
 import Point from '../../geometry/point';
 import Offset from '../../geometry/offset';
 import Viewport from '../../viewport/viewport';
 import Render from '../../render/render';
 
-import Bezier from '../../utils/bezier';
 import NodeIcons from '../../utils/node-icons';
 
 import Zoomer from './zoomer';
 import Navigator from './navigator';
 import DrawMarker from './draw-marker/draw-marker';
 
-import CoordinateIndex from '../../map/indexes/coordinate-index';
+import Indexes from './indexes';
+
+import Selection from './selection'
 
 export class Map extends React.Component {
 
@@ -38,12 +37,8 @@ export class Map extends React.Component {
 	constructor() {
 		super();
 		this.network = MapGenerator.generate();
-		this.selectedSet = new NodeSet();
-		this.sitesIndex = null;
-		this.nodesIndex = null;
-		this.portsIndex = null;
-		this.linksIndex = null;
-		this.linkControlsIndex = null;
+		this.selection = null;
+		this.indexes = null;
 	}
 	componentDidMount() {
 		window.addEventListener('resize', this.onResize.bind(this), false);
@@ -57,36 +52,9 @@ export class Map extends React.Component {
 
 		viewport.resize(width, height);
 
-		this.sitesIndex = new CoordinateIndex(this.network.sites, site => site.bounds());
-		this.nodesIndex = new CoordinateIndex(this.network.nodes.concat(this.network.siteNodes()), node => node.bounds(this.props.settings.sizes[node.type]));
-		this.portsIndex = new CoordinateIndex(this.network.ports(), port => port.bounds());
-		this.linksIndex = new CoordinateIndex(this.network.links, link => {
-			let sPortCenter = viewport.portDisplayCenter(link.sPort);
-			let ePortCenter = viewport.portDisplayCenter(link.ePort);
-			let cp1 = new Point(sPortCenter.x + link.sControlPoint.center.x, sPortCenter.y - link.sControlPoint.center.y);
-			let cp2 = new Point(ePortCenter.x + link.eControlPoint.center.x, ePortCenter.y - link.eControlPoint.center.y);
-			let curve = new Bezier(sPortCenter, cp1, cp2, ePortCenter);
-			return curve.bounds();
-		}, (point, link) => {
-			let sPortCenter = viewport.portDisplayCenter(link.sPort);
-			let ePortCenter = viewport.portDisplayCenter(link.ePort);
-			let cp1 = new Point(sPortCenter.x + link.sControlPoint.center.x, sPortCenter.y - link.sControlPoint.center.y);
-			let cp2 = new Point(ePortCenter.x + link.eControlPoint.center.x, ePortCenter.y - link.eControlPoint.center.y);
-			let curve = new Bezier(sPortCenter, cp1, cp2, ePortCenter);
-			var p = curve.project(point);
-			return Math.abs(p.x - point.x) < 5 && Math.abs(p.y - point.y) < 5;
-		});
-		this.linkControlsIndex = new CoordinateIndex(this.network.linkControls(), control => {
-			var portCenter = control.port.absCenter();
-			let wControlPoint = 10;
-			let hControlPoint = 10;
-			return {
-				x: portCenter.x + control.center.x - wControlPoint / 2,
-				y: portCenter.y + control.center.y - hControlPoint / 2,
-				width: wControlPoint,
-				height: hControlPoint
-			};
-		});
+		this.indexes = new Indexes(viewport, this.network, icons);
+
+		this.selection = new Selection(render);
 
 		this.props.onViewportStateChanged && this.props.onViewportStateChanged(viewport.state());
 
@@ -155,97 +123,38 @@ export class Map extends React.Component {
 		this.state.viewport.move(offset);
 		this.forceUpdate();
 	}
+	getMouseRealPoint(e) {
+		let xOffset = DomUtils.offsetLeft(this.refs.stage);
+		let yOffset = DomUtils.offsetTop(this.refs.stage);
+		return this.state.viewport.toRealPosition(
+			new Point(e.nativeEvent.clientX - xOffset, e.nativeEvent.clientY - yOffset)
+		);
+	}
 	onMouseClick(e) {
 		if (this.state.movingState !== 'moving') {
-			if (this.nodesIndex && this.state.viewport) {
-				let xOffset = DomUtils.offsetLeft(this.refs.stage);
-				let yOffset = DomUtils.offsetTop(this.refs.stage);
-				let clickPos = new Point(e.nativeEvent.clientX - xOffset, e.nativeEvent.clientY - yOffset);
-				let port = this.portsIndex.find(this.state.viewport.toRealPosition(clickPos));
-				if (port) {
-					if (port.isSelected()) {
-						port.deselect();
-					} else {
-						port.select();
-					}
-					this.forceUpdate();
-				} else {
-					let node = this.nodesIndex.find(this.state.viewport.toRealPosition(clickPos));
-					if (node) {
-						if (node.isSelected()) {
-							node.deselect();
-							this.state.render.deselectNode(node, () => this.forceUpdate(), () => {
-								this.selectedSet.remove(node);
-								this.props.onSelect(this.selectedSet.nodes());
-							});
-						} else {
-							this.state.render.selectNode(node, () => this.forceUpdate(), () => {
-								node.select();
-								this.selectedSet.add(node);
-								this.props.onSelect(this.selectedSet.nodes());
-							});
-						}
-					} else {
-						let link = this.linksIndex.find(clickPos);
-						if (link) {
-							if (link.isSelected()) {
-								link.deselect();
-							} else {
-								link.select();
-							}
-							this.forceUpdate();
-						} else {
-							let site = this.sitesIndex.find(this.state.viewport.toRealPosition(clickPos));
-							if (site) {
-								if (site.isSelected()) {
-									site.deselect();
-								} else {
-									site.select();
-								}
-								this.forceUpdate();
-							}
-						}
-					}
+			if (this.state.viewport) {
+				let target = this.indexes.findByPoint(this.getMouseRealPoint(e));
+				if (target) {
+					this.selection.select(target, this.forceUpdate.bind(this), (selectedSet) => {
+						this.props.onSelect(selectedSet.nodes());
+						this.forceUpdate();
+					})
 				}
 			}
 		} else {
 			if (this.state.movingTarget !== 'map') {
-				if (this.state.movingTarget instanceof Node) {
-					this.nodesIndex.remove(this.state.movingTarget);
-					this.nodesIndex.insert(this.state.movingTarget);
-				} else if (this.state.movingTarget instanceof Site) {
-					this.sitesIndex.remove(this.state.movingTarget);
-					this.sitesIndex.insert(this.state.movingTarget);
-				}
+				this.indexes.update(this.state.movingTarget);
 			}
 		}
 		this.setState({movingState: null, xMove: 0, yMove: 0});
 	}
 
 	onMouseDown(e) {
-		let xOffset = DomUtils.offsetLeft(this.refs.stage);
-		let yOffset = DomUtils.offsetTop(this.refs.stage);
-		let clickPos = new Point(e.nativeEvent.clientX - xOffset, e.nativeEvent.clientY - yOffset);
-		let linkControl = this.linkControlsIndex.find(this.state.viewport.toRealPosition(clickPos));
-		if (linkControl) {
-			this.setState({movingState: 'init', movingTarget: linkControl, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
+		let target = this.indexes.findByPoint(this.getMouseRealPoint(e));
+		if (target) {
+			this.setState({movingState: 'init', movingTarget: target, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
 		} else {
-			let port = this.portsIndex.find(this.state.viewport.toRealPosition(clickPos));
-			if (port) {
-				this.setState({movingState: 'init', movingTarget: port, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
-			} else {
-				let node = this.nodesIndex.find(this.state.viewport.toRealPosition(clickPos));
-				if (node) {
-					this.setState({movingState: 'init', movingTarget: node, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
-				} else {
-					let site = this.sitesIndex.find(this.state.viewport.toRealPosition(clickPos));
-					if (site) {
-						this.setState({movingState: 'init', movingTarget: site, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
-					} else {
-						this.setState({movingState: 'init', movingTarget: 'map', xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
-					}
-				}
-			}
+			this.setState({movingState: 'init', movingTarget: 'map', xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
 		}
 	}
 

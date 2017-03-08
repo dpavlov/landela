@@ -10,6 +10,10 @@ export default class NodeIcons {
       return this._selectIconForCurrentScale(this.icons[node.type + ".normal"]);
     }
   }
+  sizeFor(node) {
+    let icon = this.getIconFor(node);
+    return [icon.image.width, icon.image.height];
+  }
   _selectIconForCurrentScale(icons) {
     let src = Object.keys(icons);
     for (var i = 0; i < src.length; i++) {
