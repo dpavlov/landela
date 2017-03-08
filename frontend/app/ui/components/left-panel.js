@@ -54,8 +54,8 @@ export default class LeftPanel extends React.Component {
             showExpandableButton={true}
           />
           <CardActions>
-            <FlatButton label="Action1" />
-            <FlatButton label="Action2" />
+            <FlatButton label="Deselect" />
+            <FlatButton label="Delete" secondary={true} />
           </CardActions>
           <CardText expandable={true}>
             <TextField hintText="Name" floatingLabelText="Name" defaultValue={t.name} onChange={this.onTargetNameChanged(t)}/>
