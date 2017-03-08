@@ -4,16 +4,16 @@ import Point from '../geometry/point';
 import Animation from '../utils/animation';
 
 export default class NodeRender {
-  constructor(viewport, icons, ioCanvas, portRender) {
-    this.icons = icons;
-    this.ioCanvas = ioCanvas;
+  constructor(viewport, ioCanvas, icons, portRender) {
     this.viewport = viewport;
+    this.ioCanvas = ioCanvas;
+    this.icons = icons;
     this.portRender = portRender;
   }
   render(node) {
     var nodeCenter = this.viewport.nodeDisplayCenter(node);
 
-    let icon = this._selectIcon(node);
+    let icon = this.icons.getIconFor(node);
 
     let { scaledWidth, scaledHeight } = this.viewport.scaledImageSize(icon.image, icon.rescale);
 
@@ -29,11 +29,6 @@ export default class NodeRender {
     };
     this.ioCanvas.text(node.name, labelPoint, labelStyle)
 
-    for (var iNodePort = 0; iNodePort < node.ports.length; iNodePort++) {
-      var port = node.ports[iNodePort];
-      this.portRender.render(port);
-    }
-
     if (node.isSelected()) {
       let halfWidth = scaledWidth / 2;
       let halfHeight = scaledHeight / 2;
@@ -42,63 +37,10 @@ export default class NodeRender {
       let underlineStyle = { lineWidth: 3, strokeStyle: 'yellow' };
       this.ioCanvas.line(sUnderlinePoint, eUnderlinePoint, underlineStyle);
     }
-  }
-  animateNodeDeselect(node, update, done) {
-    let nodeCenter = this.viewport.nodeDisplayCenter(node);
-    let icon = this._selectIcon(node);
-    let { scaledWidth, scaledHeight } = this.viewport.scaledImageSize(icon.image, icon.rescale);
-    let halfWidth = scaledWidth / 2;
-    let halfHeight = scaledHeight / 2;
-    let sUnderlinePoint = nodeCenter.shift(new Offset(- halfWidth, halfHeight));
-    let eUnderlinePoint = nodeCenter.shift(new Offset(halfWidth, halfHeight));
-    let underlineStyle = { lineWidth: 3, strokeStyle: 'yellow' };
-    this.ioCanvas.line(sUnderlinePoint, eUnderlinePoint, underlineStyle);
-    Animation.animate(
-      (progress) => {
-        update();
-        let sUnderlinePoint = nodeCenter.shift(new Offset(- halfWidth * (1 - progress), halfHeight));
-        let eUnderlinePoint = nodeCenter.shift(new Offset(halfWidth * (1 - progress), halfHeight));
-        this.ioCanvas.line(sUnderlinePoint, eUnderlinePoint, underlineStyle);
-      },
-      500,
-      done
-    );
-  }
-  animateNodeSelect(node, update, done) {
-    let nodeCenter = this.viewport.nodeDisplayCenter(node);
-    let icon = this._selectIcon(node);
-    let { scaledWidth, scaledHeight } = this.viewport.scaledImageSize(icon.image, icon.rescale);
-    let halfWidth = scaledWidth / 2;
-    let halfHeight = scaledHeight / 2;
-    let centerUnderlinePoint = nodeCenter.shift(new Offset(0, halfHeight));
-    let underlineStyle = { lineWidth: 3, strokeStyle: 'yellow' };
-    this.ioCanvas.line(centerUnderlinePoint, centerUnderlinePoint, underlineStyle);
-    Animation.animate(
-      (progress) => {
-        update();
-        let sUnderlinePoint = centerUnderlinePoint.shift(new Offset(- halfWidth * progress, 0));
-        let eUnderlinePoint = centerUnderlinePoint.shift(new Offset(halfWidth * progress, 0));
-        this.ioCanvas.line(sUnderlinePoint, eUnderlinePoint, underlineStyle);
-      },
-      500,
-      done
-    );
-  }
-  _selectIcon(node) {
-    if (node.isSelected() && this.icons[node.type + ".selected"]) {
-      return this._selectIconForCurrentScale(this.icons[node.type + ".selected"]);
-    } else {
-      return this._selectIconForCurrentScale(this.icons[node.type + ".normal"]);
+
+    for (var iNodePort = 0; iNodePort < node.ports.length; iNodePort++) {
+      var port = node.ports[iNodePort];
+      this.portRender.render(port);
     }
-  }
-  _selectIconForCurrentScale(icons) {
-    let src = Object.keys(icons);
-    for (var i = 0; i < src.length; i++) {
-      let iconProps = icons[src[i]];
-      if (this.viewport.isScaleInRange(iconProps.scaleRange)) {
-        return iconProps;
-      }
-    }
-    return icons[src[0]];
   }
 };

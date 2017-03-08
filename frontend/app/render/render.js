@@ -5,6 +5,7 @@ import NodeRender from './node-render';
 import PortRender from './port-render';
 import LinkRender from './link-render';
 import IOCanvas from './io-canvas';
+import SelectionAnimation from './selection-animation';
 
 export default class Render {
     constructor(settings, viewport, canvas, icons) {
@@ -15,13 +16,13 @@ export default class Render {
 		    this.ctx = canvas.getContext('2d');
         this.ioCanvas = new IOCanvas(this.ctx);
 		    this.grid = new Grid(this.settings.grid, this.ioCanvas);
-
+        this.selectionAnimation = new SelectionAnimation(viewport, this.ioCanvas, icons);
         this.viewport.subscribe(function(scale, offset) {
           this.grid.scale(scale);
           this.grid.offset(offset);
         }.bind(this));
         let portRender = new PortRender(this.viewport, this.ioCanvas);
-        let nodeRender = new NodeRender(this.viewport, icons, this.ioCanvas, portRender);
+        let nodeRender = new NodeRender(this.viewport, this.ioCanvas, icons, portRender);
         let siteRender = new SiteRender(settings.site, this.viewport, this.ioCanvas, nodeRender);
         let linkRender = new LinkRender(settings.link, this.viewport, this.ioCanvas);
 		    this.mapRender = new MapRender(this.viewport, siteRender, nodeRender, linkRender);
@@ -29,11 +30,11 @@ export default class Render {
   			throw "Canvas is not supported"
   		}
     }
-    animateNodeDeselect(node, update, done) {
-      this.mapRender.nodeRender.animateNodeDeselect(node, update, done);
+    selectNode(node, updateCallback, doneCallback) {
+      this.selectionAnimation.selectNode(node, updateCallback, doneCallback);
     }
-    animateNodeSelect(node, update, done) {
-      this.mapRender.nodeRender.animateNodeSelect(node, update, done);
+    deselectNode(node, updateCallback, doneCallback) {
+      this.selectionAnimation.deselectNode(node, updateCallback, doneCallback);
     }
     render(map, delayFn) {
     	var sTs = Date.now();

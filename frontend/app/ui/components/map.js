@@ -4,11 +4,8 @@ import { connect } from 'react-redux'
 
 import DomUtils from '../utils/dom-utils';
 
-import NetworkMap from '../../map/map';
+import MapGenerator from '../../map/gen/simple-map-generator';
 import Node from '../../map/node';
-import Site from '../../map/site';
-import Port from '../../map/port';
-import Link from '../../map/link';
 import NodeSet from '../../map/node-set';
 
 import Point from '../../geometry/point';
@@ -17,6 +14,7 @@ import Viewport from '../../viewport/viewport';
 import Render from '../../render/render';
 
 import Bezier from '../../utils/bezier';
+import NodeIcons from '../../utils/node-icons';
 
 import Zoomer from './zoomer';
 import Navigator from './navigator';
@@ -39,32 +37,7 @@ export class Map extends React.Component {
 
 	constructor() {
 		super();
-		let sPort = new Port('11', 'port-1', new Point(50, 50));
-		let ePort = new Port('41', 'port-1', new Point(-50, -50));
-		this.network = new NetworkMap('m1', 'Network',
-		[
-			new Site('1', '2079 Hart Country Lane', new Point(650, 500), 300, 400).attachNodes([
-				new Node('12', 'r1.example.com', 'router', new Point(0, 0))
-			]),
-			new Site('2', '1783 Romrog Way', new Point(-500, 350), 300, 250).attachNodes([
-				new Node('21', 'r2.example.com', 'router', new Point(50, 50))
-			])
-		], [
-			new Node('1', 'r3.example.com', 'router', new Point(100, 100)).attachPorts(
-				[
-					sPort,
-					new Port('12', 'port-2', new Point(-50, -50))
-				]
-			),
-			new Node('2', 'r4.example.com', 'router', new Point(100, 300)),
-			new Node('3', 'r5.example.com', 'router', new Point(350, 100)),
-			new Node('4', 'r6.example.com', 'router', new Point(400, 400)).attachPorts([
-				new Port('42', 'port-2', new Point(50, 50)),
-				ePort
-			])
-		], [
-			new Link('l1', sPort, ePort)
-		]);
+		this.network = MapGenerator.generate();
 		this.selectedSet = new NodeSet();
 		this.sitesIndex = null;
 		this.nodesIndex = null;
@@ -77,7 +50,8 @@ export class Map extends React.Component {
 		window.addEventListener('keydown', this.handleKeyDown.bind(this), false);
 
 		let viewport = new Viewport(this.refs.stage.width, this.refs.stage.height);
-		let render = new Render(this.props.settings.render, viewport, this.refs.stage, this.props.icons.icons);
+		let icons = new NodeIcons(this.props.icons.icons, viewport.isScaleInRange.bind(viewport));
+		let render = new Render(this.props.settings.render, viewport, this.refs.stage, icons);
 		let width = DomUtils.width(this.refs.mapContainer);
 		let height = DomUtils.height(this.refs.mapContainer);
 
@@ -200,12 +174,12 @@ export class Map extends React.Component {
 					if (node) {
 						if (node.isSelected()) {
 							node.deselect();
-							this.state.render.animateNodeDeselect(node, () => this.forceUpdate(), () => {
+							this.state.render.deselectNode(node, () => this.forceUpdate(), () => {
 								this.selectedSet.remove(node);
 								this.props.onSelect(this.selectedSet.nodes());
 							});
 						} else {
-							this.state.render.animateNodeSelect(node, () => this.forceUpdate(), () => {
+							this.state.render.selectNode(node, () => this.forceUpdate(), () => {
 								node.select();
 								this.selectedSet.add(node);
 								this.props.onSelect(this.selectedSet.nodes());
