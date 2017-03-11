@@ -60,23 +60,23 @@ export default class Indexes {
     }
   }
   findByPoint(point) {
-    let linkControl = this.linkControls.find(point);
+    let linkControl = this.linkControls.find(point.real);
 		if (linkControl) {
 			return linkControl;
 		} else {
-      let port = this.ports.find(point);
+      let port = this.ports.find(point.real);
       if (port) {
         return port;
       } else {
-        let node = this.nodes.find(point);
+        let node = this.nodes.find(point.real);
         if (node) {
           return node;
         } else {
-          let link = this.links.find(point);
+          let link = this.links.find(point.disp);
           if (link) {
             return link;
           } else {
-            let site = this.sites.find(point);
+            let site = this.sites.find(point.real);
             if (site) {
               return site;
             } else {

@@ -126,9 +126,8 @@ export class Map extends React.Component {
 	getMouseRealPoint(e) {
 		let xOffset = DomUtils.offsetLeft(this.refs.stage);
 		let yOffset = DomUtils.offsetTop(this.refs.stage);
-		return this.state.viewport.toRealPosition(
-			new Point(e.nativeEvent.clientX - xOffset, e.nativeEvent.clientY - yOffset)
-		);
+		let point = new Point(e.nativeEvent.clientX - xOffset, e.nativeEvent.clientY - yOffset);
+		return { disp: point, real: this.state.viewport.toRealPosition(point) };
 	}
 	onMouseClick(e) {
 		if (this.state.movingState !== 'moving') {
