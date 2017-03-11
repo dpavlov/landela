@@ -27,10 +27,10 @@ export default class Point {
     withMultiplier(k) {
         return new Point(this.x * k, this.y * k);
     }
-    static random(min, max) {
+    static random(xmin, xmax, ymin, ymax) {
       return new Point(
-        Math.random() * (max - min) + min,
-        Math.random() * (max - min) + min
+        Math.round(Math.random() * (xmax - xmin) + xmin),
+        Math.round(Math.random() * (ymax - ymin) + ymin)
       );
     }
     toString() {

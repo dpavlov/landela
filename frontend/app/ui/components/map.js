@@ -4,10 +4,11 @@ import { connect } from 'react-redux'
 
 import DomUtils from '../utils/dom-utils';
 
-import MapGenerator from '../../map/gen/simple-map-generator';
+import MapGenerator from '../../map/gen/random-map-generator';
 
 import Point from '../../geometry/point';
 import Offset from '../../geometry/offset';
+import Bounds from '../../geometry/bounds';
 import Viewport from '../../viewport/viewport';
 import Render from '../../render/render';
 
@@ -36,7 +37,7 @@ export class Map extends React.Component {
 
 	constructor() {
 		super();
-		this.network = MapGenerator.generate();
+		this.network = MapGenerator.generate(new Bounds(- 1000, -700, 2000, 1400), 15, 0.1);
 		this.selection = null;
 		this.indexes = null;
 	}
