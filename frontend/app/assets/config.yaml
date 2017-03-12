@@ -53,6 +53,12 @@ settings:
           'icons/network/small-network/small-network-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/small-network/small-network-1x.png': 0.75 - 1.5, 1
           'icons/network/small-network/small-network-1.5x.png': 1.5 - 5, 0.66
+      printer:
+        normal:
+          'icons/network/printer/printer-0.5x.png': 0 - 0.5, 2
+          'icons/network/printer/printer-0.75x.png': 0.5 - 0.75, 1.5
+          'icons/network/printer/printer-1x.png': 0.75 - 1.5, 1
+          'icons/network/printer/printer-1.5x.png': 1.5 - 5, 0.66
     render:
       grid:
         step: 50
@@ -97,6 +103,9 @@ settings:
         small-network:
           name: 'Small Network'
           code: 'SNET'
+        printer:
+          name: 'Printer'
+          code: 'PR'
       slots-allocation:
         router: 1
         switch: 2
@@ -106,5 +115,6 @@ settings:
         database: 6
         basestation: 7
         small-network: 8
+        printer: 9
     site:
     link:
