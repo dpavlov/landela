@@ -63,7 +63,7 @@ export default class SlotsAllocator extends React.Component {
   }
 	render() {
 		return (
-          <Table selectable={false}>
+          <Table selectable={false} height={300}>
             <TableBody displayRowCheckbox={false}>
             {
               Object.keys(this.props.nodeTypes).map(nt => {

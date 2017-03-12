@@ -59,6 +59,12 @@ settings:
           'icons/network/printer/printer-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/printer/printer-1x.png': 0.75 - 1.5, 1
           'icons/network/printer/printer-1.5x.png': 1.5 - 5, 0.66
+      wifi-router:
+        normal:
+          'icons/network/wifi-router/wifi-router-0.5x.png': 0 - 0.5, 2
+          'icons/network/wifi-router/wifi-router-0.75x.png': 0.5 - 0.75, 1.5
+          'icons/network/wifi-router/wifi-router-1x.png': 0.75 - 1.5, 1
+          'icons/network/wifi-router/wifi-router-1.5x.png': 1.5 - 5, 0.66
     render:
       grid:
         step: 50
@@ -106,6 +112,9 @@ settings:
         printer:
           name: 'Printer'
           code: 'PR'
+        wifi-router:
+          name: 'Wi-Fi Router'
+          code: 'WIFIR'
       slots-allocation:
         router: 1
         switch: 2
