@@ -1,21 +1,19 @@
 import Offset from './offset';
 export default class Size {
-  width: number
-  height: number
-  constructor(width: number, height: number) {
+  constructor(width, height) {
     this.width = width;
     this.height = height;
   }
-  halfWidth(): number {
+  halfWidth() {
     return this.width / 2;
   }
-  halfHeight(): number {
+  halfHeight() {
     return this.height / 2;
   }
-  half(): Size {
+  half() {
     return new Size(this.halfWidth(), this.halfHeight());
   }
-  toString(): string {
+  toString() {
     return "[" + (this.width | 0) + " x " + (this.height | 0) + "]";
   }
 };

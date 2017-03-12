@@ -1,5 +1,8 @@
+import Size from '../geometry/size';
+import Offset from '../geometry/offset';
 export default class IOCanvas {
-  constructor(ctx) {
+  constructor(canvas, ctx) {
+    this.canvas = canvas;
     this.ctx = ctx;
     this.lineDefaultStyle = { lineWidth: 1, strokeStyle: '#000000' };
     this.textDefaultStyle = {
@@ -12,6 +15,12 @@ export default class IOCanvas {
       strokeStyle: '#ffffff',
       fillStyle: 'rgba(0,0,0, 1)'
     };
+  }
+  clear() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+  size() {
+    return new Size(this.canvas.width, this.canvas.height);
   }
   text(_text, sPoint, style) {
     let compiledStyle = Object.assign(this.textDefaultStyle, style || {})
@@ -77,5 +86,45 @@ export default class IOCanvas {
     let m = this.ctx.measureText(text);
     this.ctx.font = origin;
     return m;
+  }
+  textLines(text, font, maxWidth, lineHeight) {
+    var lines = text.split("\n"), actual = [], maxLineWidth = 0;
+    for (var i = 0; i < lines.length; i++) {
+        var words = lines[i].split(' ');
+        var line = '';
+        for (var n = 0; n < words.length; n++) {
+            var testLine = line + words[n] + ' ';
+            var metrics = this.measureText(font, testLine);
+            var testWidth = metrics.width;
+            if (testWidth > maxWidth && n > 0) {
+                let lineMetrics = this.measureText(font, line)
+                maxLineWidth = lineMetrics.width > maxLineWidth ? lineMetrics.width : maxLineWidth;
+                actual.push({text: line, offset: new Offset(0, lineHeight * actual.length)});
+                line = words[n] + ' ';
+            }
+            else {
+                line = testLine;
+            }
+        }
+        actual.push({text: line, offset: new Offset(0, lineHeight * actual.length)});
+        let lineMetrics = this.measureText(font, line)
+        maxLineWidth = lineMetrics.width > maxLineWidth ? lineMetrics.width : maxLineWidth;
+    }
+    return { lines: actual, maxLineWidth: maxLineWidth };
+  }
+  circle(center, radius, style) {
+    let _style = style || {};
+    let compiledStyle = Object.assign(this.lineDefaultStyle, style || {})
+    this.ctx.beginPath();
+    this.ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI, false);
+    if (_style.fillStyle) {
+      this.ctx.fillStyle = compiledStyle.fillStyle;
+      this.ctx.fill();
+    }
+    if (_style.strokeStyle) {
+      this.ctx.lineWidth = compiledStyle.lineWidth;
+      this.ctx.strokeStyle = compiledStyle.strokeStyle;
+      this.ctx.stroke();
+    }
   }
 }

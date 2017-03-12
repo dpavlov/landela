@@ -12,4 +12,14 @@ export default class Circle {
     var y = 0 + this.radius * Math.sin(angle);
     return new Point(x, y);
   }
+  absPointsOn(total) {
+    let points = [];
+    let angle = 2 * Math.PI / total;
+    for (var i = 0; i < total; i ++) {
+      var x = this.center.x + this.radius * Math.cos(angle * i);
+      var y = this.center.y + this.radius * Math.sin(angle * i);
+      points.push(new Point(x, y));
+    }
+    return points;
+  }
 }

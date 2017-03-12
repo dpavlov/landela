@@ -12,9 +12,11 @@ import ErdosRenyi from './erdos-renyi'
 export default class RandomMapGenerator {
   static generate(bounds, nodesCount, linkProbability) {
     let g = ErdosRenyi.np(nodesCount, linkProbability);
-    let nodes = {};
 
+    let nodes = {};
+    
     g.nodes.forEach(n => nodes[n.id] = RandomMapGenerator.node(n.id, bounds));
+
     let links = g.edges.map(l => {
       let sNode = nodes[l.source];
       let eNode = nodes[l.target];

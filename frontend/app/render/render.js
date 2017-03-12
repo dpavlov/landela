@@ -1,4 +1,5 @@
 import Grid from './grid';
+import Honeycombs from './honeycombs';
 import MapRender from './map-render';
 import SiteRender from './site-render';
 import NodeRender from './node-render';
@@ -11,10 +12,9 @@ export default class Render {
     constructor(settings, viewport, canvas, icons) {
       this.settings = settings;
       this.viewport = viewport;
-    	this.canvas = canvas;
       if (canvas.getContext){
-		    this.ctx = canvas.getContext('2d');
-        this.ioCanvas = new IOCanvas(this.ctx);
+		    let ctx = canvas.getContext('2d');
+        this.ioCanvas = new IOCanvas(canvas, ctx);
 		    this.grid = new Grid(this.settings.grid, this.ioCanvas);
         this.selectionAnimation = new SelectionAnimation(viewport, this.ioCanvas, icons);
         this.viewport.subscribe(function(scale, offset) {
@@ -46,10 +46,10 @@ export default class Render {
       delayFn && delayFn(Date.now() - sTs);
     }
     clean() {
-    	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    	this.ioCanvas.clear();
     }
     _layer0(grid) {
-    	grid.render(this.canvas.width, this.canvas.height);
+    	grid.render(this.ioCanvas.size());
     }
     _layer1(map) {
     	this.mapRender.render(map);

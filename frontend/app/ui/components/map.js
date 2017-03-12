@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import DomUtils from '../utils/dom-utils';
 
-import MapGenerator from '../../map/gen/random-map-generator';
+import MapGenerator from '../../map/gen/simple-map-generator';
 
 import Point from '../../geometry/point';
 import Offset from '../../geometry/offset';

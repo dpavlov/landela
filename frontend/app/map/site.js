@@ -1,3 +1,6 @@
+import Bounds from '../geometry/bounds';
+import Size from '../geometry/size';
+
 export default class Site {
     constructor(id, name, center, width, height) {
         this.id = id;
@@ -18,7 +21,10 @@ export default class Site {
       return this;
     }
     bounds() {
-			return { x: this.center.x - this.width / 2, y: this.center.y - this.height / 2, width: this.width, height: this.height };
+			return Bounds.fromCenter(this.center, new Size(this.width, this.height));
+    }
+    size(mul) {
+      return new Size(this.width * (mul || 1), this.height * (mul || 1));
     }
     isSelected() {
       return this.state === SiteState.SELECTED;

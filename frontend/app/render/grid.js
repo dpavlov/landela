@@ -25,19 +25,20 @@ export default class Grid {
     );
     return alignedOffset.subtract(offset);
   }
-  render(wStage, hStage) {
-
-    let topCenter = new Point(wStage / 2, 0).xShift(this._offset);
-    let bottomCenter = new Point(wStage / 2, hStage).xShift(this._offset);
-    let leftCenter = new Point(0, hStage / 2).yShift(this._offset);
-    let rightCenter = new Point(wStage, hStage / 2).yShift(this._offset)
+  render(stageSize) {
+    let hwStage = stageSize.halfWidth();
+    let hhStage = stageSize.halfHeight();
+    let topCenter = new Point(hwStage, 0).xShift(this._offset);
+    let bottomCenter = new Point(hwStage, stageSize.height).xShift(this._offset);
+    let leftCenter = new Point(0, hhStage).yShift(this._offset);
+    let rightCenter = new Point(stageSize.width, hhStage).yShift(this._offset)
 
     let axisStyle = { lineWidth: 1, strokeStyle: "rgba(255,255,255,0.3)" };
 
     this.ioCanvas.line(topCenter, bottomCenter, axisStyle);
     this.ioCanvas.line(leftCenter, rightCenter, axisStyle);
 
-    let stageCenter = new Point((wStage / 2), (hStage / 2))
+    let stageCenter = new Point((hwStage), (hhStage))
     let ziroLabelPoint = stageCenter.shift(new Offset(3, -3).withMultiplier(this._scale)).shift(this._offset)
     let ziroLabelStyle = {
       font: (this._scale * 10) + "px Tahoma",
@@ -50,12 +51,12 @@ export default class Grid {
     let xAxis = this.settings['x-axis'];
     let yAxis = this.settings['y-axis'];
 
-    var wGridStep = this.settings.step * this._scale;
+    var wGridStep = this.step();
 
-    var vLeftGridTotal = ((wStage / 2) - this._offset.xOffset) / wGridStep;
-    var vRightGridTotal = ((wStage / 2) + this._offset.xOffset) / wGridStep;
-    var hTopGridTotal = ((hStage / 2) - this._offset.yOffset) / wGridStep;
-    var hBottomGridTotal = ((hStage / 2) + this._offset.yOffset) / wGridStep;
+    var vLeftGridTotal = (hwStage - this._offset.xOffset) / wGridStep;
+    var vRightGridTotal = (hwStage + this._offset.xOffset) / wGridStep;
+    var hTopGridTotal = (hhStage - this._offset.yOffset) / wGridStep;
+    var hBottomGridTotal = (hhStage + this._offset.yOffset) / wGridStep;
 
     let xAxisLabelStyle = {
       font: (this._scale * xAxis['font-size']) + "px " + xAxis['font-famaly'],
@@ -65,24 +66,24 @@ export default class Grid {
     let xAxisGridLineStyle = {lineWidth: 1, strokeStyle: "rgba(255,255,255,0.1)"};
 
     for (var i = 1; i < vLeftGridTotal; i++) {
-      let svGridLinePoint = new Point(wStage / 2 + i * wGridStep, 0).xShift(this._offset);
-      let evGridLinePoint = new Point(wStage / 2 + i * wGridStep, hStage).xShift(this._offset)
+      let svGridLinePoint = new Point(hwStage + i * wGridStep, 0).xShift(this._offset);
+      let evGridLinePoint = new Point(hwStage + i * wGridStep, stageSize.height).xShift(this._offset)
       this.ioCanvas.line(svGridLinePoint, evGridLinePoint, xAxisGridLineStyle);
 
       let gridLabel = this.settings.step * i;
-      let sGridLabelPoint = new Point(wStage / 2 + i * wGridStep, hStage / 2)
+      let sGridLabelPoint = new Point(hwStage + i * wGridStep, hhStage)
         .shift(new Offset(3, 10).withMultiplier(this._scale))
         .shift(this._offset)
       this.ioCanvas.text(gridLabel, sGridLabelPoint, xAxisLabelStyle);
     }
 
     for (var i = 1; i < vRightGridTotal; i++) {
-      let svGridLinePoint = new Point(wStage / 2 - i * wGridStep, 0).xShift(this._offset);
-      let evGridLinePoint = new Point(wStage / 2 - i * wGridStep, hStage).xShift(this._offset);
+      let svGridLinePoint = new Point(hwStage - i * wGridStep, 0).xShift(this._offset);
+      let evGridLinePoint = new Point(hwStage - i * wGridStep, stageSize.height).xShift(this._offset);
       this.ioCanvas.line(svGridLinePoint, evGridLinePoint, xAxisGridLineStyle);
 
       let gridLabel = -this.settings.step * i;
-      let sGridLabelPoint = new Point(wStage / 2 - i * wGridStep, hStage / 2)
+      let sGridLabelPoint = new Point(hwStage - i * wGridStep, hhStage)
         .shift(new Offset(3, 10).withMultiplier(this._scale))
         .shift(this._offset);
       this.ioCanvas.text(gridLabel, sGridLabelPoint, xAxisLabelStyle);
@@ -96,12 +97,12 @@ export default class Grid {
     let yAxisGridLineStyle = {lineWidth: 1, strokeStyle: "rgba(255,255,255,0.1)"};
 
     for (var i = 1; i < hTopGridTotal; i++) {
-      let shGridLinePoint = new Point(0, hStage / 2 + i * wGridStep).yShift(this._offset);
-      let ehGridLinePoint = new Point(wStage, hStage / 2 + i * wGridStep).yShift(this._offset);
+      let shGridLinePoint = new Point(0, hhStage + i * wGridStep).yShift(this._offset);
+      let ehGridLinePoint = new Point(stageSize.width, hhStage + i * wGridStep).yShift(this._offset);
       this.ioCanvas.line(shGridLinePoint, ehGridLinePoint, yAxisGridLineStyle);
 
       let gridLabel = -this.settings.step * i;
-      let sGridLabelPoint = new Point(wStage / 2, hStage / 2 + i * wGridStep)
+      let sGridLabelPoint = new Point(hwStage, hhStage + i * wGridStep)
         .shift(new Offset(3, 10).withMultiplier(this._scale))
         .shift(this._offset)
 
@@ -109,12 +110,12 @@ export default class Grid {
     }
 
     for (var i = 1; i < hBottomGridTotal; i++) {
-      let shGridLinePoint = new Point(0, hStage / 2 - i * wGridStep).yShift(this._offset);
-      let ehGridLinePoint = new Point(wStage, hStage / 2 - i * wGridStep).yShift(this._offset);
+      let shGridLinePoint = new Point(0, hhStage - i * wGridStep).yShift(this._offset);
+      let ehGridLinePoint = new Point(stageSize.width, hhStage - i * wGridStep).yShift(this._offset);
       this.ioCanvas.line(shGridLinePoint, ehGridLinePoint, yAxisGridLineStyle);
 
       let gridLabel = this.settings.step * i;
-      let sGridLabelPoint = new Point(wStage / 2, hStage / 2 - i * wGridStep)
+      let sGridLabelPoint = new Point(hwStage, hhStage - i * wGridStep)
         .shift(new Offset(3, 10).withMultiplier(this._scale))
         .shift(this._offset)
 

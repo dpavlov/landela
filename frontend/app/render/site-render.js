@@ -9,47 +9,57 @@ export default class SiteRender {
     this.nodeRender = nodeRender;
   }
   render(site) {
-    var siteCenter = this.viewport.siteDisplayCenter(site);
-    let w = this.viewport.withScale(site.width);
-    let h = this.viewport.withScale(site.height);
-    let radius = this.viewport.withScale(20);
-    let sitePoint = siteCenter.shift(new Offset(- w / 2, - h / 2));
-    let siteStyle = { lineWidth: 1, strokeStyle: '#c0e2f7' };
-    this.ioCanvas.roundedRectangle(sitePoint, w, h, radius, siteStyle);
+    let siteCenter = this.viewport.siteDisplayCenter(site);
+    let siteSize = site.size(this.viewport.scale());
+    let siteTopLeftPoint = siteCenter.shift(new Offset(- siteSize.halfWidth(), - siteSize.halfHeight()));
 
-    let labelPaddingLeft = this.viewport.withScale(20);
-    let labelPaddingBottom = this.viewport.withScale(10);
+    let radius = this.viewport.withScale(this.settings.radius);
+    let siteStyle = { lineWidth: this.settings.lineWidth, strokeStyle: this.settings.strokeStyle };
 
-    let labelPoint = siteCenter.shift(new Offset(- w / 2 + labelPaddingLeft, h / 2 - labelPaddingBottom));
+    this.ioCanvas.roundedRectangle(siteTopLeftPoint, siteSize.width, siteSize.height, radius, siteStyle);
 
-    let labelFont = this.viewport.withScale(16) + "px Times";
-
-    let textWidth = Math.min(
-      this.ioCanvas.measureText(labelFont, site.name).width + this.viewport.withScale(10),
-      w  - this.viewport.withScale(35)
-    );
-    let textHeight = this.viewport.withScale(30);
-    let labelBackgroundPoint = labelPoint.shift(new Offset(- this.viewport.withScale(3), - this.viewport.withScale(22)));
-    let labelBackgroundStyle = {fillStyle: "#9c27b0"};
-    this.ioCanvas.rectangle(labelBackgroundPoint, textWidth, textHeight, labelBackgroundStyle);
-
+    let fontSize = this.viewport.withScale(14);
+    let labelFont = fontSize + "px Times";
     let labelStyle = { font: labelFont, fillStyle: "#c0e2f7", textAlign: "left" };
+    let labelPadding = {
+      left: this.viewport.withScale(5),
+      right: this.viewport.withScale(5),
+      top: this.viewport.withScale(5),
+      bottom: this.viewport.withScale(5)
+    }
 
-    this.ioCanvas.text(site.name, labelPoint, labelStyle);
+    let maxLabelWidth = siteSize.width - 2 * radius - labelPadding.left - labelPadding.right;
+
+    let textHeight = fontSize + this.viewport.withScale(2);
+    let lineHeight = textHeight + this.viewport.withScale(2);
+
+    let {lines, maxLineWidth} = this.ioCanvas.textLines(site.name, labelFont, maxLabelWidth, textHeight);
+
+    let topLeft = this.labelBackground(siteCenter, siteSize, radius, labelPadding, maxLineWidth, lineHeight, lines.length);
+    this.label(topLeft, labelPadding, lines, lineHeight, textHeight, labelStyle);
 
     for (var iNode = 0; iNode < site.nodes.length; iNode++) {
         var node = site.nodes[iNode];
         this.nodeRender.render(node);
     }
+  }
+  labelBackground(siteCenter, siteSize, radius, labelPadding, maxLineWidth, lineHeight, linesTotal) {
+    let backgroundWidth = labelPadding.left + maxLineWidth + labelPadding.right;
+    let backgroundHeight = labelPadding.top + lineHeight * linesTotal + labelPadding.bottom;
+    let labelBackgroundTolLeftPoint = siteCenter.shift(new Offset( - siteSize.halfWidth() + radius, siteSize.halfHeight() - backgroundHeight));
 
-    if (site.isSelected()) {
-      let halfWidth = w / 2;
-      let halfHeight = h / 2;
-      let paddingBottom = this.viewport.withScale(5);
-      let sUnderlinePoint = siteCenter.shift(new Offset(- halfWidth, halfHeight + paddingBottom));
-      let eUnderlinePoint = siteCenter.shift(new Offset(halfWidth, halfHeight + paddingBottom))
-      let underlineStyle = { lineWidth: 3, strokeStyle: 'yellow' };
-      this.ioCanvas.line(sUnderlinePoint, eUnderlinePoint, underlineStyle);
-    }
+    let labelBackgroundStyle = {fillStyle: "#9c27b0"};
+
+    this.ioCanvas.rectangle(labelBackgroundTolLeftPoint, backgroundWidth, backgroundHeight, labelBackgroundStyle);
+
+    return labelBackgroundTolLeftPoint;
+  }
+
+  label(topLeft, labelPadding, lines, lineHeight, textHeight, labelStyle) {
+    let labelStartPoint = topLeft.shift(new Offset(labelPadding.left,labelPadding.top));
+    lines.forEach(line => {
+      let pos = labelStartPoint.shift(line.offset).shift(new Offset(0, lineHeight - textHeight * 0.25));
+      this.ioCanvas.text(line.text, pos, labelStyle);
+    });
   }
 };
