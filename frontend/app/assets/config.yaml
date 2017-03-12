@@ -10,49 +10,49 @@ settings:
           'icons/network/router/router-48x48.png': 0 - 0.5, 2
           'icons/network/router/router-72x72.png': 0.5 - 0.75, 1.5
           'icons/network/router/router-96x96.png': 0.75 - 1.5, 1
-          'icons/network/router/router-128x128.png': 1.5 - 5, 0.5
+          'icons/network/router/router-128x128.png': 1.5 - 5, 0.66
       switch:
         normal:
           'icons/network/switch/switch-48x48.png': 0 - 0.5, 2
           'icons/network/switch/switch-72x72.png': 0.5 - 0.75, 1.5
           'icons/network/switch/switch-96x96.png': 0.75 - 1.5, 1
-          'icons/network/switch/switch-128x128.png': 1.5 - 5, 0.5
+          'icons/network/switch/switch-128x128.png': 1.5 - 5, 0.66
       host:
         normal:
           'icons/network/host/host-48x48.png': 0 - 0.5, 2
           'icons/network/host/host-72x72.png': 0.5 - 0.75, 1.5
           'icons/network/host/host-96x96.png': 0.75 - 1.5, 1
-          'icons/network/host/host-128x128.png': 1.5 - 5, 0.5
+          'icons/network/host/host-128x128.png': 1.5 - 5, 0.66
       notebook:
         normal:
           'icons/network/notebook/notebook-48x48.png': 0 - 0.5, 2
           'icons/network/notebook/notebook-72x72.png': 0.5 - 0.75, 1.5
           'icons/network/notebook/notebook-96x96.png': 0.75 - 1.5, 1
-          'icons/network/notebook/notebook-128x128.png': 1.5 - 5, 0.5
+          'icons/network/notebook/notebook-128x128.png': 1.5 - 5, 0.66
       firewall:
         normal:
           'icons/network/firewall/firewall-48x48.png': 0 - 0.5, 2
           'icons/network/firewall/firewall-72x72.png': 0.5 - 0.75, 1.5
           'icons/network/firewall/firewall-96x96.png': 0.75 - 1.5, 1
-          'icons/network/firewall/firewall-128x128.png': 1.5 - 5, 0.5
+          'icons/network/firewall/firewall-128x128.png': 1.5 - 5, 0.66
       database:
         normal:
           'icons/network/database/database-48x48.png': 0 - 0.5, 2
           'icons/network/database/database-72x72.png': 0.5 - 0.75, 1.5
           'icons/network/database/database-96x96.png': 0.75 - 1.5, 1
-          'icons/network/database/database-128x128.png': 1.5 - 5, 0.5
+          'icons/network/database/database-128x128.png': 1.5 - 5, 0.66
       basestation:
         normal:
           'icons/network/basestation/basestation-48x48.png': 0 - 0.5, 2
           'icons/network/basestation/basestation-72x72.png': 0.5 - 0.75, 1.5
           'icons/network/basestation/basestation-96x96.png': 0.75 - 1.5, 1
-          'icons/network/basestation/basestation-128x128.png': 1.5 - 5, 0.5
+          'icons/network/basestation/basestation-128x128.png': 1.5 - 5, 0.66
       small-network:
         normal:
           'icons/network/small-network/small-network-0.5x.png': 0 - 0.5, 2
           'icons/network/small-network/small-network-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/small-network/small-network-1x.png': 0.75 - 1.5, 1
-          'icons/network/small-network/small-network-1.5x.png': 1.5 - 5, 0.5
+          'icons/network/small-network/small-network-1.5x.png': 1.5 - 5, 0.66
     render:
       grid:
         step: 50
