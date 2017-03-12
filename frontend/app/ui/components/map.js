@@ -15,6 +15,7 @@ import Render from '../../render/render';
 import NodeIcons from '../../utils/node-icons';
 import StateMachine from '../../utils/state-machine';
 import Site from '../../map/site';
+import Node from '../../map/node';
 
 import Zoomer from './zoomer';
 import Navigator from './navigator';
@@ -92,7 +93,7 @@ export class Map extends React.Component {
 		let realPos = this.viewport.toRealPosition(new Point(x, y));
 		let newNode = new Node('n' + Math.random(), name, aType, realPos);
 		this.network.nodes.push(newNode);
-		this.nodesIndex.insert(newNode);
+		this.indexes.nodes.insert(newNode);
 		this.forceUpdate();
 	}
 	onMapZoom(delta) {

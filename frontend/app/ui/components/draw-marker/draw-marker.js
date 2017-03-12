@@ -89,7 +89,7 @@ export default class DrawMarker extends React.Component {
     return slots;
   }
   handleResize() {
-    if (this.props.container) {
+    if (this.props.container && this.refs.vline && this.refs.hline) {
       let width = DomUtils.width(this.props.container);
       let height = DomUtils.height(this.props.container);
       let vLineWidth = DomUtils.width(this.refs.vline);
