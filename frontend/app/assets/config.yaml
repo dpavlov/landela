@@ -4,14 +4,6 @@ settings:
       min: 0.01
       max: 2
       step: 0.01
-    sizes:
-      router: [96, 96]
-      switch: [96, 96]
-      host: [96, 96]
-      notebook: [96, 96]
-      firewall: [96, 96]
-      database: [96, 96]
-      basestation: [96, 96]
     icons:
       router:
         normal:
@@ -55,6 +47,12 @@ settings:
           'icons/network/basestation/basestation-72x72.png': 0.5 - 0.75, 1.5
           'icons/network/basestation/basestation-96x96.png': 0.75 - 1.5, 1
           'icons/network/basestation/basestation-128x128.png': 1.5 - 5, 0.5
+      small-network:
+        normal:
+          'icons/network/small-network/small-network-0.5x.png': 0 - 0.5, 2
+          'icons/network/small-network/small-network-0.75x.png': 0.5 - 0.75, 1.5
+          'icons/network/small-network/small-network-1x.png': 0.75 - 1.5, 1
+          'icons/network/small-network/small-network-1.5x.png': 1.5 - 5, 0.5
     render:
       grid:
         step: 50
@@ -96,6 +94,9 @@ settings:
         basestation:
           name: 'Basestation'
           code: 'BS'
+        small-network:
+          name: 'Small Network'
+          code: 'SNET'
       slots-allocation:
         router: 1
         switch: 2
@@ -104,5 +105,6 @@ settings:
         firewall: 5
         database: 6
         basestation: 7
+        small-network: 8
     site:
     link:

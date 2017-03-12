@@ -12,6 +12,15 @@ export default class SimpleMapGenerator {
     let sPort = new Port('11', 'port-1', new Point(50, 50));
 		let ePort = new Port('41', 'port-1', new Point(-50, -50));
 
+    let nsPort = new Port('42', 'port-2', new Point(-50, 50));
+
+    let n4 = new Node('4', 'r6.example.com', 'router', new Point(400, 400));
+
+    let nPort = new Port('111', 'port-2', new Point(50, -50));
+    let network = new Node('41', 'SDH', 'small-network', new Point(100, 700));
+
+    network.attachPort(nPort);
+
     return new Map('m1', 'Network',
 		[
 			new Site('1', 'Unated States Of America, New York, 2079 Hart Country Lane', new Point(650, 500), 300, 400).attachNodes([
@@ -29,12 +38,14 @@ export default class SimpleMapGenerator {
 			),
 			new Node('2', 'r4.example.com', 'router', new Point(100, 300)),
 			new Node('3', 'r5.example.com', 'router', new Point(350, 100)),
-			new Node('4', 'r6.example.com', 'router', new Point(400, 400)).attachPorts([
-				new Port('42', 'port-2', new Point(50, 50)),
+			n4.attachPorts([
+				nsPort,
 				ePort
-			])
+			]),
+      network
 		], [
-			new Link('l1', sPort, ePort, new Point(50, 50), new Point(-50, -50))
+			new Link('l1', sPort, ePort, new Point(50, 50), new Point(-50, -50)),
+      new Link('l1', nPort, nsPort, new Point(50, -50), new Point(-50, 50))
 		]);
   }
 }

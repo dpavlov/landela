@@ -20,14 +20,7 @@ export default class NodeRender {
     let iconPoint = nodeCenter.shift(new Offset(- scaledWidth / 2, - scaledHeight / 2));
 
     this.ioCanvas.image(icon.image, iconPoint, scaledWidth, scaledHeight);
-
-    let labelPoint = nodeCenter.shift(new Offset(0, scaledHeight / 2 + this.viewport.withScale(15)));
-    let labelStyle = {
-      font: this.viewport.withScale(16) + "px Times",
-      fillStyle: "#c0e2f7",
-      textAlign: "center"
-    };
-    this.ioCanvas.text(node.name, labelPoint, labelStyle)
+    this.label(node, nodeCenter, scaledWidth, scaledHeight);
 
     if (node.isSelected()) {
       let halfWidth = scaledWidth / 2;
@@ -41,6 +34,20 @@ export default class NodeRender {
     for (var iNodePort = 0; iNodePort < node.ports.length; iNodePort++) {
       var port = node.ports[iNodePort];
       this.portRender.render(port);
+    }
+  }
+
+  label(node, nodeCenter, scaledWidth, scaledHeight) {
+    let labelStyle = {
+      font: this.viewport.withScale(16) + "px Times",
+      fillStyle: "#c0e2f7",
+      textAlign: "center"
+    };
+    if (node.type === 'small-network') {
+      this.ioCanvas.text(node.name, nodeCenter, { ... labelStyle,  fillStyle: "#9c27b0"});
+    } else {
+      let labelPoint = nodeCenter.shift(new Offset(0, scaledHeight / 2 + this.viewport.withScale(15)));
+      this.ioCanvas.text(node.name, labelPoint, labelStyle)
     }
   }
 };
