@@ -6,6 +6,18 @@ export default class Offset {
     inverse() {
         return new Offset(-this.xOffset, -this.yOffset);
     }
+    half() {
+        return new Offset(this.xOffset / 2, this.yOffset / 2);
+    }
+    quad() {
+        return new Offset(this.xOffset / 4, this.yOffset / 4);
+    }
+    xReset() {
+        return new Offset(0, this.yOffset);
+    }
+    yReset() {
+        return new Offset(this.xOffset, 0);
+    }
     xInverse() {
         return new Offset(-this.xOffset, this.yOffset);
     }

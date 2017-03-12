@@ -13,6 +13,8 @@ import Viewport from '../../viewport/viewport';
 import Render from '../../render/render';
 
 import NodeIcons from '../../utils/node-icons';
+import StateMachine from '../../utils/state-machine';
+import Site from '../../map/site';
 
 import Zoomer from './zoomer';
 import Navigator from './navigator';
@@ -26,13 +28,6 @@ export class Map extends React.Component {
 
 	state = {
 		container: null,
-		render: null,
-		viewport: null,
-		movingState: null,
-		movingTarget: null,
-		xMove: 0,
-		yMove: 0,
-		renderDelay: 0
 	};
 
 	constructor() {
@@ -40,77 +35,94 @@ export class Map extends React.Component {
 		this.network = MapGenerator.generate(new Bounds(- 1000, -700, 2000, 1400), 15, 0.1);
 		this.selection = null;
 		this.indexes = null;
+		this._render = null;
+		this.viewport = null;
+
+		this._draggingParams = {target: null, xMove: 0, yMove: 0};
+		this._dragging = new StateMachine('init', [
+			{event: 'move-target-selected', from: 'init', to: 'ready-to-move'},
+			{event: 'moved', from: 'ready-to-move', to: 'moving'},
+			{event: 'left-resize-target-selected', from: 'init', to: 'ready-to-left-resize'},
+			{event: 'resized', from: 'ready-to-left-resize', to: 'left-resizing'},
+			{event: 'right-resize-target-selected', from: 'init', to: 'ready-to-right-resize'},
+			{event: 'resized', from: 'ready-to-right-resize', to: 'right-resizing'},
+			{event: 'top-resize-target-selected', from: 'init', to: 'ready-to-top-resize'},
+			{event: 'resized', from: 'ready-to-top-resize', to: 'top-resizing'},
+			{event: 'bottom-resize-target-selected', from: 'init', to: 'ready-to-bottom-resize'},
+			{event: 'resized', from: 'ready-to-bottom-resize', to: 'bottom-resizing'},
+			{event: 'reset', from: '*', to: 'init'}
+		]);
 	}
 	componentDidMount() {
 		window.addEventListener('resize', this.onResize.bind(this), false);
 		window.addEventListener('keydown', this.handleKeyDown.bind(this), false);
 
-		let viewport = new Viewport(this.refs.stage.width, this.refs.stage.height);
-		let icons = new NodeIcons(this.props.icons.icons, viewport.isScaleInRange.bind(viewport));
-		let render = new Render(this.props.settings.render, viewport, this.refs.stage, icons);
+		this.viewport = new Viewport(this.refs.stage.width, this.refs.stage.height);
+		let icons = new NodeIcons(this.props.icons.icons, this.viewport.isScaleInRange.bind(this.viewport));
+		this._render = new Render(this.props.settings.render, this.viewport, this.refs.stage, icons);
 		let width = DomUtils.width(this.refs.mapContainer);
 		let height = DomUtils.height(this.refs.mapContainer);
 
-		viewport.resize(width, height);
+		this.viewport.resize(width, height);
 
-		this.indexes = new Indexes(viewport, this.network, icons);
+		this.indexes = new Indexes(this.viewport, this.network, icons);
 
-		this.selection = new Selection(render);
+		this.selection = new Selection(this._render);
 
-		this.props.onViewportStateChanged && this.props.onViewportStateChanged(viewport.state());
+		this.props.onViewportStateChanged && this.props.onViewportStateChanged(this.viewport.state());
 
 		document.addEventListener('mouseout', (e) => this.setState({movingState: null}));
 		document.addEventListener('mousemove', this.onMouseMove.bind(this));
 
-		this.setState({render: render, viewport: viewport, container: this.refs.mapContainer});
+		this.setState({container: this.refs.mapContainer});
 	}
 	componentDidUpdate() {
-		this.state.render.render(this.network, (delay) => console.log(delay));
+		this._render.render(this.network, (delay) => console.log(delay));
 	}
 	onResize() {
 		let width = this.state.container ? DomUtils.width(this.state.container) : 500;
 		let height = this.state.container ? DomUtils.height(this.state.container) : 500;
-		this.state.viewport.resize(width, height);
-		this.props.onViewportStateChanged && this.props.onViewportStateChanged(this.state.viewport.state());
+		this.viewport.resize(width, height);
+		this.props.onViewportStateChanged && this.props.onViewportStateChanged(this.viewport.state());
 		this.forceUpdate();
 	}
 	handleAdd = (aType, name) => {
 		let x = DomUtils.width(this.state.container) / 2;
 		let y = DomUtils.height(this.state.container) / 2;
-		let realPos = this.state.viewport.toRealPosition(new Point(x, y));
+		let realPos = this.viewport.toRealPosition(new Point(x, y));
 		let newNode = new Node('n' + Math.random(), name, aType, realPos);
 		this.network.nodes.push(newNode);
 		this.nodesIndex.insert(newNode);
 		this.forceUpdate();
 	}
 	onMapZoom(delta) {
-		if (this.state.render) {
-			this.state.viewport.zoom(delta);
-			this.props.onViewportStateChanged && this.props.onViewportStateChanged(this.state.viewport.state());
+		if (this._render) {
+			this.viewport.zoom(delta);
+			this.props.onViewportStateChanged && this.props.onViewportStateChanged(this.viewport.state());
 			this.forceUpdate();
 		}
 	}
 	onMapMove(direction) {
-		if (this.state.viewport) {
-			let delta = this.state.render.grid.step();
+		if (this.viewport) {
+			let delta = this._render.grid.step();
 			switch (direction) {
 				case 'up':
-				this.state.viewport.up(delta);
-				break;
+					this.viewport.up(delta);
+					break;
 				case 'dw':
-				this.state.viewport.down(delta);
-				break;
+					this.viewport.down(delta);
+					break;
 				case 'lt':
-				this.state.viewport.left(delta);
-				break;
+					this.viewport.left(delta);
+					break;
 				case 'rt':
-				this.state.viewport.right(delta);
-				break;
+					this.viewport.right(delta);
+					break;
 				default:
-				throw new Error("Unexpected map move direction: " + direction)
-				break;
+					throw new Error("Unexpected map move direction: " + direction)
+					break;
 			}
-			this.props.onViewportStateChanged && this.props.onViewportStateChanged(this.state.viewport.state());
+			this.props.onViewportStateChanged && this.props.onViewportStateChanged(this.viewport.state());
 			this.forceUpdate();
 		}
 	}
@@ -120,19 +132,19 @@ export class Map extends React.Component {
 		return true;
 	}
 	onGridAlign = () => {
-		let offset = this.state.render.grid.align(this.state.viewport.offset());
-		this.state.viewport.move(offset);
+		let offset = this._render.grid.align(this.viewport.offset());
+		this.viewport.move(offset);
 		this.forceUpdate();
 	}
 	getMouseRealPoint(e) {
 		let xOffset = DomUtils.offsetLeft(this.refs.stage);
 		let yOffset = DomUtils.offsetTop(this.refs.stage);
 		let point = new Point(e.nativeEvent.clientX - xOffset, e.nativeEvent.clientY - yOffset);
-		return { disp: point, real: this.state.viewport.toRealPosition(point) };
+		return { disp: point, real: this.viewport.toRealPosition(point) };
 	}
 	onMouseClick(e) {
-		if (this.state.movingState !== 'moving') {
-			if (this.state.viewport) {
+		if (!this._dragging.isAnyOf(['moving', 'left-resizing', 'right-resizing', 'top-resizing', 'bottom-resizing'])) {
+			if (this.viewport) {
 				let target = this.indexes.findByPoint(this.getMouseRealPoint(e));
 				if (target) {
 					this.selection.select(target, this.forceUpdate.bind(this), (selectedSet) => {
@@ -142,34 +154,72 @@ export class Map extends React.Component {
 				}
 			}
 		} else {
-			if (this.state.movingTarget !== 'map') {
-				this.indexes.update(this.state.movingTarget);
+			if (this._draggingParams.target !== 'map') {
+				this.indexes.update(this._draggingParams.target);
 			}
 		}
-		this.setState({movingState: null, xMove: 0, yMove: 0});
+		this._dragging = this._dragging.on('reset');
+		this._draggingParams = {target: null, xMove: 0, yMove: 0};
 	}
 
 	onMouseDown(e) {
-		let target = this.indexes.findByPoint(this.getMouseRealPoint(e));
+		let pos = this.getMouseRealPoint(e);
+		let target = this.indexes.findByPoint(pos);
 		if (target) {
-			this.setState({movingState: 'init', movingTarget: target, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
+			if (target instanceof Site) {
+				if (this._render.mapRender.siteRender.isPointInMoveHandler(target, pos.disp)) {
+					this._draggingParams = {target: target, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY};
+					this._dragging = this._dragging.on('move-target-selected');
+				} else {
+					let handler = this._render.mapRender.siteRender.isPointInResizeHandler(target, pos.disp);
+					if (handler) {
+						this._draggingParams = {target: target, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY};
+						this._dragging = this._dragging.on(handler + '-resize-target-selected');
+					} else {
+						this._draggingParams = {target: 'map', xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY};
+						this._dragging = this._dragging.on('move-target-selected');
+					}
+				}
+			} else {
+				this._draggingParams = {target: target, xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY};
+				this._dragging = this._dragging.on('move-target-selected');
+			}
 		} else {
-			this.setState({movingState: 'init', movingTarget: 'map', xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY});
+			this._draggingParams = {target: 'map', xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY};
+			this._dragging = this._dragging.on('move-target-selected');
 		}
 	}
 
 	onMouseMove(e) {
-		if (this.state.movingState === 'init' || this.state.movingState === 'moving') {
-			let offset = new Offset(e.screenX - this.state.xMove,  e.screenY - this.state.yMove)
-			if (this.state.movingTarget === 'map') {
-				if (this.state.viewport) {
-					this.state.viewport.move(offset);
-				}
+		let offset = new Offset(e.screenX - this._draggingParams.xMove,  e.screenY - this._draggingParams.yMove);
+		let target = this._draggingParams.target;
+		if (this._dragging.is('ready-to-move') || this._dragging.is('moving')) {
+			if (target === 'map') {
+				this.viewport.move(offset);
 			} else {
-				this.state.movingTarget.move(offset.withReverseMultiplier(this.state.viewport.scale()));
+				target.move(offset.withReverseMultiplier(this.viewport.scale()));
 			}
-			this.setState({movingState: 'moving', xMove: e.screenX, yMove: e.screenY})
+			this._dragging = this._dragging.on('moved');
+			this.forceUpdate();
+		} else if (this._dragging.isAnyOf(['ready-to-left-resize', 'left-resizing'])) {
+			target.resize('left', offset.withReverseMultiplier(this.viewport.scale()));
+			this._dragging = this._dragging.on('resized');
+			this.forceUpdate();
+		} else if (this._dragging.isAnyOf(['ready-to-right-resize', 'right-resizing'])) {
+			target.resize('right', offset.withReverseMultiplier(this.viewport.scale()));
+			this._dragging = this._dragging.on('resized');
+			this.forceUpdate();
+		} else if (this._dragging.isAnyOf(['ready-to-top-resize', 'top-resizing'])) {
+			target.resize('top', offset.withReverseMultiplier(this.viewport.scale()));
+			this._dragging = this._dragging.on('resized');
+			this.forceUpdate();
+		} else if (this._dragging.isAnyOf(['ready-to-bottom-resize', 'bottom-resizing'])) {
+			target.resize('bottom', offset.withReverseMultiplier(this.viewport.scale()));
+			this._dragging = this._dragging.on('resized');
+			this.forceUpdate();
 		}
+		this._draggingParams.xMove = e.screenX;
+		this._draggingParams.yMove = e.screenY;
 	}
 
 	render() {

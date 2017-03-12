@@ -26,6 +26,47 @@ export default class Site {
     size(mul) {
       return new Size(this.width * (mul || 1), this.height * (mul || 1));
     }
+    resize(direction, offset) {
+      switch (direction) {
+        case 'left':
+          if(this.width - offset.xOffset >= 200) {
+            let lDelta = offset.yReset().half();
+            this.move(lDelta);
+            this.modeNodes(lDelta);
+            this.width = this.width - offset.xOffset;
+          }
+          break;
+        case 'right':
+          if(this.width + offset.xOffset >= 200) {
+            let rDelta = offset.yReset().half();
+            this.move(rDelta);
+            this.modeNodes(rDelta);
+            this.width = this.width + offset.xOffset;
+          }
+          break;
+        case 'top':
+          if(this.height - offset.yOffset >= 200) {
+            let tDelta = offset.xReset().half();
+            this.move(tDelta);
+            this.modeNodes(tDelta);
+            this.height = this.height - offset.yOffset;
+          }
+          break;
+        case 'bottom':
+          if(this.height + offset.yOffset >= 200) {
+            let bDelta = offset.xReset().half();
+            this.move(bDelta);
+            this.modeNodes(bDelta);
+            this.height = this.height + offset.yOffset;
+          }
+          break;
+      }
+    }
+    modeNodes(offset) {
+      for (var i = 0; i < this.nodes.length; i++) {
+        this.nodes[i].move(offset.inverse());
+      }
+    }
     isSelected() {
       return this.state === SiteState.SELECTED;
     }

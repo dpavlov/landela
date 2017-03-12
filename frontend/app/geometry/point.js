@@ -27,6 +27,11 @@ export default class Point {
     withMultiplier(k) {
         return new Point(this.x * k, this.y * k);
     }
+    distanceTo(point) {
+      let xDelta = this.x - point.x;
+      let yDelta = this.y - point.y;
+      return Math.sqrt(xDelta * xDelta + yDelta * yDelta);
+    }
     static random(xmin, xmax, ymin, ymax) {
       return new Point(
         Math.round(Math.random() * (xmax - xmin) + xmin),
