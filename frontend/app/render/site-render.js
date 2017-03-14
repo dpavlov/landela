@@ -16,7 +16,7 @@ export default class SiteRender {
     let siteTopLeftPoint = siteCenter.shift(new Offset(- siteSize.halfWidth(), - siteSize.halfHeight()));
 
     let radius = this.viewport.withScale(this.settings.radius);
-    let siteStyle = { lineWidth: this.settings.lineWidth, strokeStyle: this.settings.strokeStyle };
+    let siteStyle = { lineWidth: this.settings.lineWidth, strokeStyle: this.settings.strokeStyle, fillStyle: this.settings.fillStyle };
 
     this.ioCanvas.roundedRectangle(siteTopLeftPoint, siteSize.width, siteSize.height, radius, siteStyle);
 
