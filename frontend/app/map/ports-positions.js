@@ -1,29 +1,29 @@
 import Circle from '../geometry/circle';
 
 export default class PortsPositions {
-  constructor(sNode, eNode) {
-    this.sNode = sNode;
-    this.eNode = eNode;
+  constructor(sNodeCenter, eNodeCenter) {
+    this.sNodeCenter = sNodeCenter;
+    this.eNodeCenter = eNodeCenter;
   }
 
-  onLine() {
-    let sNodePortsOrbit = new Circle(this.sNode.center, 60);
-    let eNodePortsOrbit = new Circle(this.eNode.center, 60);
+  onLine(viewport) {
+    let sNodePortsOrbit = new Circle(this.sNodeCenter, 60);
+    let eNodePortsOrbit = new Circle(this.eNodeCenter, 60);
 
-    let sLinkControlOrbit = new Circle(this.sNode.center, 120);
-    let eLinkControlOrbit = new Circle(this.eNode.center, 120);
+    let sLinkControlOrbit = new Circle(this.sNodeCenter, 120);
+    let eLinkControlOrbit = new Circle(this.eNodeCenter, 120);
 
-    let sPortPosition = sNodePortsOrbit.pointOn(sNodePortsOrbit.angleTo(this.eNode.center));
-    let ePortPosition = eNodePortsOrbit.pointOn(eNodePortsOrbit.angleTo(this.sNode.center));
+    let sPortPosition = sNodePortsOrbit.pointOn(sNodePortsOrbit.angleTo(this.eNodeCenter));
+    let ePortPosition = eNodePortsOrbit.pointOn(eNodePortsOrbit.angleTo(this.sNodeCenter));
 
-    let sLinkControlPosition = sLinkControlOrbit.pointOn(sLinkControlOrbit.angleTo(this.eNode.center));
-    let eLinkControlPosition = eLinkControlOrbit.pointOn(eLinkControlOrbit.angleTo(this.sNode.center));
+    let sLinkControlPosition = sLinkControlOrbit.pointOn(sLinkControlOrbit.angleTo(this.eNodeCenter));
+    let eLinkControlPosition = eLinkControlOrbit.pointOn(eLinkControlOrbit.angleTo(this.sNodeCenter));
 
     return {
-      sp: sPortPosition,
-      ep: ePortPosition,
-      slc: sLinkControlPosition,
-      elc: eLinkControlPosition
+      sp: sPortPosition.yInverse(),
+      ep: ePortPosition.yInverse(),
+      slc: sLinkControlPosition.yInverse(),
+      elc: eLinkControlPosition.yInverse()
     };
   }
 

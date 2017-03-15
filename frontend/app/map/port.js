@@ -16,7 +16,9 @@ export default class Port {
 			return { x: center.x - nSize[0]/2, y: center.y - nSize[1] / 2, width: nSize[0], height: nSize[1] };
     }
     absCenter() {
-      return this.node.center.add(this.center);
+      return this.node.site
+        ? this.node.site.center.add(this.node.center.add(this.center))
+        : this.node.center.add(this.center);
     }
     isSelected() {
       return this.state === PortState.SELECTED;

@@ -59,6 +59,18 @@ export default class Indexes {
       this.sites.insert(target);
     }
   }
+	addLinks(links) {
+		for (var i = 0; i < links.length; i ++) {
+			this.links.insert(links[i]);
+			this.linkControls.insert(links[i].sControlPoint);
+			this.linkControls.insert(links[i].eControlPoint);
+		}
+	}
+	addPorts(ports) {
+		for (var i = 0; i < ports.length; i ++) {
+			this.ports.insert(ports[i]);
+		}
+	}
   findByPoint(point) {
     let linkControl = this.linkControls.find(point.real);
 		if (linkControl) {

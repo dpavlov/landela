@@ -32,6 +32,9 @@ export default class Node {
 			     return { x: this.center.x - nSize[0]/2, y: this.center.y - nSize[1] / 2, width: nSize[0], height: nSize[1] };
       }
     }
+    absCenter() {
+      return this.site ? this.site.center.add(this.center) : this.center;
+    }
     isSelected() {
       return this.state === NodeState.SELECTED;
     }

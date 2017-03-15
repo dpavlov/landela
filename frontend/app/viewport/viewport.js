@@ -91,8 +91,14 @@ export default class Viewport {
       return { x: center.x - this.withScale(64), y: center.y - this.withScale(64), width: this.withScale(128), height: this.withScale(128) };
     }
     portDisplayCenter(port) {
-      let nodeCoordinateSystem = new CoordinateSystem(port.node.center.x, port.node.center.y, this.coordinateSystem);
-      return nodeCoordinateSystem.displayCoordinates(port.center);
+      if (port.node.site) {
+        let siteCoordinateSystem = new CoordinateSystem(port.node.site.center.x, port.node.site.center.y, this.coordinateSystem);
+        let nodeCoordinateSystem = new CoordinateSystem(port.node.center.x, port.node.center.y, siteCoordinateSystem);
+        return nodeCoordinateSystem.displayCoordinates(port.center);
+      } else {
+        let nodeCoordinateSystem = new CoordinateSystem(port.node.center.x, port.node.center.y, this.coordinateSystem);
+        return nodeCoordinateSystem.displayCoordinates(port.center);
+      }
     }
     withScale(value) {
       return this.coordinateSystem.withScale(value);

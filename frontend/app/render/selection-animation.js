@@ -8,7 +8,7 @@ export default class SelectionAnimation {
     this.icons = icons;
     this.ioCanvas = ioCanvas;
     this.viewport = viewport;
-    this.duration = 500;
+    this.duration = 300;
     this.underlineStyle = { lineWidth: 3, strokeStyle: 'yellow' };
   }
   select(target, updateCallback, doneCallback) {

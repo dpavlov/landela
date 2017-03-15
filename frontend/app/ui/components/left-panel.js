@@ -3,16 +3,21 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import Avatar from 'material-ui/Avatar';
 import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
 import { purple500 } from 'material-ui/styles/colors';
 import {List, ListItem} from 'material-ui/List';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import Node from '../../map/node';
+import Site from '../../map/site';
 
 export default class LeftPanel extends React.Component {
 
   static defaultProps = {
     open: false,
-    targets: []
+    targets: null
   }
   constructor(props) {
     super(props);
@@ -23,6 +28,34 @@ export default class LeftPanel extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({style : { ...this.state.style, display: nextProps.open ? 'block' : 'none' }});
+  }
+
+  handleLinkTap = (linkType) => {
+    return (e) => {
+      this.props.onMakeLink && this.props.onMakeLink(linkType);
+    }
+  }
+
+  toolbar = () => {
+    return (
+      <Toolbar style={{marginBottom: '5px'}}>
+        {
+          this.toolbarIcons()
+        }
+      </Toolbar>
+    );
+  }
+
+  toolbarIcons() {
+    if (this.props.targets.hasAtLeastNNodes(2)) {
+      return [
+        <IconButton iconClassName="link-by-line-icon" style={{width: 56, height: 56}} onTouchTap={this.handleLinkTap("point-to-point")}/>,
+        <IconButton iconClassName="link-by-tree-icon" style={{width: 56, height: 56}} onTouchTap={this.handleLinkTap("point-to-multipoint")}/>,
+        <IconButton iconClassName="link-by-triangle-icon" style={{width: 56, height: 56}} onTouchTap={this.handleLinkTap("ring")}/>
+      ];
+    } else {
+      return [];
+    }
   }
 
   title = (target) => {
@@ -45,7 +78,7 @@ export default class LeftPanel extends React.Component {
 
   renderTarget = (t) => {
     return (
-        <Card key={t.id} style={{marginBottom: '10px'}}>
+        <Card key={t.id} style={{marginBottom: '5px'}}>
           <CardHeader
             title={this.title(t)}
             subtitle={this.description(t)}
@@ -76,6 +109,14 @@ export default class LeftPanel extends React.Component {
         }
         </List>
       )
+    } else if (t instanceof Site) {
+      return (
+        <List>
+        {
+          t.nodes.map(node => <ListItem key={node.id} primaryText={node.name}/>)
+        }
+        </List>
+      )
     } else {
       return null;
     }
@@ -84,9 +125,19 @@ export default class LeftPanel extends React.Component {
 	render() {
 		return (
 			<div id='left-panel' style={this.state.style}>
+      <ReactCSSTransitionGroup transitionName="fadein" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
       {
-        this.props.targets.map(function(t){ return this.renderTarget(t); }.bind(this))
+        this.toolbar()
       }
+      </ReactCSSTransitionGroup>
+      {
+        this.props.targets.sites().map(function(t){ return this.renderTarget(t); }.bind(this))
+      }
+      <ReactCSSTransitionGroup transitionName="fadein" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+      {
+        this.props.targets.nodes().map(function(t){ return this.renderTarget(t); }.bind(this))
+      }
+      </ReactCSSTransitionGroup>
 			</div>
 		);
 	}

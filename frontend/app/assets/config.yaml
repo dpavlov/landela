@@ -5,6 +5,24 @@ settings:
       max: 2
       step: 0.01
     icons:
+      control-center:
+        normal:
+          'icons/network/control-center/control-center-0.5x.png': 0 - 0.5, 2
+          'icons/network/control-center/control-center-0.75x.png': 0.5 - 0.75, 1.5
+          'icons/network/control-center/control-center-1x.png': 0.75 - 1.5, 1
+          'icons/network/control-center/control-center-1.5x.png': 1.5 - 5, 0.66
+      small-city:
+        normal:
+          'icons/network/small-city/small-city-0.5x.png': 0 - 0.5, 2
+          'icons/network/small-city/small-city-0.75x.png': 0.5 - 0.75, 1.5
+          'icons/network/small-city/small-city-1x.png': 0.75 - 1.5, 1
+          'icons/network/small-city/small-city-1.5x.png': 1.5 - 5, 0.66
+      site:
+        normal:
+          'icons/network/site/site-0.5x.png': 0 - 0.5, 2
+          'icons/network/site/site-0.75x.png': 0.5 - 0.75, 1.5
+          'icons/network/site/site-1x.png': 0.75 - 1.5, 1
+          'icons/network/site/site-1.5x.png': 1.5 - 5, 0.66
       router:
         normal:
           'icons/network/router/router-48x48.png': 0 - 0.5, 2
@@ -71,6 +89,12 @@ settings:
           'icons/network/ups/ups-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/ups/ups-1x.png': 0.75 - 1.5, 1
           'icons/network/ups/ups-1.5x.png': 1.5 - 5, 0.66
+      server:
+        normal:
+          'icons/network/server/server-0.5x.png': 0 - 0.5, 2
+          'icons/network/server/server-0.75x.png': 0.5 - 0.75, 1.5
+          'icons/network/server/server-1x.png': 0.75 - 1.5, 1
+          'icons/network/server/server-1.5x.png': 1.5 - 5, 0.66
     render:
       grid:
         step: 50
@@ -125,6 +149,9 @@ settings:
         ups:
           name: 'UPS'
           code: 'UPS'
+        server:
+          name: 'Server'
+          code: 'SVR'
       slots-allocation:
         router: 1
         switch: 2

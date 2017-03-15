@@ -21,24 +21,27 @@ import Zoomer from './zoomer';
 import Navigator from './navigator';
 import DrawMarker from './draw-marker/draw-marker';
 
-import Indexes from './indexes';
+import Indexes from '../utils/indexes';
 
-import Selection from './selection'
+import Selection from '../utils/selection'
+
+import LinksBuilder from '../utils/links-builder';
 
 export class Map extends React.Component {
 
 	state = {
 		container: null,
+		layer: 'equipments'
 	};
 
 	constructor() {
 		super();
-		this.network = MapGenerator.generate(new Bounds(- 1000, -700, 2000, 1400), 15, 0.1);
+		this.network = MapGenerator.generate(this.state.layer, new Bounds(- 1000, -700, 2000, 1400), 15, 0.1);
 		this.selection = null;
 		this.indexes = null;
 		this._render = null;
 		this.viewport = null;
-
+		this.linksBuilder = null;
 		this._draggingParams = {target: null, xMove: 0, yMove: 0};
 		this._dragging = new StateMachine('init', [
 			{event: 'move-target-selected', from: 'init', to: 'ready-to-move'},
@@ -70,6 +73,8 @@ export class Map extends React.Component {
 
 		this.selection = new Selection(this._render);
 
+		this.linksBuilder = new LinksBuilder(this.viewport);
+
 		this.props.onViewportStateChanged && this.props.onViewportStateChanged(this.viewport.state());
 
 		document.addEventListener('mouseout', (e) => this.setState({movingState: null}));
@@ -79,6 +84,14 @@ export class Map extends React.Component {
 	}
 	componentDidUpdate() {
 		this._render.render(this.network, (delay) => console.log(delay));
+	}
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.activeLayer !== this.state.layer) {
+			this.setState({layer: nextProps.activeLayer});
+			this.network = MapGenerator.generate(nextProps.activeLayer, new Bounds(- 1000, -700, 2000, 1400), 15, 0.1);
+			let icons = new NodeIcons(this.props.icons.icons, this.viewport.isScaleInRange.bind(this.viewport));
+			this.indexes = new Indexes(this.viewport, this.network, icons);
+		}
 	}
 	onResize() {
 		let width = this.state.container ? DomUtils.width(this.state.container) : 500;
@@ -95,6 +108,15 @@ export class Map extends React.Component {
 		this.network.nodes.push(newNode);
 		this.indexes.nodes.insert(newNode);
 		this.forceUpdate();
+	}
+	makeLinks(linkType) {
+		let nodes = this.selection.selectedSet.nodes();
+		let {links, ports} = this.linksBuilder.build(linkType, nodes);
+		this.network.addLinks(links);
+		this.indexes.addLinks(links);
+		this.indexes.addPorts(ports);
+		Promise.all(nodes.map(node => this.selection.select(node, this.forceUpdate.bind(this))))
+			.then(() => this.props.onSelect(this.selection.selectedSet));
 	}
 	onMapZoom(delta) {
 		if (this._render) {
@@ -148,8 +170,8 @@ export class Map extends React.Component {
 			if (this.viewport) {
 				let target = this.indexes.findByPoint(this.getMouseRealPoint(e));
 				if (target) {
-					this.selection.select(target, this.forceUpdate.bind(this), (selectedSet) => {
-						this.props.onSelect(selectedSet.nodes());
+					this.selection.select(target, this.forceUpdate.bind(this)).then(selectedSet => {
+						this.props.onSelect(selectedSet);
 						this.forceUpdate();
 					})
 				}
@@ -256,4 +278,4 @@ const mapDispatchToProps = (dispatch) => {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Map);
+export default connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(Map);

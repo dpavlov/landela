@@ -6,6 +6,11 @@ export default class Map {
         this.nodes = nodes;
         this.links = links;
     }
+    addLinks(links) {
+      for (var i = 0; i < links.length; i ++) {
+        this.links.push(links[i]);
+      }
+    }
     ports() {
       let ports = [];
       for (var nIndex = 0; nIndex < this.nodes.length; nIndex ++) {
