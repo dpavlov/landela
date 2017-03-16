@@ -70,6 +70,9 @@ export default class Indexes {
 		for (var i = 0; i < ports.length; i ++) {
 			this.ports.insert(ports[i]);
 		}
+	}f
+	findSiteByPoint(point) {
+		return this.sites.find(point);
 	}
   findByPoint(point) {
     let linkControl = this.linkControls.find(point.real);

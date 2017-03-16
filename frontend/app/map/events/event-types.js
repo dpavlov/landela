@@ -8,6 +8,8 @@ export let NODE_CREATED = Symbol.for("NODE_CREATED");
 export let NODE_SELECTED = Symbol.for("NODE_SELECTED");
 export let NODE_DESELECTED = Symbol.for("NODE_DESELECTED");
 export let NODE_MOVED = Symbol.for("NODE_MOVED");
+export let NODE_ATTACHED = Symbol.for("NODE_ATTACHED");
+export let NODE_DETTACHED = Symbol.for("NODE_DETTACHED");
 
 export let PORT_CREATED = Symbol.for("PORT_CREATED");
 export let PORT_SELECTED = Symbol.for("PORT_SELECTED");

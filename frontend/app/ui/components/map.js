@@ -125,9 +125,13 @@ export class Map extends React.Component {
 			this.network.addSites([newSite]);
 			this.indexes.sites.insert(newSite);
 		} else {
-			let newNode = new Node(Id.generate(), name, aType, realPos);
+			var newNode = new Node(Id.generate(), name, aType, realPos);
 			this.network.addNodes([newNode]);
 			this.indexes.nodes.insert(newNode);
+			let site = this.indexes.findSiteByPoint(realPos);
+			if (site) {
+					this.network.attachNode(site, newNode);
+			}
 		}
 		this.forceUpdate();
 	}
@@ -189,6 +193,18 @@ export class Map extends React.Component {
 			}
 			if (this._dragging.is('moving')) {
 				this._draggingParams.target.moved && this._draggingParams.target.moved();
+				if (this._draggingParams.target instanceof Node) {
+					let site = this.indexes.findSiteByPoint(this._draggingParams.target.center);
+					if (site) {
+							if (!this._draggingParams.target.isAttached()) {
+								this.network.attachNode(site, this._draggingParams.target);
+							}
+					} else {
+							if (this._draggingParams.target.isAttached()) {
+								this.network.dettachNode(this._draggingParams.target.site, this._draggingParams.target);
+							}
+					}
+				}
 			}
 			if (this._dragging.isAnyOf(['left-resizing', 'right-resizing', 'top-resizing', 'bottom-resizing'])) {
 				this._draggingParams.target.resized && this._draggingParams.target.resized();

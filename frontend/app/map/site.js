@@ -2,7 +2,7 @@ import Bounds from '../geometry/bounds';
 import Size from '../geometry/size';
 
 import Observable from '../utils/observable';
-import { SITE_MOVED, SITE_RESIZED, NODE_MOVED } from './events/event-types';
+import { SITE_MOVED, SITE_RESIZED, NODE_MOVED, NODE_ATTACHED } from './events/event-types';
 
 export default class Site extends Observable {
   constructor(id, name, center, width, height) {
@@ -19,10 +19,26 @@ export default class Site extends Observable {
     nodes.forEach(n => this.attachNode(n))
     return this;
   }
-  attachNode(node) {
-    node.attachSite(this);
-    this.nodes.push(node);
-    node.subscribe(this);
+  attachNode(node, silent = false) {
+    if (!node.isAttached()) {
+      node.attachSite(this);
+      this.nodes.push(node);
+      node.subscribe(this);
+      if (!silent) {
+        this.notify(node, NODE_ATTACHED);
+      }
+    }
+    return this;
+  }
+  dettachNode(node, silent = false) {
+    if (node.isAttached()) {
+      node.detach(silent);
+      let index = this.nodes.indexOf(node);
+      if (index >= 0) {
+        node.unsubscribe(this);
+        this.nodes.splice(index, 1);
+      }
+    }
     return this;
   }
   onEvent = (obj, ...args) => this.notify(obj, ...args);

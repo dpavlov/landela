@@ -1,4 +1,6 @@
-import { SITE_CREATED, SITE_MOVED, NODE_CREATED, NODE_MOVED, PORT_CREATED, LINK_CREATED } from '../../map/events/event-types';
+import { SITE_CREATED, SITE_MOVED, SITE_RESIZED } from '../../map/events/event-types';
+import { NODE_ATTACHED, NODE_DETTACHED, NODE_CREATED, NODE_MOVED } from '../../map/events/event-types';
+import { PORT_CREATED, LINK_CREATED } from '../../map/events/event-types';
 
 export default class EventsFactory {
   static create(args) {
@@ -6,8 +8,9 @@ export default class EventsFactory {
     let eventType = args[args.length - 1];
     let target = args[args.length - 2];
 		let path = args.splice(0, args.length - 1).map(t => t.id);
+    let event = { ts: new Date().getTime(), type: Symbol.keyFor(eventType), path: path };
     if (eventType === SITE_CREATED) {
-      return {  ts: new Date().getTime(), type: Symbol.keyFor(eventType), path: path, args: {
+      return { ... event, args: {
         id: target.id,
         name: target.name,
         center: target.center.copy(),
@@ -15,9 +18,15 @@ export default class EventsFactory {
         height: target.height
       } };
     } else if (eventType === SITE_MOVED) {
-      return {  ts: new Date().getTime(), type: Symbol.keyFor(eventType), path: path, args: target.center.copy() };
+      return {  ... event, args: target.center.copy() };
+    } else if (eventType === SITE_RESIZED) {
+      return {  ... event, args: {center: target.center.copy(), width: target.width, height: target.height } };
+    } else if (eventType === NODE_ATTACHED) {
+      return {  ... event, args: { site: [map.id, target.site.id], node: [map.id, target.id] } };
+    } else if (eventType === NODE_DETTACHED) {
+      return {  ... event, args: { site: [map.id, target.site.id], node: [map.id, target.site.id, target.id] } };
     } else if (eventType === NODE_CREATED) {
-      return {  ts: new Date().getTime(), type: Symbol.keyFor(eventType), path: path, args: {
+      return {  ... event, args: {
         id: target.id,
         name: target.name,
         type: target.type,
@@ -26,9 +35,9 @@ export default class EventsFactory {
         state: target.state
       } };
     } else if (eventType === NODE_MOVED) {
-      return {  ts: new Date().getTime(), type: Symbol.keyFor(eventType), path: path, args: target.center.copy() };
+      return {  ... event, args: target.center.copy() };
     } else if (eventType === PORT_CREATED) {
-      return {  ts: new Date().getTime(), type: Symbol.keyFor(eventType), path: path, args: {
+      return {  ... event, args: {
         id: target.id,
         name: target.name,
         center: target.center.copy(),
@@ -36,7 +45,7 @@ export default class EventsFactory {
         state: target.state,
       } };
     } else if (eventType === LINK_CREATED) {
-      return {  ts: new Date().getTime(), type: Symbol.keyFor(eventType), path: path, args: {
+      return {  ... event, args: {
         id: target.id,
         sPort: target.sPort.node.site
           ? [map.id, target.sPort.node.site.id, target.sPort.node.id, target.sPort.id]
@@ -48,7 +57,7 @@ export default class EventsFactory {
         eControlPoint: target.eControlPoint.center.copy(),
       } };
     } else {
-      return { ts: new Date().getTime(), type: Symbol.keyFor(eventType), path: path };
+      return event;
     }
   }
 }

@@ -33,6 +33,20 @@ export default class Map extends Observable {
       }
     }
   }
+  attachNode(site, node, silent = false) {
+    node.center = node.center.subtract(site.center);
+    site.attachNode(node, silent);
+    let index = this.nodes.indexOf(node);
+    if (index >= 0) {
+      node.unsubscribe(this);
+      this.nodes.splice(index, 1);
+    }
+  }
+  dettachNode(site, node, silent = false) {
+    node.center = node.center.add(site.center);
+    site.dettachNode(node, silent);
+    this.addNodes([node], silent);
+  }
   addLinks(links, silent = false) {
     for (var i = 0; i < links.length; i ++) {
       links[i].subscribe(this);

@@ -1,7 +1,7 @@
 import Port from './port';
 import Point from '../geometry/point';
 import Observable from '../utils/observable';
-import { NODE_SELECTED, NODE_DESELECTED, NODE_MOVED, PORT_CREATED } from './events/event-types';
+import { NODE_SELECTED, NODE_DESELECTED, NODE_MOVED, NODE_DETTACHED, PORT_CREATED } from './events/event-types';
 
 export default class Node extends Observable {
   constructor(id, name, type, center) {
@@ -30,6 +30,16 @@ export default class Node extends Observable {
   }
   attachSite(site) {
     this.site = site;
+    return this;
+  }
+  isAttached() {
+    return this.site !== null;
+  }
+  detach(silent = false) {
+    if (!silent) {
+      this.notify(this, NODE_DETTACHED);
+    }
+    this.site = null;
     return this;
   }
   bounds(size) {

@@ -3,7 +3,7 @@ import Site from '../../map/site';
 import Node from '../../map/node';
 import Link, { LinkControl } from '../../map/link';
 import Port from '../../map/port';
-import { SITE_CREATED, SITE_MOVED, NODE_CREATED, NODE_MOVED, PORT_CREATED, LINK_CREATED } from '../../map/events/event-types';
+import { SITE_CREATED, SITE_MOVED, SITE_RESIZED, NODE_DETTACHED, NODE_ATTACHED, NODE_CREATED, NODE_MOVED, PORT_CREATED, LINK_CREATED } from '../../map/events/event-types';
 import Point from '../../geometry/point';
 export default class MapUpdater {
   constructor(map) {
@@ -18,6 +18,18 @@ export default class MapUpdater {
         this.map.addSites([site], true);
       } else if (Symbol.for(event.type) === SITE_MOVED) {
         target.center = new Point(event.args.x, event.args.y);
+      } else if (Symbol.for(event.type) === SITE_RESIZED) {
+        target.center = new Point(event.args.center.x, event.args.center.y);
+        target.width = event.args.width;
+        target.height = event.args.height;
+      } else if (Symbol.for(event.type) === NODE_ATTACHED) {
+        let siteResult = this.findTargetByPath(this.map, [... event.args.site]);
+        let nodeResult = this.findTargetByPath(this.map, [... event.args.node]);
+        this.map.attachNode(siteResult.target, nodeResult.target, true);
+      } else if (Symbol.for(event.type) === NODE_DETTACHED) {
+        let siteResult = this.findTargetByPath(this.map, [... event.args.site]);
+        let nodeResult = this.findTargetByPath(this.map, [... event.args.node]);
+        this.map.dettachNode(siteResult.target, nodeResult.target, true);
       } else if (Symbol.for(event.type) === NODE_CREATED) {
         let nCenter = new Point(event.args.center.x, event.args.center.y);
         let node = new Node(event.args.id, event.args.name, event.args.type, nCenter);
