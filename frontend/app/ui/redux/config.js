@@ -15,7 +15,6 @@ export function configLoaded(config) {
 }
 
 export const reducer = (state = {}, action) => {
-	console.log(action);
 	switch(action.type) {
 		case CONFIG_LOADED:
 			return { ... state, state: 'Done', config: action.payload };

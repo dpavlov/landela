@@ -3,6 +3,9 @@ import createSagaMiddleware from 'redux-saga';
 
 import { reducer as iconsReducer } from './ui/redux/icons';
 import { reducer as configReducer } from './ui/redux/config';
+import { reducer as mapReducer } from './ui/redux/map';
+
+import persistState from 'redux-localstorage';
 
 import IconsLoadingSaga from './ui/sagas/icons-loading';
 import ConfigLoadingSaga from './ui/sagas/config-loading';
@@ -10,7 +13,8 @@ import ConfigLoadingSaga from './ui/sagas/config-loading';
 export default () => {
   const reducers = {
     icons: iconsReducer,
-    config: configReducer
+    config: configReducer,
+    map: mapReducer
   };
   const reducer = combineReducers(reducers);
   const sagaMiddleware = createSagaMiddleware();
@@ -20,6 +24,7 @@ export default () => {
     undefined,
     compose(
       applyMiddleware(sagaMiddleware),
+      persistState(['config', 'map']),
       typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f,
     ),
   );

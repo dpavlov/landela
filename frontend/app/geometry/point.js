@@ -38,6 +38,9 @@ export default class Point {
         Math.round(Math.random() * (ymax - ymin) + ymin)
       );
     }
+    copy() {
+        return new Point(this.x, this.y);
+    }
     toString() {
         return "[" + (this.x | 0) + " x " + (this.y | 0) + "]";
     }

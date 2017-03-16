@@ -37,14 +37,17 @@ export default class DrawMarker extends React.Component {
           {nr: 7, style: { top: 0, left: 0 }},
           {nr: 8, style: { top: 0, left: 0 }},
           {nr: 9, style: { top: 0, left: 0 }}
+        ],
+        '3': [
+          {nr: 10, style: { top: 0, left: 0 }}
         ]
       },
       drawMarkerStyle: { top: 0, left: 0 },
       hLineStyle: { top: 0, left: 0 },
       vLineStyle: { top: 0, left: 0 },
       drawMarkerDlgOpen: false,
-      busySlots: this.props.settings['slots-allocation'],
-      nodeTypes: this.props.settings['node-types'],
+      busySlots: {... this.props.settings['slots-allocation'], site: 10},
+      nodeTypes: {... this.props.settings['node-types'], site: {name: 'Site', code: 'SITE'}},
       buttons: [
         {code: 'menu', left: 0, top: 0, icon: <Menu/>},
         {code: 'align', left: 0, top: 0, icon: <Grid/>},
@@ -61,7 +64,8 @@ export default class DrawMarker extends React.Component {
     this.recalculateButtonPositions(80, -1.5 * Math.PI);
     let l1Slots = this.recalculateSlotPositions('1', - Math.PI / 4 - Math.PI / 18, 110, 0.75);
     let l2Slots = this.recalculateSlotPositions('2', - Math.PI / 4 + Math.PI / 36 - Math.PI / 144, 150, 0.6);
-    this.setState({ slots: { '1': l1Slots, '2': l2Slots } });
+    let l3Slots = this.recalculateSlotPositions('3', - Math.PI / 4 + Math.PI / 12 , 190, 0.6);
+    this.setState({ slots: { '1': l1Slots, '2': l2Slots, '3': l3Slots } });
   }
   recalculateButtonPositions(radius, initAngle) {
     let buttons = [];
@@ -160,15 +164,15 @@ export default class DrawMarker extends React.Component {
   renderSlot(line, index, slot) {
     let aType = this.findNodeTypeForSlotNr(slot.nr);
     if (!aType) {
-      return (<div key={index} className='slot empty-slot' style={slot.style}></div>);
+      return (<div key={index} className={'slot empty-slot line-' + line + '-slot' } style={slot.style}></div>);
     } else {
       let isActiveType = this.state.config.type === aType;
       let classes = isActiveType
-        ? 'slot allocated-slot active-slot'
-        : 'slot allocated-slot'
+        ? 'slot allocated-slot active-slot line-' + line + '-slot'
+        : 'slot allocated-slot line-' + line + '-slot'
       return (
         <div key={line + '-' + index} className={classes} style={slot.style} onClick={this.handleSlotActivated(slot, aType)}>
-          <Avatar backgroundColor={isActiveType ? purple900 : purple500} style={{fontSize: '10px'}}>
+          <Avatar size={line === '3' ? 50 : 40} backgroundColor={isActiveType ? purple900 : (line === '3' ? 'rgb(255, 64, 129)' : purple500)} style={{fontSize: '10px'}}>
             { this.findTypeCode(aType) }
           </Avatar>
         </div>
@@ -194,6 +198,9 @@ export default class DrawMarker extends React.Component {
         {
           this.renderSlots('2', this.state.slots['2'])
         }
+        {
+          this.renderSlots('3', this.state.slots['3'])
+        }
         <div className="vline" ref='vline' style={this.state.vLineStyle}></div>
         <div className="hline" ref='hline' style={this.state.hLineStyle}></div>
         <div className="circle"></div>
@@ -206,11 +213,11 @@ export default class DrawMarker extends React.Component {
         >
           <SelectField floatingLabelText="Active Type" value={this.state.config.type} fullWidth={true} onChange={this.handleTypeChange}>
             {
-              Object.keys(this.state.nodeTypes).map(nt => <MenuItem key={nt} value={nt} primaryText={this.state.nodeTypes[nt].name}/>)
+              Object.keys(this.props.settings['node-types']).map(nt => <MenuItem key={nt} value={nt} primaryText={this.props.settings['node-types'][nt].name}/>)
             }
           </SelectField>
           <TextField hintText="Name" floatingLabelText="Name" floatingLabelFixed={true} fullWidth={true} defaultValue={this.state.config.name} onChange={this.handleNameChange}/>
-          <SlotsAllocator busySlots={this.state.busySlots} nodeTypes={this.state.nodeTypes} onBusySlotsChanged={this.handleBusySlotsChanged}/>
+          <SlotsAllocator busySlots={this.state.busySlots} nodeTypes={this.props.settings['node-types']} onBusySlotsChanged={this.handleBusySlotsChanged}/>
         </Dialog>
 			</div>
 		);

@@ -98,7 +98,7 @@ settings:
     render:
       grid:
         step: 50
-        display: false
+        display: true
         x-axis:
           text-align: 'left'
           font-size: 10
@@ -162,5 +162,6 @@ settings:
         basestation: 7
         small-network: 8
         printer: 9
+        site: 10
     site:
     link:

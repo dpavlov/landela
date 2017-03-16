@@ -2,6 +2,7 @@ import PortsPositions from '../../map/ports-positions';
 
 import Port from '../../map/port';
 import Link from '../../map/link';
+import Id from '../../map/id';
 
 export default class LinksBuilder {
 	constructor(viewport) {
@@ -26,8 +27,8 @@ export default class LinksBuilder {
     for (var i = 1; i < nodes.length; i++) {
       var to = nodes[i];
 
-      let sPortId = from.id + '-p-' + 0;
-      let ePortId = to.id + '-p-' + 1;
+      let sPortId = Id.generate();
+      let ePortId = Id.generate();
 
       var positions = new PortsPositions(this.viewport.nodeDisplayCenter(from), this.viewport.nodeDisplayCenter(to)).onLine();
 
@@ -36,7 +37,7 @@ export default class LinksBuilder {
       from.attachPort(sPort);
       to.attachPort(ePort);
 
-      let link = new Link(from.id + '-' + to.id, sPort, ePort, positions.slc, positions.elc);
+      let link = new Link(Id.generate(), sPort, ePort, positions.slc, positions.elc);
 
       result.links.push(link);
       result.ports.push(sPort);
@@ -51,8 +52,8 @@ export default class LinksBuilder {
     for (var i = 1; i < nodes.length; i++) {
       var to = nodes[i];
 
-      let sPortId = from.id + '-p-' + 0;
-      let ePortId = to.id + '-p-' + 1;
+      let sPortId = Id.generate();
+      let ePortId = Id.generate();
 
       var positions = new PortsPositions(this.viewport.nodeDisplayCenter(from), this.viewport.nodeDisplayCenter(to)).onLine();
 
@@ -61,7 +62,7 @@ export default class LinksBuilder {
       from.attachPort(sPort);
       to.attachPort(ePort);
 
-      let link = new Link(from.id + '-' + to.id, sPort, ePort, positions.slc, positions.elc);
+      let link = new Link(Id.generate(), sPort, ePort, positions.slc, positions.elc);
 
       result.links.push(link);
       result.ports.push(sPort);
@@ -75,8 +76,8 @@ export default class LinksBuilder {
     for (var i = 1; i < ring.length; i++) {
       var to = ring[i];
 
-      let sPortId = from.id + '-p-' + 0;
-      let ePortId = to.id + '-p-' + 1;
+      let sPortId = Id.generate();
+      let ePortId = Id.generate();
 
       var positions = new PortsPositions(this.viewport.nodeDisplayCenter(from), this.viewport.nodeDisplayCenter(to)).onLine();
 
@@ -85,7 +86,7 @@ export default class LinksBuilder {
       from.attachPort(sPort);
       to.attachPort(ePort);
 
-      let link = new Link(from.id + '-' + to.id, sPort, ePort, positions.slc, positions.elc);
+      let link = new Link(Id.generate(), sPort, ePort, positions.slc, positions.elc);
 
       result.links.push(link);
       result.ports.push(sPort);

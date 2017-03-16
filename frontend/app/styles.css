@@ -156,6 +156,12 @@ body {
   position: absolute;
 }
 
+#draw-marker .line-3-slot {
+  border-radius: 27px;
+  width: 50px;
+  height: 50px;
+}
+
 #draw-marker .allocated-slot {
   border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;

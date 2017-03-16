@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import DomUtils from '../utils/dom-utils';
 
-import MapGenerator from '../../map/gen/simple-map-generator';
+import MapGenerator from '../../map/gen/empty-map-generator';
 
 import Point from '../../geometry/point';
 import Offset from '../../geometry/offset';
@@ -14,6 +14,7 @@ import Render from '../../render/render';
 
 import NodeIcons from '../../utils/node-icons';
 import StateMachine from '../../utils/state-machine';
+import Id from '../../map/id';
 import Site from '../../map/site';
 import Node from '../../map/node';
 
@@ -26,6 +27,11 @@ import Indexes from '../utils/indexes';
 import Selection from '../utils/selection'
 
 import LinksBuilder from '../utils/links-builder';
+import SiteResizer from '../utils/site-resizer';
+import EventsFactory from '../utils/events-factory';
+import MapUpdater from '../utils/map-updater';
+
+import { updateMap } from '../redux/map'
 
 export class Map extends React.Component {
 
@@ -34,9 +40,14 @@ export class Map extends React.Component {
 		layer: 'equipments'
 	};
 
-	constructor() {
-		super();
-		this.network = MapGenerator.generate(this.state.layer, new Bounds(- 1000, -700, 2000, 1400), 15, 0.1);
+	constructor(props) {
+		super(props);
+		this.network = MapGenerator.generate(this.state.layer);
+		if (props.events) {
+			let updater = new MapUpdater(this.network);
+			props.events.forEach(e => updater.update(e));
+		}
+		this.network.subscribe(this);
 		this.selection = null;
 		this.indexes = null;
 		this._render = null;
@@ -56,6 +67,11 @@ export class Map extends React.Component {
 			{event: 'resized', from: 'ready-to-bottom-resize', to: 'bottom-resizing'},
 			{event: 'reset', from: '*', to: 'init'}
 		]);
+	}
+	onEvent(...args) {
+		let e = EventsFactory.create(args);
+		this.network.version(e.ts);
+		this.props.updateMap(e);
 	}
 	componentDidMount() {
 		window.addEventListener('resize', this.onResize.bind(this), false);
@@ -88,7 +104,7 @@ export class Map extends React.Component {
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.activeLayer !== this.state.layer) {
 			this.setState({layer: nextProps.activeLayer});
-			this.network = MapGenerator.generate(nextProps.activeLayer, new Bounds(- 1000, -700, 2000, 1400), 15, 0.1);
+			this.network = MapGenerator.generate(nextProps.activeLayer);
 			let icons = new NodeIcons(this.props.icons.icons, this.viewport.isScaleInRange.bind(this.viewport));
 			this.indexes = new Indexes(this.viewport, this.network, icons);
 		}
@@ -104,9 +120,15 @@ export class Map extends React.Component {
 		let x = DomUtils.width(this.state.container) / 2;
 		let y = DomUtils.height(this.state.container) / 2;
 		let realPos = this.viewport.toRealPosition(new Point(x, y));
-		let newNode = new Node('n' + Math.random(), name, aType, realPos);
-		this.network.nodes.push(newNode);
-		this.indexes.nodes.insert(newNode);
+		if (aType === 'site') {
+			let newSite = new Site(Id.generate(), name, realPos, 200, 200);
+			this.network.addSites([newSite]);
+			this.indexes.sites.insert(newSite);
+		} else {
+			let newNode = new Node(Id.generate(), name, aType, realPos);
+			this.network.addNodes([newNode]);
+			this.indexes.nodes.insert(newNode);
+		}
 		this.forceUpdate();
 	}
 	makeLinks(linkType) {
@@ -128,23 +150,8 @@ export class Map extends React.Component {
 	onMapMove(direction) {
 		if (this.viewport) {
 			let delta = this._render.grid.step();
-			switch (direction) {
-				case 'up':
-					this.viewport.up(delta);
-					break;
-				case 'dw':
-					this.viewport.down(delta);
-					break;
-				case 'lt':
-					this.viewport.left(delta);
-					break;
-				case 'rt':
-					this.viewport.right(delta);
-					break;
-				default:
-					throw new Error("Unexpected map move direction: " + direction)
-					break;
-			}
+			let directions = {'up': this.viewport.up, 'dw': this.viewport.down, 'lt': this.viewport.left, 'rt': this.viewport.right};
+			directions[direction].apply(this.viewport, [delta]);
 			this.props.onViewportStateChanged && this.props.onViewportStateChanged(this.viewport.state());
 			this.forceUpdate();
 		}
@@ -179,6 +186,12 @@ export class Map extends React.Component {
 		} else {
 			if (this._draggingParams.target !== 'map') {
 				this.indexes.update(this._draggingParams.target);
+			}
+			if (this._dragging.is('moving')) {
+				this._draggingParams.target.moved && this._draggingParams.target.moved();
+			}
+			if (this._dragging.isAnyOf(['left-resizing', 'right-resizing', 'top-resizing', 'bottom-resizing'])) {
+				this._draggingParams.target.resized && this._draggingParams.target.resized();
 			}
 		}
 		this._dragging = this._dragging.on('reset');
@@ -225,19 +238,19 @@ export class Map extends React.Component {
 			this._dragging = this._dragging.on('moved');
 			this.forceUpdate();
 		} else if (this._dragging.isAnyOf(['ready-to-left-resize', 'left-resizing'])) {
-			target.resize('left', offset.withReverseMultiplier(this.viewport.scale()));
+			SiteResizer.resize(target, 'left', offset.withReverseMultiplier(this.viewport.scale()));
 			this._dragging = this._dragging.on('resized');
 			this.forceUpdate();
 		} else if (this._dragging.isAnyOf(['ready-to-right-resize', 'right-resizing'])) {
-			target.resize('right', offset.withReverseMultiplier(this.viewport.scale()));
+			SiteResizer.resize(target, 'right', offset.withReverseMultiplier(this.viewport.scale()));
 			this._dragging = this._dragging.on('resized');
 			this.forceUpdate();
 		} else if (this._dragging.isAnyOf(['ready-to-top-resize', 'top-resizing'])) {
-			target.resize('top', offset.withReverseMultiplier(this.viewport.scale()));
+			SiteResizer.resize(target, 'top', offset.withReverseMultiplier(this.viewport.scale()));
 			this._dragging = this._dragging.on('resized');
 			this.forceUpdate();
 		} else if (this._dragging.isAnyOf(['ready-to-bottom-resize', 'bottom-resizing'])) {
-			target.resize('bottom', offset.withReverseMultiplier(this.viewport.scale()));
+			SiteResizer.resize(target, 'bottom', offset.withReverseMultiplier(this.viewport.scale()));
 			this._dragging = this._dragging.on('resized');
 			this.forceUpdate();
 		}
@@ -268,13 +281,14 @@ export class Map extends React.Component {
 const mapStateToProps = (state) => {
 	return {
 		settings: state.config.state === 'Done' ? state.config.config.settings.map : {},
-		icons: state.icons
+		icons: state.icons,
+		events: state.map.events
 	}
 }
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-
+		updateMap: (event) => dispatch(updateMap(event)),
 	}
 }
 

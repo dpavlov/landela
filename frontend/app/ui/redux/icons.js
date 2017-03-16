@@ -16,7 +16,6 @@ export function iconsLoaded(icons) {
 }
 
 export const reducer = (state = {}, action) => {
-	console.log(action);
 	switch(action.type) {
 		case ICONS_LOADED:
 			return { ... state, state: 'Done', icons: action.payload };
