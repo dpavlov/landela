@@ -45,7 +45,7 @@ export default class Map extends Observable {
   dettachNode(site, node, silent = false) {
     node.center = node.center.add(site.center);
     site.dettachNode(node, silent);
-    this.addNodes([node], silent);
+    this.addNodes([node], true);
   }
   addLinks(links, silent = false) {
     for (var i = 0; i < links.length; i ++) {

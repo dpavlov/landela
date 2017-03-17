@@ -10,6 +10,7 @@ export default class MapUpdater {
     this.map = map;
   }
   update(event) {
+    console.log(JSON.stringify(event));
     if (event.ts > this.map._version) {
       let { parent,  target } = this.findTargetByPath(this.map, [... event.path]);
       if (Symbol.for(event.type) === SITE_CREATED) {

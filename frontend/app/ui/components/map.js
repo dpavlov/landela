@@ -93,7 +93,10 @@ export class Map extends React.Component {
 
 		this.props.onViewportStateChanged && this.props.onViewportStateChanged(this.viewport.state());
 
-		document.addEventListener('mouseout', (e) => this.setState({movingState: null}));
+		document.addEventListener('mouseout', (e) => {
+			this._dragging = this._dragging.on('reset');
+			this._draggingParams = {target: null, xMove: 0, yMove: 0};
+		});
 		document.addEventListener('mousemove', this.onMouseMove.bind(this));
 
 		this.setState({container: this.refs.mapContainer});
