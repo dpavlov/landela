@@ -1,5 +1,9 @@
+import Node from './node';
+import Site from './site';
+
 import Observable from '../utils/observable';
-import { SITE_CREATED, NODE_CREATED, LINK_CREATED, NODE_MOVED } from './events/event-types';
+
+import { SITE_CREATED, NODE_CREATED, LINK_CREATED, NODE_MOVED, NODE_REMOVED } from './events/event-types';
 
 export default class Map extends Observable {
   constructor(id, name, sites, nodes, links) {
@@ -84,5 +88,30 @@ export default class Map extends Observable {
       controls.push(link.eControlPoint);
     }
     return controls;
+  }
+  remove(target, silent = false) {
+    if (target instanceof Node) {
+      if (target.site) {
+        target.site.removeNode(target, silent);
+      } else {
+        let index = this.nodes.indexOf(target);
+        if (index >= 0) {
+          target.unsubscribe(this);
+          this.nodes.splice(index, 1);
+          if (!silent) {
+            this.notify(target, NODE_REMOVED);
+          }
+        }
+      }
+    } else if (target instanceof Site) {
+      let index = this.sites.indexOf(target);
+      if (index >= 0) {
+        target.unsubscribe(this);
+        this.sites.splice(index, 1);
+        if (!silent) {
+          this.notify(target, NODE_REMOVED);
+        }
+      }
+    }
   }
 };

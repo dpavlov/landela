@@ -10,8 +10,8 @@ import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-import Node from '../../map/node';
-import Site from '../../map/site';
+import NodeProperties from './node-properties';
+import SiteProperties from './site-properties';
 
 export default class LeftPanel extends React.Component {
 
@@ -58,70 +58,6 @@ export default class LeftPanel extends React.Component {
     }
   }
 
-  title = (target) => {
-    return target.name;
-  }
-
-  description = (target) => {
-    return "Properties for " + target.name;
-  }
-
-  icon = (target) => {
-    return <Avatar size={50} backgroundColor={purple500}>R</Avatar>;
-  }
-
-  onTargetNameChanged = (target) => {
-    return (e) => {
-      target.name = e.target.value;
-    }
-  }
-
-  renderTarget = (t) => {
-    return (
-        <Card key={t.id} style={{marginBottom: '5px'}}>
-          <CardHeader
-            title={this.title(t)}
-            subtitle={this.description(t)}
-            avatar={this.icon(t)}
-            actAsExpander={true}
-            showExpandableButton={true}
-          />
-          <CardActions>
-            <FlatButton label="Deselect" />
-            <FlatButton label="Delete" secondary={true} />
-          </CardActions>
-          <CardText expandable={true}>
-            <TextField hintText="Name" floatingLabelText="Name" defaultValue={t.name} onChange={this.onTargetNameChanged(t)}/>
-            {
-              this.renderTargetProperties(t)
-            }
-          </CardText>
-        </Card>
-    );
-  }
-
-  renderTargetProperties = (t) => {
-    if (t instanceof Node) {
-      return (
-        <List>
-        {
-          t.ports.map(port => <ListItem key={port.id} primaryText={port.name}/>)
-        }
-        </List>
-      )
-    } else if (t instanceof Site) {
-      return (
-        <List>
-        {
-          t.nodes.map(node => <ListItem key={node.id} primaryText={node.name}/>)
-        }
-        </List>
-      )
-    } else {
-      return null;
-    }
-  }
-
 	render() {
 		return (
 			<div id='left-panel' style={this.state.style}>
@@ -131,11 +67,11 @@ export default class LeftPanel extends React.Component {
       }
       </ReactCSSTransitionGroup>
       {
-        this.props.targets.sites().map(function(t){ return this.renderTarget(t); }.bind(this))
+        this.props.targets.sites().map(site => <SiteProperties key={site.id} site={site} onNameChanged={this.props.onNameChanged} onDeselect={this.props.onDeselect} onDelete={this.props.onDelete}/>)
       }
       <ReactCSSTransitionGroup transitionName="fadein" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
       {
-        this.props.targets.nodes().map(function(t){ return this.renderTarget(t); }.bind(this))
+        this.props.targets.nodes().map(node => <NodeProperties key={node.id} node={node} onNameChanged={this.props.onNameChanged} onDeselect={this.props.onDeselect} onDelete={this.props.onDelete}/>)
       }
       </ReactCSSTransitionGroup>
 			</div>

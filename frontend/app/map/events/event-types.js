@@ -5,6 +5,7 @@ export let SITE_MOVED = Symbol.for("SITE_MOVED");
 export let SITE_RESIZED = Symbol.for("SITE_RESIZED");
 
 export let NODE_CREATED = Symbol.for("NODE_CREATED");
+export let NODE_REMOVED = Symbol.for("NODE_REMOVED");
 export let NODE_SELECTED = Symbol.for("NODE_SELECTED");
 export let NODE_DESELECTED = Symbol.for("NODE_DESELECTED");
 export let NODE_MOVED = Symbol.for("NODE_MOVED");

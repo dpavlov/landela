@@ -147,6 +147,20 @@ export class Map extends React.Component {
 		Promise.all(nodes.map(node => this.selection.select(node, this.forceUpdate.bind(this))))
 			.then(() => this.props.onSelect(this.selection.selectedSet));
 	}
+	deselect(target) {
+		this.selection.select(target, this.forceUpdate.bind(this)).then(selectedSet => {
+			this.props.onSelect(selectedSet);
+			this.forceUpdate();
+		})
+	}
+	remove(target) {
+		this.selection.select(target, this.forceUpdate.bind(this)).then(selectedSet => {
+			this.props.onSelect(selectedSet);
+			this.indexes.remove(target);
+			this.network.remove(target);
+			this.forceUpdate();
+		})
+	}
 	onMapZoom(delta) {
 		if (this._render) {
 			this.viewport.zoom(delta);

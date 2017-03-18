@@ -24,6 +24,15 @@ export default class Layout extends React.Component {
 	handleMakeLink = (linkType) => {
 		this.refs.map.getWrappedInstance().makeLinks(linkType);
 	}
+	handleNameChanged = (obj) => {
+		this.refs.map.getWrappedInstance().forceUpdate();
+	}
+	handleDeselect = (obj) => {
+		this.refs.map.getWrappedInstance().deselect(obj);
+	}
+	handleDelete = (obj) => {
+		this.refs.map.getWrappedInstance().remove(obj);
+	}
 	render() {
 		return (
 			<div id='layout'>
@@ -35,7 +44,13 @@ export default class Layout extends React.Component {
 						isLeftPanelOpen={this.state.isLeftPanelOpen}
 						displayDrawMarker={this.state.isDrawMarkerDisplayed}
 						/>
-					<LeftPanel open={this.state.isLeftPanelOpen} targets={this.state.leftPanelTargets} onMakeLink={this.handleMakeLink}/>
+					<LeftPanel
+						open={this.state.isLeftPanelOpen}
+						targets={this.state.leftPanelTargets}
+						onMakeLink={this.handleMakeLink}
+						onNameChanged={this.handleNameChanged}
+						onDeselect={this.handleDeselect}
+						onDelete={this.handleDelete}/>
 			</div>
 		);
 	}

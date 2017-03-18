@@ -51,14 +51,20 @@ export default class Indexes {
     });
 	}
   update(target) {
+		this.remove(target);
     if (target instanceof Node) {
-      this.nodes.remove(target);
       this.nodes.insert(target);
     } else if (target instanceof Site) {
-      this.sites.remove(target);
       this.sites.insert(target);
     }
   }
+	remove(target) {
+		if (target instanceof Node) {
+			this.nodes.remove(target);
+		} else if (target instanceof Site) {
+			this.sites.remove(target);
+		}
+	}
 	addLinks(links) {
 		for (var i = 0; i < links.length; i ++) {
 			this.links.insert(links[i]);
