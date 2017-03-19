@@ -56,6 +56,30 @@ export default class SiteProperties extends React.Component {
     this.props.onDelete && this.props.onDelete(this.props.site);
   }
 
+  handleCancel = (e) => {
+    this.props.site.name = this.state.originName;
+    this.props.site.address = this.state.originAddress;
+    this.setState({name: this.state.originName, address: this.state.originAddress});
+    this.props.updateMap && this.props.updateMap();
+  }
+  actions() {
+    if (this.state.name !== this.state.originName || this.state.address !== this.state.originAddress) {
+      return (
+        <CardActions>
+          <FlatButton label="Deselect" onTouchTap={this.handleDeselect}/>
+          <FlatButton label="Delete" secondary={true} onTouchTap={this.handleDelete}/>
+          <FlatButton label="Cancel" onTouchTap={this.handleCancel}/>
+        </CardActions>
+      );
+    } else {
+      return (
+        <CardActions>
+          <FlatButton label="Deselect" onTouchTap={this.handleDeselect}/>
+          <FlatButton label="Delete" secondary={true} onTouchTap={this.handleDelete}/>
+        </CardActions>
+      );
+    }
+  }
   render() {
     return (
         <Card key={this.props.site.id} style={{marginBottom: '5px'}}>
@@ -66,13 +90,12 @@ export default class SiteProperties extends React.Component {
             actAsExpander={true}
             showExpandableButton={true}
           />
-          <CardActions>
-            <FlatButton label="Deselect" onTouchTap={this.handleDeselect}/>
-            <FlatButton label="Delete" secondary={true} onTouchTap={this.handleDelete}/>
-          </CardActions>
+          {
+            this.actions()
+          }
           <CardText expandable={true}>
-            <TextField hintText="Name" floatingLabelText="Name" defaultValue={this.props.site.name} onChange={this.onNameChanged}/>
-            <TextField hintText="Address" floatingLabelText="Address" defaultValue={this.props.site.address} onChange={this.onAddressChanged}/>
+            <TextField hintText="Name" floatingLabelText="Name" value={this.state.name} onChange={this.onNameChanged}/>
+            <TextField hintText="Address" floatingLabelText="Address" value={this.state.address} onChange={this.onAddressChanged}/>
             {
               this.properties(this.props.site)
             }
