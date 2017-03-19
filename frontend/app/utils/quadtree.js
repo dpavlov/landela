@@ -187,6 +187,18 @@ export default class Quadtree {
     	return point.x >= rect.x && point.x <= rect.x + rect.width && point.y >= rect.y && point.y <= rect.y + rect.height;
 	}
 
+	visit(visitor) {
+		for( var i = 0; i < this.objects.length; i = i + 1 ) {
+			visitor(this.objects[i], this._toRect(this.objects[i]));
+		}
+
+		for( var i=0; i < this.nodes.length; i=i+1 ) {
+			if( typeof this.nodes[i] !== 'undefined' ) {
+				this.nodes[i].visit(visitor);
+		  }
+		}
+	}
+
 	clear() {
 
 		this.objects = [];
@@ -194,7 +206,7 @@ export default class Quadtree {
 		for( var i=0; i < this.nodes.length; i=i+1 ) {
 			if( typeof this.nodes[i] !== 'undefined' ) {
 				this.nodes[i].clear();
-		  	}
+		  }
 		}
 
 		this.nodes = [];

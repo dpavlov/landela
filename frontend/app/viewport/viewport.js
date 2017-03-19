@@ -11,7 +11,7 @@ export default class Viewport {
       this.onZoomHandlers = [];
       this.coordinateSystem = new CoordinateSystem(width / 2, height / 2);
     }
-    bounds() { return { width: this.width, height: this.height}; }
+    bounds() { return { width: this.width, height: this.height }; }
     offset() { return this._offset; }
     scale() { return this._scale; }
     state() { return { bounds: this.bounds(), scale: this.scale(), offset: this.offset() }; }
@@ -45,8 +45,6 @@ export default class Viewport {
 
     	this.move(new Offset(-screenCenterDelta.x, screenCenterDelta.y).withMultiplier(this._scale));
 
-    	var screenCenterAfterDelta = this.coordinateSystem.realCoordinates(screenCenter);
-
       this._fireEvent(this._scale, this._offset, this.bounds());
     }
     up(delta) {
@@ -66,6 +64,11 @@ export default class Viewport {
     	this.coordinateSystem.offset(this._offset);
     	this._fireEvent(this._scale, this._offset, this.bounds());
     }
+    moveTo(center) {
+      this._offset = new Offset(center.x * this._scale, center.y * this._scale);
+      this.coordinateSystem.offset(this._offset);
+      this._fireEvent(this._scale, this._offset, this.bounds());
+    }
     resize(width, height) {
         this.width = width;
         this.height = height;
@@ -74,6 +77,9 @@ export default class Viewport {
     }
     toRealPosition(point) {
       return this.coordinateSystem.realCoordinates(point);
+    }
+    toDispPosition(point) {
+      return this.coordinateSystem.displayCoordinates(point);
     }
     siteDisplayCenter(site) {
       return this.coordinateSystem.displayCoordinates(site.center);

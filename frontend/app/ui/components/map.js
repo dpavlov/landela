@@ -21,6 +21,7 @@ import Node from '../../map/node';
 import Zoomer from './zoomer';
 import Navigator from './navigator';
 import DrawMarker from './draw-marker/draw-marker';
+import MiniMap from './mini-map';
 
 import Indexes from '../utils/indexes';
 
@@ -177,6 +178,10 @@ export class Map extends React.Component {
 			this.forceUpdate();
 		}
 	}
+	handleMoveTo = (center) => {
+		this.viewport.moveTo(center);
+		this.forceUpdate();
+	}
 	handleKeyDown(e) {
 		var moves = ['lt', 'up', 'rt', 'dw'];
 		if(e.keyCode && e.keyCode > 36 && e.keyCode < 41) this.onMapMove(moves[e.keyCode - 37]);
@@ -296,16 +301,15 @@ export class Map extends React.Component {
 		let height = this.state.container ? DomUtils.height(this.state.container) : 500;
 		return (
 			<div className="map" ref="mapContainer">
-			<Zoomer settings={this.props.settings.zoomer} onZoom={this.onMapZoom.bind(this)} isLeftPanelOpen={this.props.isLeftPanelOpen}/>
-			<Navigator onMove={ this.onMapMove.bind(this) } />
-			{
-				this.props.displayDrawMarker
-					? <DrawMarker container={this.refs.mapContainer} onAdd={this.handleAdd} onGridAlign={this.onGridAlign} settings={this.props.settings['draw-marker']}/>
-					: null
-			}
-			<canvas id="stage" width={width} height={height} ref="stage"
-			onClick={this.onMouseClick.bind(this)}
-			onMouseDown={this.onMouseDown.bind(this)}/>
+				<Zoomer settings={this.props.settings.zoomer} onZoom={this.onMapZoom.bind(this)} isLeftPanelOpen={this.props.isLeftPanelOpen}/>
+				<Navigator onMove={ this.onMapMove.bind(this) } />
+				{
+					this.props.displayDrawMarker
+						? <DrawMarker container={this.refs.mapContainer} onAdd={this.handleAdd} onGridAlign={this.onGridAlign} settings={this.props.settings['draw-marker']}/>
+						: null
+				}
+				<canvas id="stage" width={width} height={height} ref="stage" onClick={this.onMouseClick.bind(this)} onMouseDown={this.onMouseDown.bind(this)}/>
+				<MiniMap settings={this.props.settings['mini-map']} source={this.indexes} viewport={this.viewport} onMapMoveTo={this.handleMoveTo}/>
 			</div>
 		);
 	}

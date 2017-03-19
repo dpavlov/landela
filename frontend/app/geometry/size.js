@@ -13,6 +13,9 @@ export default class Size {
   half() {
     return new Size(this.halfWidth(), this.halfHeight());
   }
+  double() {
+    return new Size(this.width * 2, this.height * 2);
+  }
   swap() {
     return new Size(this.height, this.width);
   }

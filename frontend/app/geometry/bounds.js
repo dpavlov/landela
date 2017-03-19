@@ -16,6 +16,12 @@ export default class Bounds {
   in(point) {
     return point.x >= this.x && point.x <= this.x + this.width && point.y >= this.y && point.y <= this.y + this.height;
   }
+  tl() {
+    return new Point(this.x, this.y);
+  }
+  center() {
+    return new Point(this.x + this.width / 2, this.y + this.height / 2);
+  }
   toString() {
     return "[" + (this.x | 0) + " x " + (this.y | 0) + "]";
   }

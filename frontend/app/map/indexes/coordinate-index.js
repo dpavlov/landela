@@ -7,6 +7,7 @@ export default class CoordinateIndex {
 		for (var index = 0; index < objs.length; index ++) {
 			this.quadtree.insert(objs[index]);
 		}
+		this.bounds = bounds;
 	}
 	_bounds(objs, boundsLookupFn) {
 		let area = { xMin: Number.MAX_VALUE, yMin: Number.MAX_VALUE, xMax: Number.MIN_VALUE, yMax: Number.MIN_VALUE };
@@ -18,14 +19,17 @@ export default class CoordinateIndex {
 			if (area.yMin > objBounds.y) {
 				area.yMin = objBounds.y;
 			}
-			if (area.xMax < objBounds.x) {
-				area.xMax = objBounds.x;
+			if (area.xMax < objBounds.x + objBounds.width) {
+				area.xMax = objBounds.x + objBounds.width;
 			}
-			if (area.yMax < objBounds.y) {
-				area.yMax = objBounds.y;
+			if (area.yMax < objBounds.y + objBounds.height) {
+				area.yMax = objBounds.y + objBounds.height;
 			}
 		}
 		return { x: area.xMin, y: area.yMin, width: area.xMax - area.xMin, height: area.yMax - area.yMin };
+	}
+	visit(visitor) {
+		this.quadtree.visit(visitor);
 	}
 	insert(obj) {
 		return this.quadtree.insert(obj);

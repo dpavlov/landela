@@ -80,6 +80,24 @@ export default class Indexes {
 	findSiteByPoint(point) {
 		return this.sites.find(point);
 	}
+	bounds() {
+		let b = [this.sites.bounds, this.nodes.bounds];
+		let area = { xMin: Number.MAX_VALUE, yMin: Number.MAX_VALUE, xMax: Number.MIN_VALUE, yMax: Number.MIN_VALUE };
+		for (var i = 0; i < b.length; i++) {
+			if (area.xMin > b[i].x) area.xMin = b[i].x;
+			if (area.yMin > b[i].y) area.yMin = b[i].y;
+			if (area.xMax < b[i].x + b[i].width) area.xMax = b[i].x + b[i].width;
+			if (area.yMax < b[i].y + b[i].height) area.yMax = b[i].y + b[i].height;
+		}
+		return { x: area.xMin, y: area.yMin, width: area.xMax - area.xMin, height: area.yMax - area.yMin };
+	}
+	visit(visitor) {
+		this.sites.visit(visitor);
+		this.nodes.visit(visitor);
+		this.ports.visit(visitor);
+		this.links.visit(visitor);
+		this.linkControls.visit(visitor);
+	}
   findByPoint(point) {
     let linkControl = this.linkControls.find(point.real);
 		if (linkControl) {

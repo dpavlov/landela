@@ -49,13 +49,25 @@ export default class IOCanvas {
     this.ctx.stroke();
   }
   rectangle(top, w, h, style) {
-    let compiledStyle = Object.assign(this.rectangleDefaultStyle, style || {})
-    this.ctx.fillStyle = compiledStyle.fillStyle;
-    this.ctx.fillRect(top.x, top.y, w, h);
+    let _style = style || {};
+    let compiledStyle = Object.assign(this.rectangleDefaultStyle, _style)
+    if (_style.strokeStyle) {
+      this.ctx.beginPath();
+      this.ctx.lineWidth = compiledStyle.lineWidth;
+      this.ctx.strokeStyle = compiledStyle.strokeStyle;
+      this.ctx.rect(top.x, top.y, w, h);
+      this.ctx.stroke();
+    }
+    if (_style.fillStyle) {
+      this.ctx.lineWidth = compiledStyle.lineWidth;
+      this.ctx.strokeStyle = compiledStyle.strokeStyle;
+      this.ctx.fillStyle = compiledStyle.fillStyle;
+      this.ctx.fillRect(top.x, top.y, w, h);
+    }
   }
   roundedRectangle(top, width, height, radius, style) {
     let _style = style || {};
-    let compiledStyle = Object.assign(this.rectangleDefaultStyle, style || {})
+    let compiledStyle = Object.assign(this.rectangleDefaultStyle, _style)
     let r = {tl: radius || 5, tr: radius || 5, br: radius || 5, bl: radius || 5};
     if (_style.fillStyle) {
       this.ctx.fillStyle = compiledStyle.fillStyle;

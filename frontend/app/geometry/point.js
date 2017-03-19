@@ -27,6 +27,9 @@ export default class Point {
     withMultiplier(k) {
         return new Point(this.x * k, this.y * k);
     }
+    withMultipliers(k1, k2) {
+        return new Point(this.x * k1, this.y * k2);
+    }
     distanceTo(point) {
       let xDelta = this.x - point.x;
       let yDelta = this.y - point.y;

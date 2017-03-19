@@ -9,7 +9,8 @@ export default class Layout extends React.Component {
 		isLeftPanelOpen: false,
 		isDrawMarkerDisplayed: false,
 		leftPanelTargets: new MapSet(),
-		activeMapLayer: 'equipments'
+		activeMapLayer: 'equipments',
+		miniMapSource: null
 	}
 	handleLeftPanelStateChanged = (selected) => {
 		let isLeftPanelOpen = !selected.isEmpty();
