@@ -2,13 +2,14 @@ import Bounds from '../geometry/bounds';
 import Size from '../geometry/size';
 
 import Observable from '../utils/observable';
-import { SITE_MOVED, SITE_RESIZED, NODE_MOVED, NODE_ATTACHED, NODE_REMOVED } from './events/event-types';
+import { SITE_MOVED, SITE_RESIZED, NODE_MOVED, NODE_ATTACHED, NODE_REMOVED, SITE_NAME_CHANGED, SITE_ADDRESS_CHANGED } from './events/event-types';
 
 export default class Site extends Observable {
-  constructor(id, name, center, width, height) {
+  constructor(id, name, address, center, width, height) {
     super();
     this.id = id;
     this.name = name;
+    this.address = address;
     this.center = center;
     this.width = width;
     this.height = height;
@@ -76,6 +77,13 @@ export default class Site extends Observable {
   resized() {
     this.notify(SITE_RESIZED);
     this.nodes.forEach(node => node.moved());
+  }
+  changed(propName, oldValue) {
+    if (propName === 'name') {
+      this.notify(SITE_NAME_CHANGED);
+    } else if (propName === 'address') {
+      this.notify(SITE_ADDRESS_CHANGED);
+    }
   }
 };
 

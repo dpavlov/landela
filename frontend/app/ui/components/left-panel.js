@@ -67,7 +67,7 @@ export default class LeftPanel extends React.Component {
       }
       </ReactCSSTransitionGroup>
       {
-        this.props.targets.sites().map(site => <SiteProperties key={site.id} site={site} onNameChanged={this.props.onNameChanged} onDeselect={this.props.onDeselect} onDelete={this.props.onDelete}/>)
+        this.props.targets.sites().map(site => <SiteProperties key={site.id} mapSet={this.props.targets} site={site} updateMap={this.props.updateMap} onDeselect={this.props.onDeselect} onDelete={this.props.onDelete}/>)
       }
       <ReactCSSTransitionGroup transitionName="fadein" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
       {

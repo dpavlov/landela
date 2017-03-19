@@ -10,7 +10,7 @@ export default class EmptyMapGenerator {
     if (layer === 'equipments') {
       return new Map('equipments', 'Equipments',
   		[
-        new Site(Id.one(), 'Landela Location', new Point(0, 0), 250, 250).attachNodes([
+        new Site(Id.one(), 'Landela Site', 'Landela Location', new Point(0, 0), 250, 250).attachNodes([
           new Node(Id.zero(), 'landela', 'control-center', new Point(0, 0))
         ])
   		],

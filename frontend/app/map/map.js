@@ -3,7 +3,7 @@ import Site from './site';
 
 import Observable from '../utils/observable';
 
-import { SITE_CREATED, NODE_CREATED, LINK_CREATED, NODE_MOVED, NODE_REMOVED } from './events/event-types';
+import { SITE_CREATED, SITE_REMOVED, NODE_CREATED, LINK_CREATED, NODE_MOVED, NODE_REMOVED } from './events/event-types';
 
 export default class Map extends Observable {
   constructor(id, name, sites, nodes, links) {
@@ -109,7 +109,7 @@ export default class Map extends Observable {
         target.unsubscribe(this);
         this.sites.splice(index, 1);
         if (!silent) {
-          this.notify(target, NODE_REMOVED);
+          this.notify(target, SITE_REMOVED);
         }
       }
     }

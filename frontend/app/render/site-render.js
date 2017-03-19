@@ -35,7 +35,7 @@ export default class SiteRender {
     let textHeight = fontSize + this.viewport.withScale(2);
     let lineHeight = textHeight + this.viewport.withScale(2);
 
-    let {lines, maxLineWidth} = this.ioCanvas.textLines(site.name, labelFont, maxLabelWidth, textHeight);
+    let {lines, maxLineWidth} = this.ioCanvas.textLines(site.name + ' | ' + site.address, labelFont, maxLabelWidth, textHeight);
 
     let topLeft = this.labelBackground(siteCenter, siteSize, radius, labelPadding, maxLineWidth, lineHeight, lines.length);
     this.label(topLeft, labelPadding, lines, lineHeight, textHeight, labelStyle);

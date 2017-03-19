@@ -1,5 +1,11 @@
-export default class MapSet {
+import Observable from '../utils/observable';
+
+export let SITE_ADDED = Symbol.for("SITE_ADDED");
+export let SITE_REMOVED = Symbol.for("SITE_REMOVED");
+
+export default class MapSet extends Observable {
     constructor(sites, nodes, links, ports) {
+      super();
       this._sites = sites || [];
       this._nodes = nodes || [];
       this._links = links || [];
@@ -7,6 +13,7 @@ export default class MapSet {
     }
     site(site) {
       this._sites.push(site);
+      this.notify(SITE_ADDED, site);
     }
     node(node) {
       this._nodes.push(node);
@@ -48,6 +55,7 @@ export default class MapSet {
       let index = this._sites.indexOf(site);
       if (index > -1) {
         this._sites.splice(index, 1);
+        this.notify(SITE_REMOVED, site);
       }
     }
     removeNode(node) {

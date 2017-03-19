@@ -23,10 +23,10 @@ export default class SimpleMapGenerator {
 
       return new Map('m1', 'Network',
   		[
-  			new Site('1', 'Unated States Of America, New York, 2079 Hart Country Lane', new Point(650, 500), 300, 400).attachNodes([
+  			new Site('1', 'site-1', 'Unated States Of America, New York, 2079 Hart Country Lane', new Point(650, 500), 300, 400).attachNodes([
   				new Node('12', 'r1.example.com', 'router', new Point(0, 0))
   			]),
-  			new Site('2', '1783 Romrog Way', new Point(-500, 350), 300, 250).attachNodes([
+  			new Site('2', 'site-2', '1783 Romrog Way', new Point(-500, 350), 300, 250).attachNodes([
   				new Node('21', 'r2.example.com', 'router', new Point(50, 50))
   			])
   		], [

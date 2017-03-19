@@ -3,7 +3,10 @@ import Site from '../../map/site';
 import Node from '../../map/node';
 import Link, { LinkControl } from '../../map/link';
 import Port from '../../map/port';
-import { SITE_CREATED, SITE_MOVED, SITE_RESIZED, NODE_DETTACHED, NODE_ATTACHED, NODE_CREATED, NODE_MOVED, PORT_CREATED, LINK_CREATED } from '../../map/events/event-types';
+import { SITE_CREATED, SITE_REMOVED, SITE_MOVED, SITE_RESIZED, SITE_NAME_CHANGED, SITE_ADDRESS_CHANGED } from '../../map/events/event-types';
+import { NODE_DETTACHED, NODE_ATTACHED, NODE_CREATED, NODE_MOVED, NODE_REMOVED } from '../../map/events/event-types';
+import { PORT_CREATED, LINK_CREATED } from '../../map/events/event-types';
+
 import Point from '../../geometry/point';
 export default class MapUpdater {
   constructor(map) {
@@ -15,8 +18,14 @@ export default class MapUpdater {
       let { parent,  target } = this.findTargetByPath(this.map, [... event.path]);
       if (Symbol.for(event.type) === SITE_CREATED) {
         let sCenter = new Point(event.args.center.x, event.args.center.y);
-        let site = new Site(event.args.id, event.args.name, sCenter, event.args.width, event.args.height);
+        let site = new Site(event.args.id, event.args.name, event.args.address, sCenter, event.args.width, event.args.height);
         this.map.addSites([site], true);
+      } else if (Symbol.for(event.type) === SITE_NAME_CHANGED) {
+        target.name = event.args;
+      } else if (Symbol.for(event.type) === SITE_ADDRESS_CHANGED) {
+        target.address = event.args;
+      } else if (Symbol.for(event.type) === SITE_REMOVED) {
+        this.map.remove(target, true);
       } else if (Symbol.for(event.type) === SITE_MOVED) {
         target.center = new Point(event.args.x, event.args.y);
       } else if (Symbol.for(event.type) === SITE_RESIZED) {
@@ -35,6 +44,8 @@ export default class MapUpdater {
         let nCenter = new Point(event.args.center.x, event.args.center.y);
         let node = new Node(event.args.id, event.args.name, event.args.type, nCenter);
         this.map.addNodes([node], true);
+      } else if (Symbol.for(event.type) === NODE_REMOVED) {
+        this.map.remove(target, true);
       } else if (Symbol.for(event.type) === NODE_MOVED) {
         target.center = new Point(event.args.x, event.args.y);
       } else if (Symbol.for(event.type) === PORT_CREATED) {

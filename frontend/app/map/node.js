@@ -1,7 +1,7 @@
 import Port from './port';
 import Point from '../geometry/point';
 import Observable from '../utils/observable';
-import { NODE_SELECTED, NODE_DESELECTED, NODE_MOVED, NODE_DETTACHED, PORT_CREATED } from './events/event-types';
+import { NODE_MOVED, NODE_DETTACHED, PORT_CREATED } from './events/event-types';
 
 export default class Node extends Observable {
   constructor(id, name, type, center) {
@@ -58,11 +58,9 @@ export default class Node extends Observable {
   }
   select() {
     this.state = NodeState.SELECTED;
-    this.notify(NODE_SELECTED);
   }
   deselect() {
     this.state = NodeState.NORMAL;
-    this.notify(NODE_DESELECTED);
   }
   move(offset) {
     this.center = this.center.shift(offset.yInverse());

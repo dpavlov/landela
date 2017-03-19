@@ -12,6 +12,7 @@ export default class Layout extends React.Component {
 		activeMapLayer: 'equipments',
 		miniMapSource: null
 	}
+	updateMap = () => this.refs.map.getWrappedInstance().forceUpdate();
 	handleLeftPanelStateChanged = (selected) => {
 		let isLeftPanelOpen = !selected.isEmpty();
 		this.setState({leftPanelTargets: selected, isLeftPanelOpen: isLeftPanelOpen});
@@ -24,9 +25,6 @@ export default class Layout extends React.Component {
 	}
 	handleMakeLink = (linkType) => {
 		this.refs.map.getWrappedInstance().makeLinks(linkType);
-	}
-	handleNameChanged = (obj) => {
-		this.refs.map.getWrappedInstance().forceUpdate();
 	}
 	handleDeselect = (obj) => {
 		this.refs.map.getWrappedInstance().deselect(obj);
@@ -49,7 +47,7 @@ export default class Layout extends React.Component {
 						open={this.state.isLeftPanelOpen}
 						targets={this.state.leftPanelTargets}
 						onMakeLink={this.handleMakeLink}
-						onNameChanged={this.handleNameChanged}
+						updateMap={this.updateMap}
 						onDeselect={this.handleDeselect}
 						onDelete={this.handleDelete}/>
 			</div>

@@ -1,5 +1,5 @@
-import { SITE_CREATED, SITE_MOVED, SITE_RESIZED } from '../../map/events/event-types';
-import { NODE_ATTACHED, NODE_DETTACHED, NODE_CREATED, NODE_MOVED } from '../../map/events/event-types';
+import { SITE_CREATED, SITE_MOVED, SITE_RESIZED, SITE_REMOVED, SITE_NAME_CHANGED, SITE_ADDRESS_CHANGED } from '../../map/events/event-types';
+import { NODE_ATTACHED, NODE_DETTACHED, NODE_CREATED, NODE_MOVED, NODE_REMOVED } from '../../map/events/event-types';
 import { PORT_CREATED, LINK_CREATED } from '../../map/events/event-types';
 
 export default class EventsFactory {
@@ -13,10 +13,17 @@ export default class EventsFactory {
       return { ... event, args: {
         id: target.id,
         name: target.name,
+        address: target.address,
         center: target.center.copy(),
         width: target.width,
         height: target.height
       } };
+    } else if (eventType === SITE_REMOVED) {
+      return { ... event, args: [map.id, target.id]};
+    } else if (eventType === SITE_NAME_CHANGED) {
+      return { ... event, args: target.name };
+    } else if (eventType === SITE_ADDRESS_CHANGED) {
+      return { ... event, args: target.address};
     } else if (eventType === SITE_MOVED) {
       return {  ... event, args: target.center.copy() };
     } else if (eventType === SITE_RESIZED) {
@@ -34,6 +41,8 @@ export default class EventsFactory {
         site: target.site ? target.site.id : null,
         state: target.state
       } };
+    } else if (eventType === NODE_REMOVED) {
+      return { ... event, args: target.site ? [map.id, target.site.id, target.id] : [map.id, target.id]};
     } else if (eventType === NODE_MOVED) {
       return {  ... event, args: target.center.copy() };
     } else if (eventType === PORT_CREATED) {

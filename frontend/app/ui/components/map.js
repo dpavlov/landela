@@ -70,6 +70,7 @@ export class Map extends React.Component {
 		]);
 	}
 	onEvent(...args) {
+		console.log(args[args.length - 1]);
 		let e = EventsFactory.create(args);
 		this.network.version(e.ts);
 		this.props.updateMap(e);
@@ -125,7 +126,7 @@ export class Map extends React.Component {
 		let y = DomUtils.height(this.state.container) / 2;
 		let realPos = this.viewport.toRealPosition(new Point(x, y));
 		if (aType === 'site') {
-			let newSite = new Site(Id.generate(), name, realPos, 200, 200);
+			let newSite = new Site(Id.generate(), name, 'Unknown Location', realPos, 200, 200);
 			this.network.addSites([newSite]);
 			this.indexes.sites.insert(newSite);
 		} else {
