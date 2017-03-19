@@ -7,6 +7,7 @@ import Bounds from '../../geometry/bounds';
 import Indexes from '../utils/indexes';
 
 import DomUtils from '../utils/dom-utils';
+import StateMachine from '../../utils/state-machine';
 
 import MiniMapRender from '../../render/mini-map-render'
 import Viewport from '../../viewport/viewport';
@@ -24,10 +25,21 @@ export default class MiniMap extends React.Component {
     };
     this._render = null;
     this.viewport = null;
+    this._draggingParams = {xMove: 0, yMove: 0};
+    this._dragging = new StateMachine('init', [
+			{event: 'frame-selected', from: 'init', to: 'ready-to-move'},
+			{event: 'moved', from: 'ready-to-move', to: 'moving'},
+			{event: 'reset', from: '*', to: 'init'}
+		]);
   }
   componentDidMount() {
     this.position();
     window.addEventListener('resize', this.onResize, false);
+    document.addEventListener('mousemove', this.handleMouseMove.bind(this));
+    document.addEventListener('mouseout', (e) => {
+			this._dragging = this._dragging.on('reset');
+			this._draggingParams = {xMove: 0, yMove: 0};
+		});
     this.viewport = new Viewport(this.state.bounds.width, this.state.bounds.height);
     this.parentViewport = null;
     this._render = new MiniMapRender(this.refs['mini-map'], this.viewport, this.parentViewport);
@@ -73,14 +85,36 @@ export default class MiniMap extends React.Component {
     this.setState({ scale: scale });
   }
   handleMouseClick(e) {
-    let pScale = this.parentViewport ? this.parentViewport.scale() : 1;
-    let point = new Point(this.state.bounds.width / 2 - e.nativeEvent.layerX, this.state.bounds.height / 2 - e.nativeEvent.layerY);
-    this.props.onMapMoveTo && this.props.onMapMoveTo(point.withMultiplier(1 / this.state.scale));
+    if (!this._dragging.is('moving')) {
+      let point = new Point(this.state.bounds.width / 2 - e.nativeEvent.layerX, this.state.bounds.height / 2 - e.nativeEvent.layerY);
+      this.props.onMapMoveTo && this.props.onMapMoveTo(point.withMultiplier(1 / this.state.scale));
+    } else {
+      this._dragging = this._dragging.on('reset');
+  		this._draggingParams = {xMove: 0, yMove: 0};
+    }
+  }
+  handleMouseDown(e) {
+    let point = new Point(e.nativeEvent.layerX, e.nativeEvent.layerY);
+    let fBounds = this._render.frame(this.state.scale);
+    if (fBounds.in(point)) {
+      this._draggingParams = { xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY };
+      this._dragging = this._dragging.on('frame-selected');
+    }
+  }
+  handleMouseMove(e) {
+    if (this._dragging.is('ready-to-move') || this._dragging.is('moving')) {
+      let offset = new Offset(e.screenX - this._draggingParams.xMove, e.screenY - this._draggingParams.yMove);
+      this.props.onMapMove && this.props.onMapMove(offset.inverse().withMultiplier(1 / this.state.scale));
+      this._dragging = this._dragging.on('moved');
+			this.forceUpdate();
+    }
+    this._draggingParams.xMove = e.screenX;
+		this._draggingParams.yMove = e.screenY;
   }
   render() {
     if (this.props.settings.display) {
       return (
-        <canvas ref="mini-map" id='mini-map' width={this.state.bounds.width} height={this.state.bounds.height} style={this.state.style} onClick={this.handleMouseClick.bind(this)}></canvas>
+        <canvas ref="mini-map" id='mini-map' width={this.state.bounds.width} height={this.state.bounds.height} style={this.state.style} onClick={this.handleMouseClick.bind(this)} onMouseDown={this.handleMouseDown.bind(this)}></canvas>
       );
     } else {
       return null;

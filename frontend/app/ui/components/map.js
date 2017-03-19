@@ -182,6 +182,10 @@ export class Map extends React.Component {
 		this.viewport.moveTo(center);
 		this.forceUpdate();
 	}
+	handleMove = (offset) => {
+		this.viewport.move(offset);
+		this.forceUpdate();
+	}
 	handleKeyDown(e) {
 		var moves = ['lt', 'up', 'rt', 'dw'];
 		if(e.keyCode && e.keyCode > 36 && e.keyCode < 41) this.onMapMove(moves[e.keyCode - 37]);
@@ -309,7 +313,7 @@ export class Map extends React.Component {
 						: null
 				}
 				<canvas id="stage" width={width} height={height} ref="stage" onClick={this.onMouseClick.bind(this)} onMouseDown={this.onMouseDown.bind(this)}/>
-				<MiniMap settings={this.props.settings['mini-map']} source={this.indexes} viewport={this.viewport} onMapMoveTo={this.handleMoveTo}/>
+				<MiniMap settings={this.props.settings['mini-map']} source={this.indexes} viewport={this.viewport} onMapMoveTo={this.handleMoveTo} onMapMove={this.handleMove}/>
 			</div>
 		);
 	}
