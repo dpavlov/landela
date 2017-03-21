@@ -1,4 +1,5 @@
 import Map from '../../map/map';
+import Layer from '../../map/layer';
 import Site from '../../map/site';
 import Node from '../../map/node';
 import Link, { LinkControl } from '../../map/link';
@@ -15,17 +16,18 @@ export default class MapUpdater {
   update(event) {
     console.log(JSON.stringify(event));
     if (event.ts > this.map._version) {
+      let layer = event.path[0];
       let { parent,  target } = this.findTargetByPath(this.map, [... event.path]);
       if (Symbol.for(event.type) === SITE_CREATED) {
         let sCenter = new Point(event.args.center.x, event.args.center.y);
         let site = new Site(event.args.id, event.args.name, event.args.address, sCenter, event.args.width, event.args.height);
-        this.map.addSites([site], true);
+        this.map.layer(layer).addSites([site], true);
       } else if (Symbol.for(event.type) === SITE_NAME_CHANGED) {
         target.name = event.args;
       } else if (Symbol.for(event.type) === SITE_ADDRESS_CHANGED) {
         target.address = event.args;
       } else if (Symbol.for(event.type) === SITE_REMOVED) {
-        this.map.remove(target, true);
+        this.map.layer(layer).remove(target, true);
       } else if (Symbol.for(event.type) === SITE_MOVED) {
         target.center = new Point(event.args.x, event.args.y);
       } else if (Symbol.for(event.type) === SITE_RESIZED) {
@@ -35,17 +37,17 @@ export default class MapUpdater {
       } else if (Symbol.for(event.type) === NODE_ATTACHED) {
         let siteResult = this.findTargetByPath(this.map, [... event.args.site]);
         let nodeResult = this.findTargetByPath(this.map, [... event.args.node]);
-        this.map.attachNode(siteResult.target, nodeResult.target, true);
+        this.map.layer(layer).attachNode(siteResult.target, nodeResult.target, true);
       } else if (Symbol.for(event.type) === NODE_DETTACHED) {
         let siteResult = this.findTargetByPath(this.map, [... event.args.site]);
         let nodeResult = this.findTargetByPath(this.map, [... event.args.node]);
-        this.map.dettachNode(siteResult.target, nodeResult.target, true);
+        this.map.layer(layer).dettachNode(siteResult.target, nodeResult.target, true);
       } else if (Symbol.for(event.type) === NODE_CREATED) {
         let nCenter = new Point(event.args.center.x, event.args.center.y);
         let node = new Node(event.args.id, event.args.name, event.args.type, nCenter);
-        this.map.addNodes([node], true);
+        this.map.layer(layer).addNodes([node], true);
       } else if (Symbol.for(event.type) === NODE_REMOVED) {
-        this.map.remove(target, true);
+        this.map.layer(layer).remove(target, true);
       } else if (Symbol.for(event.type) === NODE_MOVED) {
         target.center = new Point(event.args.x, event.args.y);
       } else if (Symbol.for(event.type) === PORT_CREATED) {
@@ -57,24 +59,16 @@ export default class MapUpdater {
         let scp = new Point(event.args.sControlPoint.x, event.args.sControlPoint.y);
         let ecp = new Point(event.args.eControlPoint.x, event.args.eControlPoint.y);
         let link = new Link(event.args.id, sPortResult.target, ePortResult.target, scp, ecp);
-        this.map.addLinks([link], true);
+        this.map.layer(layer).addLinks([link], true);
       }
     }
     return this.map;
   }
-  findTargetByPath(current, path) {
-    if (current.id === path[0]) {
-      if (path.length === 1) {
-        return { parent: null, target: current }
-      } else {
-        var childId = path[1];
-        path.splice(0, 2);
-        let children = this.children(current);
-        return this.findChildren(childId, children, path, current);
-      }
-    } else {
-      return {parent: null, target: null};
-    }
+  findTargetByPath(map, path) {
+    var childId = path[0];
+    path.splice(0, 1);
+    let children = this.children(map);
+    return this.findChildren(childId, children, path, map);
   }
 
   findChildren(currentId, children, path, parent) {
@@ -94,7 +88,9 @@ export default class MapUpdater {
 
   children(obj) {
     if (obj instanceof Map) {
-      return [...obj.nodes, ...obj.sites, ...obj.links];
+      return obj.layers();
+    } else if (obj instanceof Layer) {
+      return [... obj.nodes, ...obj.sites, ...obj.links];
     } else if (obj instanceof Site) {
       return obj.nodes;
     } else if (obj instanceof Node) {

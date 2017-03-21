@@ -43,7 +43,8 @@ export class Map extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.network = MapGenerator.generate(this.state.layer);
+		this.network = MapGenerator.generate();
+		this.network.activate(this.state.layer);
 		if (props.events) {
 			let updater = new MapUpdater(this.network);
 			props.events.forEach(e => updater.update(e));
@@ -87,7 +88,7 @@ export class Map extends React.Component {
 
 		this.viewport.resize(width, height);
 
-		this.indexes = new Indexes(this.viewport, this.network, icons);
+		this.indexes = new Indexes(this.viewport, this.network.active(), icons);
 
 		this.selection = new Selection(this._render);
 
@@ -104,14 +105,14 @@ export class Map extends React.Component {
 		this.setState({container: this.refs.mapContainer});
 	}
 	componentDidUpdate() {
-		this._render.render(this.network, (delay) => console.log(delay));
+		this._render.render(this.network.active(), (delay) => console.log(delay));
 	}
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.activeLayer !== this.state.layer) {
 			this.setState({layer: nextProps.activeLayer});
-			this.network = MapGenerator.generate(nextProps.activeLayer);
 			let icons = new NodeIcons(this.props.icons.icons, this.viewport.isScaleInRange.bind(this.viewport));
-			this.indexes = new Indexes(this.viewport, this.network, icons);
+			this.network.activate(nextProps.activeLayer);
+			this.indexes = new Indexes(this.viewport, this.network.active(), icons);
 		}
 	}
 	onResize() {
@@ -125,17 +126,21 @@ export class Map extends React.Component {
 		let x = DomUtils.width(this.state.container) / 2;
 		let y = DomUtils.height(this.state.container) / 2;
 		let realPos = this.viewport.toRealPosition(new Point(x, y));
-		if (aType === 'site') {
-			let newSite = new Site(Id.generate(), name, 'Unknown Location', realPos, 200, 200);
-			this.network.addSites([newSite]);
-			this.indexes.sites.insert(newSite);
-		} else {
-			var newNode = new Node(Id.generate(), name, aType, realPos);
-			this.network.addNodes([newNode]);
-			this.indexes.nodes.insert(newNode);
-			let site = this.indexes.findSiteByPoint(realPos);
-			if (site) {
-					this.network.attachNode(site, newNode);
+		if (this.network.active().id === 'equipments') {
+			if (aType === 'site') {
+				let newSite = new Site(Id.generate(), name, 'Unknown Location', realPos, 200, 200);
+				this.network.active().addSites([newSite]);
+				var newNode = new Node(Id.generate(), name, aType, realPos.withMultiplier(0.1));
+				this.network.active().upLayer.addNodes([newNode]);
+				this.indexes.sites.insert(newSite);
+			} else {
+				var newNode = new Node(Id.generate(), name, aType, realPos);
+				this.network.active().addNodes([newNode]);
+				this.indexes.nodes.insert(newNode);
+				let site = this.indexes.findSiteByPoint(realPos);
+				if (site) {
+						this.network.attachNode(site, newNode);
+				}
 			}
 		}
 		this.forceUpdate();
@@ -143,9 +148,9 @@ export class Map extends React.Component {
 	makeLinks(linkType) {
 		let nodes = this.selection.selectedSet.nodes();
 		let {links, ports} = this.linksBuilder.build(linkType, nodes);
-		this.network.addLinks(links);
-		this.indexes.addLinks(links);
-		this.indexes.addPorts(ports);
+		this.network.active().addLinks(links);
+		this.indexes.active().addLinks(links);
+		this.indexes.active().addPorts(ports);
 		Promise.all(nodes.map(node => this.selection.select(node, this.forceUpdate.bind(this))))
 			.then(() => this.props.onSelect(this.selection.selectedSet));
 	}
@@ -159,7 +164,7 @@ export class Map extends React.Component {
 		this.selection.select(target, this.forceUpdate.bind(this)).then(selectedSet => {
 			this.props.onSelect(selectedSet);
 			this.indexes.remove(target);
-			this.network.remove(target);
+			this.network.active().remove(target);
 			this.forceUpdate();
 		})
 	}
@@ -224,11 +229,11 @@ export class Map extends React.Component {
 					let site = this.indexes.findSiteByPoint(this._draggingParams.target.center);
 					if (site) {
 							if (!this._draggingParams.target.isAttached()) {
-								this.network.attachNode(site, this._draggingParams.target);
+								this.network.active().attachNode(site, this._draggingParams.target);
 							}
 					} else {
 							if (this._draggingParams.target.isAttached()) {
-								this.network.dettachNode(this._draggingParams.target.site, this._draggingParams.target);
+								this.network.active().dettachNode(this._draggingParams.target.site, this._draggingParams.target);
 							}
 					}
 				}
