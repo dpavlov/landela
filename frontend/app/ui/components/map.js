@@ -101,7 +101,6 @@ export class Map extends React.Component {
 			this._draggingParams = {target: null, xMove: 0, yMove: 0};
 		});
 		document.addEventListener('mousemove', this.onMouseMove.bind(this));
-
 		this.setState({container: this.refs.mapContainer});
 	}
 	componentDidUpdate() {
@@ -130,7 +129,7 @@ export class Map extends React.Component {
 			if (aType === 'site') {
 				let newSite = new Site(Id.generate(), name, 'Unknown Location', realPos, 200, 200);
 				this.network.active().addSites([newSite]);
-				var newNode = new Node(Id.generate(), name, aType, realPos.withMultiplier(0.1));
+				var newNode = new Node(newSite.id, name, aType, realPos.withMultiplier(0.1));
 				this.network.active().upLayer.addNodes([newNode]);
 				this.indexes.sites.insert(newSite);
 			} else {
@@ -182,6 +181,17 @@ export class Map extends React.Component {
 			directions[direction].apply(this.viewport, [delta]);
 			this.props.onViewportStateChanged && this.props.onViewportStateChanged(this.viewport.state());
 			this.forceUpdate();
+		}
+	}
+	miniMapObjBoundsResolveHandler = (obj, originBounds) => {
+		if (obj instanceof Node) {
+			let b = new Bounds(originBounds.x, originBounds.y, originBounds.width, originBounds.height);
+			let icon = this._render.mapRender.nodeRender.icons.getIconFor(obj);
+	    let scaledWidth = icon.image.width * icon.rescale;
+			let scaledHeight = icon.image.height * icon.rescale;
+			return new Bounds(b.center().x - scaledWidth / 2, b.center().y - scaledHeight / 2, scaledWidth, scaledHeight);
+		} else {
+			return new Bounds(originBounds.x, originBounds.y, originBounds.width, originBounds.height);
 		}
 	}
 	handleMoveTo = (center) => {
@@ -319,7 +329,7 @@ export class Map extends React.Component {
 						: null
 				}
 				<canvas id="stage" width={width} height={height} ref="stage" onClick={this.onMouseClick.bind(this)} onMouseDown={this.onMouseDown.bind(this)}/>
-				<MiniMap settings={this.props.settings['mini-map']} source={this.indexes} viewport={this.viewport} onMapMoveTo={this.handleMoveTo} onMapMove={this.handleMove}/>
+				<MiniMap settings={this.props.settings['mini-map']} source={this.indexes} viewport={this.viewport} boundsResolver={this.miniMapObjBoundsResolveHandler} onMapMoveTo={this.handleMoveTo} onMapMove={this.handleMove}/>
 			</div>
 		);
 	}

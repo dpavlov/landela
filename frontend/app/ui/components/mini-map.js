@@ -42,7 +42,7 @@ export default class MiniMap extends React.Component {
 		});
     this.viewport = new Viewport(this.state.bounds.width, this.state.bounds.height);
     this.parentViewport = null;
-    this._render = new MiniMapRender(this.refs['mini-map'], this.viewport, this.parentViewport);
+    this._render = new MiniMapRender(this.refs['mini-map'], this.viewport, this.parentViewport, this.icons);
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.viewport && !this._render.parentViewport) {
@@ -53,7 +53,7 @@ export default class MiniMap extends React.Component {
         let scale = this.scale(nextProps);
         let objs = [];
         nextProps.source.visit( (obj, b) => {
-          objs.push({type: obj.constructor.name.toLowerCase(), bounds: new Bounds(b.x, b.y, b.width, b.height)});
+          objs.push({type: obj.constructor.name.toLowerCase(), bounds: nextProps.boundsResolver(obj, b)});
         });
         this.setState({objs: objs, scale: scale});
       }

@@ -15,7 +15,7 @@ export default class EmptyMapGenerator {
     ]);
     let l2 = new Layer('sites', 'Sites', [],
       [
-        new Node(Id.generate(), 'site', 'site', new Point(0, 0))
+        new Node(Id.one(), 'site', 'site', new Point(0, 0))
       ]
     );
     let l3 = new Layer('cities', 'Cities', [],
