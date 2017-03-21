@@ -99,6 +99,12 @@ settings:
           'icons/network/server/server-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/server/server-1x.png': 0.75 - 1.5, 1
           'icons/network/server/server-1.5x.png': 1.5 - 5, 0.66
+      multilayer-switch:
+        normal:
+          'icons/network/multilayer-switch/multilayer-switch-0.5x.png': 0 - 0.5, 2
+          'icons/network/multilayer-switch/multilayer-switch-0.75x.png': 0.5 - 0.75, 1.5
+          'icons/network/multilayer-switch/multilayer-switch-1x.png': 0.75 - 1.5, 1
+          'icons/network/multilayer-switch/multilayer-switch-1.5x.png': 1.5 - 5, 0.66
     render:
       grid:
         step: 50
@@ -156,6 +162,9 @@ settings:
         server:
           name: 'Server'
           code: 'SVR'
+        multilayer-switch:
+          name: 'Multilayer Switch'
+          code: 'MLSW'            
       slots-allocation:
         router: 1
         switch: 2

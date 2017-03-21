@@ -1,6 +1,8 @@
 import React from 'react';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import Avatar from 'material-ui/Avatar';
 import FlatButton from 'material-ui/FlatButton';
 import { purple500 } from 'material-ui/styles/colors';
@@ -18,6 +20,7 @@ export default class SiteProperties extends React.Component {
       originAddress: props.site.address,
       name: props.site.name,
       address: props.site.address,
+      city: 'city'
     }
   }
 
@@ -94,8 +97,13 @@ export default class SiteProperties extends React.Component {
             this.actions()
           }
           <CardText expandable={true}>
-            <TextField hintText="Name" floatingLabelText="Name" value={this.state.name} onChange={this.onNameChanged}/>
-            <TextField hintText="Address" floatingLabelText="Address" value={this.state.address} onChange={this.onAddressChanged}/>
+            <TextField hintText="Name" floatingLabelText="Name" value={this.state.name} onChange={this.onNameChanged} fullWidth={true}/>
+            <TextField hintText="Address" floatingLabelText="Address" value={this.state.address} onChange={this.onAddressChanged} fullWidth={true}/>
+            <SelectField floatingLabelText="City" value={this.state.city} fullWidth={true} onChange={this.handleCiteChanged}>
+              {
+                <MenuItem key={'city'} value={'city'} primaryText={'City'}/>
+              }
+            </SelectField>
             {
               this.properties(this.props.site)
             }
