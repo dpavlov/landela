@@ -3,6 +3,9 @@ import Observable from '../utils/observable';
 export let SITE_ADDED = Symbol.for("SITE_ADDED");
 export let SITE_REMOVED = Symbol.for("SITE_REMOVED");
 
+export let NODE_ADDED = Symbol.for("NODE_ADDED");
+export let NODE_REMOVED = Symbol.for("NODE_REMOVED");
+
 export default class MapSet extends Observable {
     constructor(sites, nodes, links, ports) {
       super();
@@ -17,6 +20,7 @@ export default class MapSet extends Observable {
     }
     node(node) {
       this._nodes.push(node);
+      this.notify(NODE_ADDED, node);
     }
     link(link) {
       this._links.push(link);
@@ -62,6 +66,7 @@ export default class MapSet extends Observable {
       let index = this._nodes.indexOf(node);
       if (index > -1) {
         this._nodes.splice(index, 1);
+        this.notify(NODE_REMOVED, node);
       }
     }
     removeLink(link) {

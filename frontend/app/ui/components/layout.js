@@ -8,14 +8,14 @@ export default class Layout extends React.Component {
 	state = {
 		isLeftPanelOpen: false,
 		isDrawMarkerDisplayed: false,
-		leftPanelTargets: new MapSet(),
+		mapSet: new MapSet(),
 		activeMapLayer: 'equipments',
 		miniMapSource: null
 	}
 	updateMap = () => this.refs.map.getWrappedInstance().forceUpdate();
 	handleLeftPanelStateChanged = (selected) => {
 		let isLeftPanelOpen = !selected.isEmpty();
-		this.setState({leftPanelTargets: selected, isLeftPanelOpen: isLeftPanelOpen});
+		this.setState({mapSet: selected, isLeftPanelOpen: isLeftPanelOpen});
 	}
 	handleDrawMarkerStateChange = (newState) => {
 		this.setState({isDrawMarkerDisplayed: newState});
@@ -45,7 +45,7 @@ export default class Layout extends React.Component {
 						/>
 					<LeftPanel
 						open={this.state.isLeftPanelOpen}
-						targets={this.state.leftPanelTargets}
+						mapSet={this.state.mapSet}
 						onMakeLink={this.handleMakeLink}
 						updateMap={this.updateMap}
 						onDeselect={this.handleDeselect}

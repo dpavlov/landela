@@ -47,7 +47,7 @@ export default class LeftPanel extends React.Component {
   }
 
   toolbarIcons() {
-    if (this.props.targets.hasAtLeastNNodes(2)) {
+    if (this.props.mapSet.hasAtLeastNNodes(2)) {
       return [
         <IconButton key="link-by-line-icon" iconClassName="link-by-line-icon" style={{width: 56, height: 56}} onTouchTap={this.handleLinkTap("point-to-point")}/>,
         <IconButton key="link-by-tree-icon" iconClassName="link-by-tree-icon" style={{width: 56, height: 56}} onTouchTap={this.handleLinkTap("point-to-multipoint")}/>,
@@ -67,11 +67,11 @@ export default class LeftPanel extends React.Component {
       }
       </ReactCSSTransitionGroup>
       {
-        this.props.targets.sites().map(site => <SiteProperties key={site.id} mapSet={this.props.targets} site={site} updateMap={this.props.updateMap} onDeselect={this.props.onDeselect} onDelete={this.props.onDelete}/>)
+        this.props.mapSet.sites().map(site => <SiteProperties key={site.id} mapSet={this.props.mapSet} site={site} updateMap={this.props.updateMap} onDeselect={this.props.onDeselect} onDelete={this.props.onDelete}/>)
       }
       <ReactCSSTransitionGroup transitionName="fadein" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
       {
-        this.props.targets.nodes().map(node => <NodeProperties key={node.id} node={node} onNameChanged={this.props.onNameChanged} onDeselect={this.props.onDeselect} onDelete={this.props.onDelete}/>)
+        this.props.mapSet.nodes().map(node => <NodeProperties key={node.id} mapSet={this.props.mapSet} node={node} updateMap={this.props.updateMap} onDeselect={this.props.onDeselect} onDelete={this.props.onDelete}/>)
       }
       </ReactCSSTransitionGroup>
 			</div>

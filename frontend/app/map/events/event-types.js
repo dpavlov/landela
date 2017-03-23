@@ -10,6 +10,7 @@ export let NODE_REMOVED = Symbol.for("NODE_REMOVED");
 export let NODE_MOVED = Symbol.for("NODE_MOVED");
 export let NODE_ATTACHED = Symbol.for("NODE_ATTACHED");
 export let NODE_DETTACHED = Symbol.for("NODE_DETTACHED");
+export let NODE_NAME_CHANGED = Symbol.for("NODE_NAME_CHANGED");
 
 export let PORT_CREATED = Symbol.for("PORT_CREATED");
 export let PORT_MOVED = Symbol.for("PORT_MOVED");
