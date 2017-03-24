@@ -52,6 +52,10 @@ export default class Site extends Observable {
       }
     }
   }
+  removeNodes(silent = false) {
+    [... this.nodes].forEach(n => this.removeNode(n, silent));
+    return this;
+  }
   onEvent = (obj, ...args) => this.notify(obj, ...args);
   bounds() {
     return Bounds.fromCenter(this.center, new Size(this.width, this.height));

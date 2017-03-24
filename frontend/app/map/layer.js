@@ -104,6 +104,7 @@ export default class Layer extends Observable {
     } else if (target instanceof Site) {
       let index = this.sites.indexOf(target);
       if (index >= 0) {
+        target.removeNodes();
         target.unsubscribe(this);
         this.sites.splice(index, 1);
         if (!silent) {
