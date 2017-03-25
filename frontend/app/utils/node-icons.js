@@ -1,14 +1,10 @@
 export default class NodeIcons {
-  constructor(icons, isScaleInRangeFn) {
-    this.icons = icons;
+  constructor(nodeTypes, isScaleInRangeFn) {
+    this.nodeTypes = nodeTypes;
     this.isScaleInRangeFn = isScaleInRangeFn;
   }
   getIconFor(node) {
-    if (node.isSelected() && this.icons[node.type + ".selected"]) {
-      return this._selectIconForCurrentScale(this.icons[node.type + ".selected"]);
-    } else {
-      return this._selectIconForCurrentScale(this.icons[node.type + ".normal"]);
-    }
+    return this._selectIconForCurrentScale(this.nodeTypes.lookup(node.type).icons);
   }
   sizeFor(node) {
     let icon = this.getIconFor(node);
@@ -18,7 +14,7 @@ export default class NodeIcons {
     let src = Object.keys(icons);
     for (var i = 0; i < src.length; i++) {
       let iconProps = icons[src[i]];
-      if (this.isScaleInRangeFn(iconProps.scaleRange)) {
+      if (this.isScaleInRangeFn(iconProps.range)) {
         return iconProps;
       }
     }

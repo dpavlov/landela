@@ -81,7 +81,7 @@ export class Map extends React.Component {
 		window.addEventListener('keydown', this.handleKeyDown.bind(this), false);
 
 		this.viewport = new Viewport(this.refs.stage.width, this.refs.stage.height);
-		let icons = new NodeIcons(this.props.icons.icons, this.viewport.isScaleInRange.bind(this.viewport));
+		let icons = new NodeIcons(this.props.nodeTypes, this.viewport.isScaleInRange.bind(this.viewport));
 		this._render = new Render(this.props.settings.render, this.viewport, this.refs.stage, icons);
 		let width = DomUtils.width(this.refs.mapContainer);
 		let height = DomUtils.height(this.refs.mapContainer);
@@ -325,7 +325,7 @@ export class Map extends React.Component {
 				<Navigator onMove={ this.onMapMove.bind(this) } />
 				{
 					this.props.displayDrawMarker
-						? <DrawMarker container={this.refs.mapContainer} onAdd={this.handleAdd} onGridAlign={this.onGridAlign} settings={this.props.settings['draw-marker']}/>
+						? <DrawMarker container={this.refs.mapContainer} onAdd={this.handleAdd} onGridAlign={this.onGridAlign} settings={this.props.settings['draw-marker']} nodeTypes={this.props.nodeTypes}/>
 						: null
 				}
 				<canvas id="stage" width={width} height={height} ref="stage" onClick={this.onMouseClick.bind(this)} onMouseDown={this.onMouseDown.bind(this)}/>
@@ -338,7 +338,7 @@ export class Map extends React.Component {
 const mapStateToProps = (state) => {
 	return {
 		settings: state.config.state === 'Done' ? state.config.config.settings.map : {},
-		icons: state.icons,
+		nodeTypes: state.icons.icons,
 		events: state.map.events
 	}
 }

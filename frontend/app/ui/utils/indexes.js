@@ -84,12 +84,20 @@ export default class Indexes {
 		let b = [this.sites.bounds, this.nodes.bounds];
 		let area = { xMin: Number.MAX_VALUE, yMin: Number.MAX_VALUE, xMax: Number.MIN_VALUE, yMax: Number.MIN_VALUE };
 		for (var i = 0; i < b.length; i++) {
-			if (area.xMin > b[i].x) area.xMin = b[i].x;
-			if (area.yMin > b[i].y) area.yMin = b[i].y;
-			if (area.xMax < b[i].x + b[i].width) area.xMax = b[i].x + b[i].width;
-			if (area.yMax < b[i].y + b[i].height) area.yMax = b[i].y + b[i].height;
+			if (area.xMin > b[i].x - b[i].width) {
+				area.xMin = b[i].x - b[i].width;
+			}
+			if (area.yMin > b[i].y - b[i].height) {
+				area.yMin = b[i].y - b[i].height;
+			}
+			if (area.xMax < b[i].x) {
+				area.xMax = b[i].x;
+			}
+			if (area.yMax < b[i].y) {
+				area.yMax = b[i].y;
+			}
 		}
-		return { x: area.xMin, y: area.yMin, width: area.xMax - area.xMin, height: area.yMax - area.yMin };
+		return { x: area.xMin, y: area.yMax, width: area.xMax - area.xMin, height: area.yMax - area.yMin };
 	}
 	visit(visitor) {
 		this.sites.visit(visitor);

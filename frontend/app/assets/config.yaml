@@ -6,101 +6,133 @@ settings:
       step: 0.01
     mini-map:
       display: true
-      width: 0.3
+      width: 0.2
       height: 0.3
-    icons:
+    node-types:
       control-center:
-        normal:
+        name: 'Control Center'
+        code: 'CC'
+        icons:
           'icons/network/control-center/control-center-0.5x.png': 0 - 0.5, 2
           'icons/network/control-center/control-center-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/control-center/control-center-1x.png': 0.75 - 1.5, 1
           'icons/network/control-center/control-center-1.5x.png': 1.5 - 5, 0.66
+      router:
+        name: 'Router'
+        code: 'R'
+        icons:
+          'icons/network/router/router-48x48.png': 0 - 0.5, 2
+          'icons/network/router/router-72x72.png': 0.5 - 0.75, 1.5
+          'icons/network/router/router-96x96.png': 0.75 - 1.5, 1
+          'icons/network/router/router-128x128.png': 1.5 - 5, 0.66
       small-city:
-        normal:
+        name: 'Small City'
+        code: 'SCITY'
+        icons:
           'icons/network/small-city/small-city-0.5x.png': 0 - 0.5, 2
           'icons/network/small-city/small-city-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/small-city/small-city-1x.png': 0.75 - 1.5, 1
           'icons/network/small-city/small-city-1.5x.png': 1.5 - 5, 0.66
       site:
-        normal:
+        name: 'Site'
+        code: 'SITE'
+        icons:
           'icons/network/site/site-0.5x.png': 0 - 0.5, 2
           'icons/network/site/site-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/site/site-1x.png': 0.75 - 1.5, 1
           'icons/network/site/site-1.5x.png': 1.5 - 5, 0.66
-      router:
-        normal:
-          'icons/network/router/router-48x48.png': 0 - 0.5, 2
-          'icons/network/router/router-72x72.png': 0.5 - 0.75, 1.5
-          'icons/network/router/router-96x96.png': 0.75 - 1.5, 1
-          'icons/network/router/router-128x128.png': 1.5 - 5, 0.66
       switch:
-        normal:
+        name: 'Switch'
+        code: 'SW'
+        icons:
           'icons/network/switch/switch-48x48.png': 0 - 0.5, 2
           'icons/network/switch/switch-72x72.png': 0.5 - 0.75, 1.5
           'icons/network/switch/switch-96x96.png': 0.75 - 1.5, 1
           'icons/network/switch/switch-128x128.png': 1.5 - 5, 0.66
       host:
-        normal:
+        name: 'Host'
+        code: 'H'
+        icons:
           'icons/network/host/host-48x48.png': 0 - 0.5, 2
           'icons/network/host/host-72x72.png': 0.5 - 0.75, 1.5
           'icons/network/host/host-96x96.png': 0.75 - 1.5, 1
           'icons/network/host/host-128x128.png': 1.5 - 5, 0.66
       notebook:
-        normal:
+        name: 'Notebook'
+        code: 'NB'
+        icons:
           'icons/network/notebook/notebook-48x48.png': 0 - 0.5, 2
           'icons/network/notebook/notebook-72x72.png': 0.5 - 0.75, 1.5
           'icons/network/notebook/notebook-96x96.png': 0.75 - 1.5, 1
           'icons/network/notebook/notebook-128x128.png': 1.5 - 5, 0.66
       firewall:
-        normal:
+        name: 'Firewall'
+        code: 'FW'
+        icons:
           'icons/network/firewall/firewall-48x48.png': 0 - 0.5, 2
           'icons/network/firewall/firewall-72x72.png': 0.5 - 0.75, 1.5
           'icons/network/firewall/firewall-96x96.png': 0.75 - 1.5, 1
           'icons/network/firewall/firewall-128x128.png': 1.5 - 5, 0.66
       database:
-        normal:
+        name: 'Database'
+        code: 'DB'
+        icons:
           'icons/network/database/database-48x48.png': 0 - 0.5, 2
           'icons/network/database/database-72x72.png': 0.5 - 0.75, 1.5
           'icons/network/database/database-96x96.png': 0.75 - 1.5, 1
           'icons/network/database/database-128x128.png': 1.5 - 5, 0.66
-      basestation:
-        normal:
-          'icons/network/basestation/basestation-48x48.png': 0 - 0.5, 2
-          'icons/network/basestation/basestation-72x72.png': 0.5 - 0.75, 1.5
-          'icons/network/basestation/basestation-96x96.png': 0.75 - 1.5, 1
-          'icons/network/basestation/basestation-128x128.png': 1.5 - 5, 0.66
       small-network:
-        normal:
+        name: 'Small Network'
+        code: 'SNET'
+        icons:
           'icons/network/small-network/small-network-0.5x.png': 0 - 0.5, 2
           'icons/network/small-network/small-network-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/small-network/small-network-1x.png': 0.75 - 1.5, 1
           'icons/network/small-network/small-network-1.5x.png': 1.5 - 5, 0.66
       printer:
-        normal:
+        name: 'Printer'
+        code: 'PR'
+        icons:
           'icons/network/printer/printer-0.5x.png': 0 - 0.5, 2
           'icons/network/printer/printer-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/printer/printer-1x.png': 0.75 - 1.5, 1
           'icons/network/printer/printer-1.5x.png': 1.5 - 5, 0.66
       wifi-router:
-        normal:
+        name: 'Wi-Fi Router'
+        code: 'WIFIR'
+        icons:
           'icons/network/wifi-router/wifi-router-0.5x.png': 0 - 0.5, 2
           'icons/network/wifi-router/wifi-router-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/wifi-router/wifi-router-1x.png': 0.75 - 1.5, 1
           'icons/network/wifi-router/wifi-router-1.5x.png': 1.5 - 5, 0.66
       ups:
-        normal:
+        name: 'UPS'
+        code: 'UPS'
+        icons:
           'icons/network/ups/ups-0.5x.png': 0 - 0.5, 2
           'icons/network/ups/ups-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/ups/ups-1x.png': 0.75 - 1.5, 1
           'icons/network/ups/ups-1.5x.png': 1.5 - 5, 0.66
       server:
-        normal:
+        name: 'Server'
+        code: 'SVR'
+        icons:
           'icons/network/server/server-0.5x.png': 0 - 0.5, 2
           'icons/network/server/server-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/server/server-1x.png': 0.75 - 1.5, 1
           'icons/network/server/server-1.5x.png': 1.5 - 5, 0.66
+      basestation:
+        name: 'Basestation'
+        code: 'BS'
+        icons:
+          'icons/network/basestation/basestation-48x48.png': 0 - 0.5, 2
+          'icons/network/basestation/basestation-72x72.png': 0.5 - 0.75, 1.5
+          'icons/network/basestation/basestation-96x96.png': 0.75 - 1.5, 1
+          'icons/network/basestation/basestation-128x128.png': 1.5 - 5, 0.66
       multilayer-switch:
-        normal:
+        name: 'Multilayer Switch'
+        code: 'MLSW'
+        icons:
           'icons/network/multilayer-switch/multilayer-switch-0.5x.png': 0 - 0.5, 2
           'icons/network/multilayer-switch/multilayer-switch-0.75x.png': 0.5 - 0.75, 1.5
           'icons/network/multilayer-switch/multilayer-switch-1x.png': 0.75 - 1.5, 1
@@ -125,46 +157,6 @@ settings:
         strokeStyle: '#c0e2f7'
         fillStyle: 'rgba(255,255, 255, 0.04)'
     draw-marker:
-      node-types:
-        router:
-          name: 'Router'
-          code: 'R'
-        switch:
-          name: 'Switch'
-          code: 'SW'
-        host:
-          name: 'Host'
-          code: 'HOST'
-        notebook:
-          name: 'Notebook'
-          code: 'NB'
-        firewall:
-          name: 'Firewall'
-          code: 'FW'
-        database:
-          name: 'Database'
-          code: 'DB'
-        basestation:
-          name: 'Basestation'
-          code: 'BS'
-        small-network:
-          name: 'Small Network'
-          code: 'SNET'
-        printer:
-          name: 'Printer'
-          code: 'PR'
-        wifi-router:
-          name: 'Wi-Fi Router'
-          code: 'WIFIR'
-        ups:
-          name: 'UPS'
-          code: 'UPS'
-        server:
-          name: 'Server'
-          code: 'SVR'
-        multilayer-switch:
-          name: 'Multilayer Switch'
-          code: 'MLSW'            
       slots-allocation:
         router: 1
         switch: 2

@@ -1,10 +1,10 @@
 export const LOAD_ICONS = 'icons/load';
 export const ICONS_LOADED = 'icons/loaded';
 
-export function loadIcons(iconTypes) {
+export function loadIcons(nodeTypes) {
 	return {
 		type: LOAD_ICONS,
-		payload: iconTypes
+		payload: nodeTypes
 	};
 }
 

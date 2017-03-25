@@ -47,7 +47,7 @@ export default class SlotsAllocator extends React.Component {
   renderFreeSlots = (nt) => {
     let freeSlots = [];
     let selectedSlot = this.findBusySlotNrForType(nt);
-    for (var i = 1; i < 10; i++) {
+    for (var i = 1; i < 11; i++) {
       if (this.checkSlotFree(i) || selectedSlot === i) {
         freeSlots.push({nr: i, label: "Slot " + i});
       }
@@ -63,13 +63,14 @@ export default class SlotsAllocator extends React.Component {
   }
 	render() {
 		return (
-          <Table selectable={false} height={300}>
+          <Table selectable={false} height={"300"}>
             <TableBody displayRowCheckbox={false}>
             {
-              Object.keys(this.props.nodeTypes).map(nt => {
+              this.props.nodeTypes.all().map(nt => {
+                 let props = this.props.nodeTypes.lookup(nt);
                   return (
-                    <TableRow key={nt}>
-                      <TableRowColumn>{this.props.nodeTypes[nt].name}</TableRowColumn>
+                    <TableRow key={props.code}>
+                      <TableRowColumn>{props.name}</TableRowColumn>
                       <TableRowColumn>{this.renderFreeSlots(nt)}</TableRowColumn>
                     </TableRow>
                   );

@@ -11,7 +11,7 @@ export default class Bounds {
     return new Bounds(point.x, point.y, size.width, size.height);
   }
   static fromCenter(center, size) {
-    return new Bounds(center.x - size.halfWidth(), center.y - size.halfHeight(), size.width, size.height);
+    return new Bounds(center.x - size.halfWidth(), center.y + size.halfHeight(), size.width, size.height);
   }
   in(point) {
     return point.x >= this.x && point.x <= this.x + this.width && point.y >= this.y && point.y <= this.y + this.height;

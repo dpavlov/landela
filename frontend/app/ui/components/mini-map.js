@@ -62,9 +62,13 @@ export default class MiniMap extends React.Component {
   scale(props) {
     let wx4Size = new Size(window.innerWidth, window.innerHeight).double().double();
     let mapBounds = props.source ? props.source.bounds() : new Bounds(0, 0, 0, 0);
-    let xScale = this.state.bounds.width / (mapBounds.width > wx4Size.width ? mapBounds.width : wx4Size.width);
-    let yScale = this.state.bounds.height / (mapBounds.height > wx4Size.height ? mapBounds.height : wx4Size.height);
-    return Math.max(xScale, yScale);
+    let mapSize = new Size(
+      Math.max(Math.abs(mapBounds.x), Math.abs(mapBounds.x + mapBounds.width)),
+      Math.max(Math.abs(mapBounds.y), Math.abs(mapBounds.y - mapBounds.height))
+    );
+    let xScale = this.state.bounds.width / (mapSize.width > wx4Size.width ? mapSize.width : wx4Size.width);
+    let yScale = this.state.bounds.height / (mapSize.height > wx4Size.height ? mapSize.height : wx4Size.height);
+    return Math.min(xScale, yScale);
   }
   componentDidUpdate() {
     this._render.render(this.state.objs, this.state.scale, (delay) => console.log("Rendering mini-map took " + delay + " ms"));
