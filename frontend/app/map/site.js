@@ -89,6 +89,16 @@ export default class Site extends Observable {
       this.notify(SITE_ADDRESS_CHANGED);
     }
   }
+  ports() {
+    let ports = [];
+    for (var nIndex = 0; nIndex < this.nodes.length; nIndex ++) {
+      let node = this.nodes[nIndex];
+      for (var pIndex = 0; pIndex < node.ports.length; pIndex ++) {
+        ports.push(node.ports[pIndex]);
+      }
+    }
+    return ports;
+  }
 };
 
 export class SiteState {

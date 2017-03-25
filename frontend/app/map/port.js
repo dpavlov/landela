@@ -17,7 +17,7 @@ export default class Port extends Observable{
   bounds(size) {
     let center = this.absCenter();
     let nSize = size || [14, 14];
-    return { x: center.x - nSize[0]/2, y: center.y - nSize[1] / 2, width: nSize[0], height: nSize[1] };
+    return { x: center.x - nSize[0]/2, y: center.y + nSize[1] / 2, width: nSize[0], height: nSize[1] };
   }
   absCenter() {
     return this.node.site

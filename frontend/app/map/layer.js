@@ -59,12 +59,16 @@ export default class Layer extends Observable {
     }
   }
   ports() {
-    let ports = [];
+    var ports = [];
     for (var nIndex = 0; nIndex < this.nodes.length; nIndex ++) {
       let node = this.nodes[nIndex];
       for (var pIndex = 0; pIndex < node.ports.length; pIndex ++) {
         ports.push(node.ports[pIndex]);
       }
+    }
+    for (var sIndex = 0; sIndex < this.sites.length; sIndex ++) {
+      let site = this.sites[sIndex];
+      ports = ports.concat(site.ports());
     }
     return ports;
   }
