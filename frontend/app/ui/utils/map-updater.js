@@ -5,7 +5,7 @@ import Node from '../../map/node';
 import Link, { LinkControl } from '../../map/link';
 import Port from '../../map/port';
 import { SITE_CREATED, SITE_REMOVED, SITE_MOVED, SITE_RESIZED, SITE_NAME_CHANGED, SITE_ADDRESS_CHANGED } from '../../map/events/event-types';
-import { NODE_DETTACHED, NODE_ATTACHED, NODE_CREATED, NODE_MOVED, NODE_REMOVED, NODE_NAME_CHANGED } from '../../map/events/event-types';
+import { NODE_DETTACHED, NODE_ATTACHED, NODE_CREATED, NODE_MOVED, NODE_REMOVED, NODE_NAME_CHANGED, NODE_TYPE_CHANGED } from '../../map/events/event-types';
 import { PORT_CREATED, LINK_CREATED } from '../../map/events/event-types';
 
 import Point from '../../geometry/point';
@@ -48,6 +48,8 @@ export default class MapUpdater {
         this.map.layer(layer).addNodes([node], true);
       } else if (Symbol.for(event.type) === NODE_NAME_CHANGED) {
         target.name = event.args;
+      } else if (Symbol.for(event.type) === NODE_TYPE_CHANGED) {
+        target.type = event.args;
       } else if (Symbol.for(event.type) === NODE_REMOVED) {
         this.map.layer(layer).remove(target, true);
       } else if (Symbol.for(event.type) === NODE_MOVED) {

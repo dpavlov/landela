@@ -2,15 +2,14 @@ import Quadtree from '../../utils/quadtree';
 
 export default class CoordinateIndex {
 	constructor(objs, boundsLookupFn, checkIntersectionFn) {
-		let bounds = this._bounds(objs, boundsLookupFn);
+		let bounds = this.calculateBounds(objs, boundsLookupFn);
 		this.quadtree = new Quadtree(bounds, boundsLookupFn, checkIntersectionFn);
 		for (var index = 0; index < objs.length; index ++) {
 			this.quadtree.insert(objs[index]);
 		}
-		console.log(bounds);
 		this.bounds = bounds;
 	}
-	_bounds(objs, boundsLookupFn) {
+	calculateBounds(objs, boundsLookupFn) {
 		let area = { xMin: Number.MAX_VALUE, yMin: Number.MAX_VALUE, xMax: Number.MIN_VALUE, yMax: Number.MIN_VALUE };
 		for (var index = 0; index < objs.length; index ++) {
 			let objBounds = boundsLookupFn(objs[index]);
@@ -32,16 +31,18 @@ export default class CoordinateIndex {
 	_updateBounds(obj) {
 		let objBounds = this.quadtree.boundsLookupFn(obj);
 		if (this.bounds.x > objBounds.x) {
+			this.bounds.width = this.bounds.width + (this.bounds.x - objBounds.x);
 			this.bounds.x = objBounds.x;
 		}
 		if (this.bounds.y < objBounds.y) {
+			this.bounds.height = this.bounds.height + (objBounds.y - this.bounds.y);
 			this.bounds.y = objBounds.y;
 		}
-		if (this.bounds.x - this.bounds.width > objBounds.x - objBounds.width) {
-			this.bounds.width = objBounds.x - (objBounds.x - objBounds.width);
+		if (this.bounds.x + this.bounds.width < objBounds.x + objBounds.width) {
+			this.bounds.width = objBounds.x + objBounds.width - this.bounds.x;
 		}
 		if (this.bounds.y - this.bounds.height > objBounds.y - objBounds.height) {
-			this.bounds.height = objBounds.y - (objBounds.y - objBounds.height);
+			this.bounds.height = Math.abs(objBounds.y - objBounds.height - this.bounds.y);
 		}
 	}
 	visit(visitor) {

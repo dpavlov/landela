@@ -1,7 +1,7 @@
 import Port from './port';
 import Point from '../geometry/point';
 import Observable from '../utils/observable';
-import { NODE_MOVED, NODE_DETTACHED, PORT_CREATED, NODE_NAME_CHANGED } from './events/event-types';
+import { NODE_MOVED, NODE_DETTACHED, PORT_CREATED, NODE_NAME_CHANGED, NODE_TYPE_CHANGED } from './events/event-types';
 
 export default class Node extends Observable {
   constructor(id, name, type, center) {
@@ -45,9 +45,9 @@ export default class Node extends Observable {
   bounds(size) {
     let nSize = size || [128, 128];
     if (this.site) {
-      return { x: this.site.center.x + this.center.x - nSize[0]/2, y: this.site.center.y + this.center.y - nSize[1] / 2, width: nSize[0], height: nSize[1] };
+      return { x: this.site.center.x + this.center.x - nSize[0]/2, y: this.site.center.y + this.center.y + nSize[1] / 2, width: nSize[0], height: nSize[1] };
     } else {
-      return { x: this.center.x - nSize[0]/2, y: this.center.y - nSize[1] / 2, width: nSize[0], height: nSize[1] };
+      return { x: this.center.x - nSize[0]/2, y: this.center.y + nSize[1] / 2, width: nSize[0], height: nSize[1] };
     }
   }
   absCenter() {
@@ -74,6 +74,9 @@ export default class Node extends Observable {
   changed(propName, oldValue) {
     if (propName === 'name') {
       this.notify(NODE_NAME_CHANGED);
+    }
+    if (propName === 'type') {
+      this.notify(NODE_TYPE_CHANGED);
     }
   }
 };

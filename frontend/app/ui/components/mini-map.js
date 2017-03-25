@@ -41,12 +41,11 @@ export default class MiniMap extends React.Component {
 			this._draggingParams = {xMove: 0, yMove: 0};
 		});
     this.viewport = new Viewport(this.state.bounds.width, this.state.bounds.height);
-    this.parentViewport = null;
-    this._render = new MiniMapRender(this.refs['mini-map'], this.viewport, this.parentViewport, this.icons);
+    this._render = new MiniMapRender(this.refs['mini-map'], this.viewport, null, this.icons);
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.viewport && !this._render.parentViewport) {
-      this._render.parentViewport = nextProps.viewport;
+    if (nextProps.mapViewport && !this._render.mapViewport) {
+      this._render.mapViewport = nextProps.mapViewport;
     }
     if (nextProps.source) {
       if (nextProps.source instanceof Indexes) {
@@ -60,12 +59,12 @@ export default class MiniMap extends React.Component {
     }
   }
   scale(props) {
-    let wx4Size = new Size(window.innerWidth, window.innerHeight).double().double();
+    let wx4Size = new Size(window.innerWidth, window.innerHeight);
     let mapBounds = props.source ? props.source.bounds() : new Bounds(0, 0, 0, 0);
     let mapSize = new Size(
       Math.max(Math.abs(mapBounds.x), Math.abs(mapBounds.x + mapBounds.width)),
       Math.max(Math.abs(mapBounds.y), Math.abs(mapBounds.y - mapBounds.height))
-    );
+    ).double();
     let xScale = this.state.bounds.width / (mapSize.width > wx4Size.width ? mapSize.width : wx4Size.width);
     let yScale = this.state.bounds.height / (mapSize.height > wx4Size.height ? mapSize.height : wx4Size.height);
     return Math.min(xScale, yScale);
@@ -91,16 +90,16 @@ export default class MiniMap extends React.Component {
   handleMouseClick(e) {
     if (!this._dragging.is('moving')) {
       let point = new Point(this.state.bounds.width / 2 - e.nativeEvent.layerX, this.state.bounds.height / 2 - e.nativeEvent.layerY);
-      this.props.onMapMoveTo && this.props.onMapMoveTo(point.withMultiplier(1 / this.state.scale));
-    } else {
-      this._dragging = this._dragging.on('reset');
-  		this._draggingParams = {xMove: 0, yMove: 0};
+      let scale =  1 / (this.state.scale * this._render.mapViewport.scale());
+      this.props.onMapMoveTo && this.props.onMapMoveTo(point.withMultiplier(scale));
     }
+    this._dragging = this._dragging.on('reset');
+    this._draggingParams = {xMove: 0, yMove: 0};
   }
   handleMouseDown(e) {
     let point = new Point(e.nativeEvent.layerX, e.nativeEvent.layerY);
     let fBounds = this._render.frame(this.state.scale);
-    if (fBounds.in(point)) {
+    if (fBounds.in(point, false)) {
       this._draggingParams = { xMove: e.nativeEvent.screenX, yMove: e.nativeEvent.screenY };
       this._dragging = this._dragging.on('frame-selected');
     }

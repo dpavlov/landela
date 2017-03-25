@@ -1,3 +1,4 @@
+import Point from './point';
 export default class Offset {
     constructor(xOffset, yOffset) {
         this.xOffset = xOffset;
@@ -36,6 +37,9 @@ export default class Offset {
     }
     subtract(offset) {
         return new Offset(this.xOffset - offset.xOffset, this.yOffset - offset.yOffset);
+    }
+    toPoint() {
+      return new Point(this.xOffset, this.yOffset);
     }
     toString() {
         return "[" + this.xOffset + " x " + this.yOffset + "]";

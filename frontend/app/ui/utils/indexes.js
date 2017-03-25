@@ -81,20 +81,21 @@ export default class Indexes {
 		return this.sites.find(point);
 	}
 	bounds() {
-		let b = [this.sites.bounds, this.nodes.bounds];
+		let objs = [this.sites.bounds, this.nodes.bounds];
 		let area = { xMin: Number.MAX_VALUE, yMin: Number.MAX_VALUE, xMax: Number.MIN_VALUE, yMax: Number.MIN_VALUE };
-		for (var i = 0; i < b.length; i++) {
-			if (area.xMin > b[i].x - b[i].width) {
-				area.xMin = b[i].x - b[i].width;
+		for (var index = 0; index < objs.length; index ++) {
+			let objBounds = objs[index];
+			if (area.xMin > objBounds.x) {
+				area.xMin = objBounds.x;
 			}
-			if (area.yMin > b[i].y - b[i].height) {
-				area.yMin = b[i].y - b[i].height;
+			if (area.yMin > objBounds.y - objBounds.height) {
+				area.yMin = objBounds.y - objBounds.height;
 			}
-			if (area.xMax < b[i].x) {
-				area.xMax = b[i].x;
+			if (area.xMax < objBounds.x + objBounds.width) {
+				area.xMax = objBounds.x + objBounds.width;
 			}
-			if (area.yMax < b[i].y) {
-				area.yMax = b[i].y;
+			if (area.yMax < objBounds.y) {
+				area.yMax = objBounds.y;
 			}
 		}
 		return { x: area.xMin, y: area.yMax, width: area.xMax - area.xMin, height: area.yMax - area.yMin };

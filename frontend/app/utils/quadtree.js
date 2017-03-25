@@ -184,7 +184,7 @@ export default class Quadtree {
 	}
 
 	intersection(point, rect) {
-    	return point.x >= rect.x && point.x <= rect.x + rect.width && point.y >= rect.y && point.y <= rect.y + rect.height;
+    	return point.x >= rect.x && point.x <= rect.x + rect.width && point.y <= rect.y && point.y >= rect.y - rect.height;
 	}
 
 	visit(visitor) {

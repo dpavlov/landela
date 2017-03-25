@@ -1,5 +1,5 @@
 import { SITE_CREATED, SITE_MOVED, SITE_RESIZED, SITE_REMOVED, SITE_NAME_CHANGED, SITE_ADDRESS_CHANGED } from '../../map/events/event-types';
-import { NODE_ATTACHED, NODE_DETTACHED, NODE_CREATED, NODE_MOVED, NODE_REMOVED, NODE_NAME_CHANGED } from '../../map/events/event-types';
+import { NODE_ATTACHED, NODE_DETTACHED, NODE_CREATED, NODE_MOVED, NODE_REMOVED, NODE_NAME_CHANGED, NODE_TYPE_CHANGED } from '../../map/events/event-types';
 import { PORT_CREATED, LINK_CREATED } from '../../map/events/event-types';
 
 export default class EventsFactory {
@@ -44,6 +44,8 @@ export default class EventsFactory {
       } };
     } else if (eventType === NODE_NAME_CHANGED) {
       return { ... event, args: target.name };
+    } else if (eventType === NODE_TYPE_CHANGED) {
+      return { ... event, args: target.type };
     } else if (eventType === NODE_REMOVED) {
       return { ... event, args: target.site ? [layer.id, target.site.id, target.id] : [layer.id, target.id]};
     } else if (eventType === NODE_MOVED) {

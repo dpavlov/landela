@@ -1,6 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux'
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import Avatar from 'material-ui/Avatar';
 import FlatButton from 'material-ui/FlatButton';
 import { purple500 } from 'material-ui/styles/colors';
@@ -8,14 +11,16 @@ import {List, ListItem} from 'material-ui/List';
 
 import { NODE_REMOVED } from '../../map/map-set'
 
-export default class NodeProperties extends React.Component {
+export class NodeProperties extends React.Component {
 
   constructor(props) {
     super(props);
     props.mapSet.subscribe(this);
     this.state = {
       originName: props.node.name,
-      name: props.node.name
+      name: props.node.name,
+      originType: props.node.type,
+      type: props.node.type,
     }
   }
 
@@ -26,7 +31,10 @@ export default class NodeProperties extends React.Component {
   onEvent(set, eType, target) {
     if (eType === NODE_REMOVED && target.id === this.props.node.id) {
       if (this.state.name !== this.state.originName) {
-        this.props.node.changed('name', this.state.originName)
+        this.props.node.changed('name', this.state.originName);
+      }
+      if (this.state.type !== this.state.originType) {
+        this.props.node.changed('type', this.state.originType);
       }
     }
   }
@@ -34,6 +42,12 @@ export default class NodeProperties extends React.Component {
   onNameChanged = (e) => {
     this.setState({name: e.target.value});
     this.props.node.name = e.target.value;
+    this.props.updateMap && this.props.updateMap();
+  }
+
+  handleTypeChange = (event, index, value) => {
+    this.setState({type: value});
+    this.props.node.type = value;
     this.props.updateMap && this.props.updateMap();
   }
 
@@ -47,12 +61,13 @@ export default class NodeProperties extends React.Component {
 
   handleCancel = (e) => {
     this.props.node.name = this.state.originName;
-    this.setState({ name: this.state.originName });
+    this.props.node.type = this.state.originType;
+    this.setState({ name: this.state.originName, type: this.state.originType });
     this.props.updateMap && this.props.updateMap();
   }
 
   actions() {
-    if (this.state.name !== this.state.originName) {
+    if (this.state.name !== this.state.originName || this.state.type !== this.state.originType) {
       return (
         <CardActions>
           <FlatButton label="Deselect" onTouchTap={this.handleDeselect}/>
@@ -84,10 +99,15 @@ export default class NodeProperties extends React.Component {
             this.actions()
           }
           <CardText expandable={true}>
-            <TextField hintText="Name" floatingLabelText="Name" value={this.props.node.name} onChange={this.onNameChanged}/>
+            <TextField hintText="Name" floatingLabelText="Name" value={this.state.name} onChange={this.onNameChanged}/>
             {
               this.properties(this.props.node)
             }
+            <SelectField floatingLabelText="Type" value={this.state.type} fullWidth={true} onChange={this.handleTypeChange}>
+              {
+                this.props.nodeTypes.all().map(nt => <MenuItem key={nt} value={nt} primaryText={this.props.nodeTypes.lookup(nt).name}/>)
+              }
+            </SelectField>
           </CardText>
         </Card>
     );
@@ -103,3 +123,17 @@ export default class NodeProperties extends React.Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+	return {
+		nodeTypes: state.icons.icons
+	}
+}
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps, null)(NodeProperties);

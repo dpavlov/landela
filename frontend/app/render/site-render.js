@@ -101,13 +101,13 @@ export default class SiteRender {
     let topPoint = siteCenter.shift(new Offset(- handlerSize.swap().halfWidth(), - siteSize.halfHeight()));
     let bottomPoint = siteCenter.shift(new Offset(- handlerSize.swap().halfWidth(), siteSize.halfHeight() - handlerSize.swap().height));
 
-    if (Bounds.fromTopLeft(rightPoint, handlerSize).in(point)) {
+    if (Bounds.fromTopLeft(rightPoint, handlerSize).in(point, false)) {
       return 'right';
-    } else if (Bounds.fromTopLeft(leftPoint, handlerSize).in(point)) {
+    } else if (Bounds.fromTopLeft(leftPoint, handlerSize).in(point, false)) {
       return 'left';
-    } else if (Bounds.fromTopLeft(topPoint, handlerSize.swap()).in(point)) {
+    } else if (Bounds.fromTopLeft(topPoint, handlerSize.swap()).in(point, false)) {
       return 'top';
-    } else if (Bounds.fromTopLeft(bottomPoint, handlerSize.swap()).in(point)) {
+    } else if (Bounds.fromTopLeft(bottomPoint, handlerSize.swap()).in(point, false)) {
       return 'bottom';
     } else {
       return null;

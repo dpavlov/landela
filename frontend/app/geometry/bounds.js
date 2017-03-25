@@ -13,14 +13,18 @@ export default class Bounds {
   static fromCenter(center, size) {
     return new Bounds(center.x - size.halfWidth(), center.y + size.halfHeight(), size.width, size.height);
   }
-  in(point) {
-    return point.x >= this.x && point.x <= this.x + this.width && point.y >= this.y && point.y <= this.y + this.height;
+  in(point, real = true) {
+    if (real) {
+      return point.x >= this.x && point.x <= this.x + this.width && point.y <= this.y && point.y >= this.y - this.height;
+    } else {
+      return point.x >= this.x && point.x <= this.x + this.width && point.y >= this.y && point.y <= this.y + this.height;
+    }
   }
   tl() {
     return new Point(this.x, this.y);
   }
   center() {
-    return new Point(this.x + this.width / 2, this.y + this.height / 2);
+    return new Point(this.x + this.width / 2, this.y - this.height / 2);
   }
   toString() {
     return "[" + (this.x | 0) + " x " + (this.y | 0) + "]";
