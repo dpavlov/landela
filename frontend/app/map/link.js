@@ -6,6 +6,7 @@ export default class Link extends Observable {
     this.id = id;
     this.sPort = sPort;
     this.ePort = ePort;
+    this.lineType = LineType.BEZIER;
     this.controlPoints = [new LinkControl(sPort, slcCenter), new LinkControl(ePort, elcCenter)];
     this.state = LinkState.NORMAL;
   }
@@ -34,6 +35,11 @@ export class LinkControl {
   move(offset) {
     this.center = this.center.shift(offset.yInverse());
   }
+}
+
+export class LineType {
+  static BEZIER = 0
+  static SEGMENTS = 1
 }
 
 export class LinkState {
