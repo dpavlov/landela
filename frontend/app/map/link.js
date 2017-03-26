@@ -1,5 +1,9 @@
 import Point from '../geometry/point';
 import Observable from '../utils/observable';
+
+import { LINK_LINE_TYPE_CHANGED } from './events/event-types';
+
+
 export default class Link extends Observable {
   constructor(id, sPort, ePort, slcCenter, elcCenter) {
     super();
@@ -25,6 +29,11 @@ export default class Link extends Observable {
   deselect() {
     this.state = LinkState.NORMAL;
   }
+  changed(propName, oldValue) {
+    if (propName === 'lineType') {
+      this.notify(LINK_LINE_TYPE_CHANGED);
+    }
+  }
 };
 
 export class LinkControl {
@@ -40,6 +49,12 @@ export class LinkControl {
 export class LineType {
   static BEZIER = 0
   static SEGMENTS = 1
+  static all() {
+    return [
+      {name: 'Bezier', value: LineType.BEZIER},
+      {name: 'Segments', value: LineType.SEGMENTS}
+    ];
+  }
 }
 
 export class LinkState {

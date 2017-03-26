@@ -17,3 +17,4 @@ export let PORT_CREATED = Symbol.for("PORT_CREATED");
 export let PORT_MOVED = Symbol.for("PORT_MOVED");
 
 export let LINK_CREATED = Symbol.for("LINK_CREATED");
+export let LINK_LINE_TYPE_CHANGED = Symbol.for("LINK_LINE_TYPE_CHANGED");

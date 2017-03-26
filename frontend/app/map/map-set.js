@@ -6,6 +6,9 @@ export let SITE_REMOVED = Symbol.for("SITE_REMOVED");
 export let NODE_ADDED = Symbol.for("NODE_ADDED");
 export let NODE_REMOVED = Symbol.for("NODE_REMOVED");
 
+export let LINK_ADDED = Symbol.for("LINK_ADDED");
+export let LINK_REMOVED = Symbol.for("LINK_REMOVED");
+
 export default class MapSet extends Observable {
     constructor(sites, nodes, links, ports) {
       super();
@@ -24,6 +27,7 @@ export default class MapSet extends Observable {
     }
     link(link) {
       this._links.push(link);
+      this.notify(LINK_ADDED, link);
     }
     port(port) {
       this._nodes.push(port);
@@ -73,6 +77,7 @@ export default class MapSet extends Observable {
       let index = this._links.indexOf(link);
       if (index > -1) {
         this._links.splice(index, 1);
+        this.notify(LINK_REMOVED, link);
       }
     }
     removePort(port) {

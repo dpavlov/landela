@@ -12,6 +12,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import NodeProperties from './node-properties';
 import SiteProperties from './site-properties';
+import LinkProperties from './link-properties';
 
 export default class LeftPanel extends React.Component {
 
@@ -66,12 +67,19 @@ export default class LeftPanel extends React.Component {
         this.toolbar()
       }
       </ReactCSSTransitionGroup>
+      <ReactCSSTransitionGroup transitionName="fadein" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
       {
         this.props.mapSet.sites().map(site => <SiteProperties key={site.id} mapSet={this.props.mapSet} site={site} updateMap={this.props.updateMap} onDeselect={this.props.onDeselect} onDelete={this.props.onDelete}/>)
       }
+      </ReactCSSTransitionGroup>
       <ReactCSSTransitionGroup transitionName="fadein" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
       {
         this.props.mapSet.nodes().map(node => <NodeProperties key={node.id} mapSet={this.props.mapSet} node={node} updateMap={this.props.updateMap} onDeselect={this.props.onDeselect} onDelete={this.props.onDelete}/>)
+      }
+      </ReactCSSTransitionGroup>
+      <ReactCSSTransitionGroup transitionName="fadein" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+      {
+        this.props.mapSet.links().map(link => <LinkProperties key={link.id} mapSet={this.props.mapSet} link={link} updateMap={this.props.updateMap} onDeselect={this.props.onDeselect} onDelete={this.props.onDelete}/>)
       }
       </ReactCSSTransitionGroup>
 			</div>

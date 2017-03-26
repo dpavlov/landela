@@ -6,7 +6,7 @@ import Link, { LinkControl } from '../../map/link';
 import Port from '../../map/port';
 import { SITE_CREATED, SITE_REMOVED, SITE_MOVED, SITE_RESIZED, SITE_NAME_CHANGED, SITE_ADDRESS_CHANGED } from '../../map/events/event-types';
 import { NODE_DETTACHED, NODE_ATTACHED, NODE_CREATED, NODE_MOVED, NODE_REMOVED, NODE_NAME_CHANGED, NODE_TYPE_CHANGED } from '../../map/events/event-types';
-import { PORT_CREATED, LINK_CREATED } from '../../map/events/event-types';
+import { PORT_CREATED, LINK_CREATED, LINK_LINE_TYPE_CHANGED } from '../../map/events/event-types';
 
 import Point from '../../geometry/point';
 export default class MapUpdater {
@@ -64,6 +64,8 @@ export default class MapUpdater {
         let ecp = new Point(event.args.eControlPoint.x, event.args.eControlPoint.y);
         let link = new Link(event.args.id, sPortResult.target, ePortResult.target, scp, ecp);
         this.map.layer(layer).addLinks([link], true);
+      } else if (Symbol.for(event.type) === LINK_LINE_TYPE_CHANGED) {
+        target.lineType = event.args;
       }
     }
     return this.map;

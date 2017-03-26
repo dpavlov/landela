@@ -1,6 +1,6 @@
 import { SITE_CREATED, SITE_MOVED, SITE_RESIZED, SITE_REMOVED, SITE_NAME_CHANGED, SITE_ADDRESS_CHANGED } from '../../map/events/event-types';
 import { NODE_ATTACHED, NODE_DETTACHED, NODE_CREATED, NODE_MOVED, NODE_REMOVED, NODE_NAME_CHANGED, NODE_TYPE_CHANGED } from '../../map/events/event-types';
-import { PORT_CREATED, LINK_CREATED } from '../../map/events/event-types';
+import { PORT_CREATED, LINK_CREATED, LINK_LINE_TYPE_CHANGED } from '../../map/events/event-types';
 
 export default class EventsFactory {
   static create(args) {
@@ -70,6 +70,8 @@ export default class EventsFactory {
         sControlPoint: target.sControlPoint().center.copy(),
         eControlPoint: target.eControlPoint().center.copy(),
       } };
+    } else if (eventType === LINK_LINE_TYPE_CHANGED) {
+      return {  ... event, args: target.lineType };
     } else {
       return event;
     }
