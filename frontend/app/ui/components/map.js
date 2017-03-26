@@ -148,8 +148,8 @@ export class Map extends React.Component {
 		let nodes = this.selection.selectedSet.nodes();
 		let {links, ports} = this.linksBuilder.build(linkType, nodes);
 		this.network.active().addLinks(links);
-		this.indexes.active().addLinks(links);
-		this.indexes.active().addPorts(ports);
+		this.indexes.addLinks(links);
+		this.indexes.addPorts(ports);
 		Promise.all(nodes.map(node => this.selection.select(node, this.forceUpdate.bind(this))))
 			.then(() => this.props.onSelect(this.selection.selectedSet));
 	}
