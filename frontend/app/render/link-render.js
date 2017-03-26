@@ -9,8 +9,8 @@ export default class LinkRender {
   render(link) {
       let sPortCenter = this.viewport.portDisplayCenter(link.sPort);
       let ePortCenter = this.viewport.portDisplayCenter(link.ePort);
-      let scpCenter = link.sControlPoint.center.withMultiplier(this.viewport.scale());
-      let ecpCenter = link.eControlPoint.center.withMultiplier(this.viewport.scale());
+      let scpCenter = link.sControlPoint().center.withMultiplier(this.viewport.scale());
+      let ecpCenter = link.eControlPoint().center.withMultiplier(this.viewport.scale());
 
       let linkLineStyle = {
         lineWidth: 1,

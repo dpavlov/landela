@@ -6,9 +6,14 @@ export default class Link extends Observable {
     this.id = id;
     this.sPort = sPort;
     this.ePort = ePort;
-    this.sControlPoint = new LinkControl(sPort, slcCenter);
-    this.eControlPoint = new LinkControl(ePort, elcCenter);
+    this.controlPoints = [new LinkControl(sPort, slcCenter), new LinkControl(ePort, elcCenter)];
     this.state = LinkState.NORMAL;
+  }
+  sControlPoint() {
+    return this.controlPoints[0];
+  }
+  eControlPoint() {
+    return this.controlPoints[this.controlPoints.length - 1];
   }
   isSelected() {
     return this.state === LinkState.SELECTED;

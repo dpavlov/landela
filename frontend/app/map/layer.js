@@ -86,8 +86,8 @@ export default class Layer extends Observable {
     let controls = [];
     for (var lIndex = 0; lIndex < this.links.length; lIndex ++) {
       let link = this.links[lIndex];
-      controls.push(link.sControlPoint);
-      controls.push(link.eControlPoint);
+      for (var cpIndex = 0; cpIndex < this.links.controlPoints; cpIndex ++)
+      controls.push(this.links.controlPoints[cpIndex]);
     }
     return controls;
   }

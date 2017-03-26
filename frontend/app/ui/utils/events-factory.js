@@ -67,8 +67,8 @@ export default class EventsFactory {
         ePort: target.ePort.node.site
           ? [layer.id, target.ePort.node.site.id, target.ePort.node.id, target.ePort.id]
           : [layer.id, target.ePort.node.id, target.ePort.id],
-        sControlPoint: target.sControlPoint.center.copy(),
-        eControlPoint: target.eControlPoint.center.copy(),
+        sControlPoint: target.sControlPoint().center.copy(),
+        eControlPoint: target.eControlPoint().center.copy(),
       } };
     } else {
       return event;

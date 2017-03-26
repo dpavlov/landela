@@ -100,7 +100,7 @@ export default class MapUpdater {
     } else if (obj instanceof Node) {
       return obj.ports;
     } else if (obj instanceof Link) {
-      return [obj.sControlPoint, obj.eControlPoint];
+      return [obj.sControlPoint(), obj.eControlPoint()];
     }
   }
 }

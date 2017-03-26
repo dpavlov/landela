@@ -23,15 +23,15 @@ export default class Indexes {
     this.links = new CoordinateIndex(network.links, link => {
       let sPortCenter = viewport.portDisplayCenter(link.sPort);
       let ePortCenter = viewport.portDisplayCenter(link.ePort);
-      let cp1 = new Point(sPortCenter.x + link.sControlPoint.center.x, sPortCenter.y - link.sControlPoint.center.y);
-      let cp2 = new Point(ePortCenter.x + link.eControlPoint.center.x, ePortCenter.y - link.eControlPoint.center.y);
+      let cp1 = new Point(sPortCenter.x + link.sControlPoint().center.x, sPortCenter.y - link.sControlPoint().center.y);
+      let cp2 = new Point(ePortCenter.x + link.eControlPoint().center.x, ePortCenter.y - link.eControlPoint().center.y);
       let curve = new Bezier(sPortCenter, cp1, cp2, ePortCenter);
       return curve.bounds();
     }, (point, link) => {
       let sPortCenter = viewport.portDisplayCenter(link.sPort);
       let ePortCenter = viewport.portDisplayCenter(link.ePort);
-      let cp1 = new Point(sPortCenter.x + link.sControlPoint.center.x, sPortCenter.y - link.sControlPoint.center.y);
-      let cp2 = new Point(ePortCenter.x + link.eControlPoint.center.x, ePortCenter.y - link.eControlPoint.center.y);
+      let cp1 = new Point(sPortCenter.x + link.sControlPoint().center.x, sPortCenter.y - link.sControlPoint().center.y);
+      let cp2 = new Point(ePortCenter.x + link.eControlPoint().center.x, ePortCenter.y - link.eControlPoint().center.y);
       let curve = new Bezier(sPortCenter, cp1, cp2, ePortCenter);
       var p = curve.project(point);
       return Math.abs(p.x - point.x) < 5 && Math.abs(p.y - point.y) < 5;
@@ -68,8 +68,8 @@ export default class Indexes {
 	addLinks(links) {
 		for (var i = 0; i < links.length; i ++) {
 			this.links.insert(links[i]);
-			this.linkControls.insert(links[i].sControlPoint);
-			this.linkControls.insert(links[i].eControlPoint);
+			this.linkControls.insert(links[i].sControlPoint());
+			this.linkControls.insert(links[i].eControlPoint());
 		}
 	}
 	addPorts(ports) {
