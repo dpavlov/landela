@@ -21,7 +21,6 @@ import Node from '../../map/node';
 import Zoomer from './zoomer';
 import Navigator from './navigator';
 import DrawMarker from './draw-marker/draw-marker';
-import MiniMap from './mini-map';
 
 import Indexes from '../utils/indexes';
 
@@ -183,17 +182,6 @@ export class Map extends React.Component {
 			this.forceUpdate();
 		}
 	}
-	miniMapObjBoundsResolveHandler = (obj, originBounds) => {
-		if (obj instanceof Node) {
-			let b = new Bounds(originBounds.x, originBounds.y, originBounds.width, originBounds.height);
-			let icon = this._render.mapRender.nodeRender.icons.getIconFor(obj);
-	    let scaledWidth = icon.image.width * icon.rescale;
-			let scaledHeight = icon.image.height * icon.rescale;
-			return new Bounds(b.center().x - scaledWidth / 2, b.center().y + scaledHeight / 2, scaledWidth, scaledHeight);
-		} else {
-			return new Bounds(originBounds.x, originBounds.y, originBounds.width, originBounds.height);
-		}
-	}
 	handleMoveTo = (center) => {
 		this.viewport.moveTo(center);
 		this.forceUpdate();
@@ -329,7 +317,6 @@ export class Map extends React.Component {
 						: null
 				}
 				<canvas id="stage" width={width} height={height} ref="stage" onClick={this.onMouseClick.bind(this)} onMouseDown={this.onMouseDown.bind(this)}/>
-				<MiniMap settings={this.props.settings['mini-map']} source={this.indexes} mapViewport={this.viewport} boundsResolver={this.miniMapObjBoundsResolveHandler} onMapMoveTo={this.handleMoveTo} onMapMove={this.handleMove}/>
 			</div>
 		);
 	}
