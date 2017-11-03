@@ -1,5 +1,5 @@
 import "babel-polyfill";
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
+import { call, put, takeEvery, takeLatest } from 'redux-saga/lib/effects'
 import { LOAD_ICONS, iconsLoaded } from '../redux/icons'
 import IconLoader from '../utils/icon-loader'
 import NodeTypes, { NodeType } from '../../map/node-types'

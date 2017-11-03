@@ -14,16 +14,16 @@
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "js-yaml": "^3.8.1",
-    "material-ui": "^0.17.0",
-    "react": "^15.4.2",
-    "react-addons-css-transition-group": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "react-redux": "^5.0.2",
-    "react-tap-event-plugin": "^2.0.1",
-    "redux": "^3.6.0",
+    "material-ui": "^0.19.4",
+    "react": "^16.0.0",
+    "react-addons-css-transition-group": "^15.6.2",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
+    "react-tap-event-plugin": "^3.0.2",
+    "redux": "^3.7.2",
     "redux-localstorage": "^0.4.1",
-    "redux-saga": "^0.14.3",
-    "whatwg-fetch": "^2.0.2"
+    "redux-saga": "^0.16.0",
+    "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
     "auto-reload-brunch": "^2",

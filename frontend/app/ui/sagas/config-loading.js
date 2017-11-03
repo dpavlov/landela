@@ -1,5 +1,5 @@
 import "babel-polyfill";
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
+import { call, put, takeEvery, takeLatest } from 'redux-saga/lib/effects'
 import { LOAD_CONFIG, configLoaded } from '../redux/config'
 import ConfigLoader from '../utils/config-loader';
 import yaml from 'js-yaml';
