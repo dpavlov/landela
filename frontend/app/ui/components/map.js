@@ -132,7 +132,7 @@ export class Map extends React.Component {
 				this.network.active().upLayer.addNodes([newNode]);
 				this.indexes.sites.insert(newSite);
 			} else {
-				var newNode = new Node(Id.generate(), name, aType, realPos.withMultiplier(0.3));
+				var newNode = new Node(Id.generate(), name, aType, realPos);
 				this.network.active().addNodes([newNode]);
 				this.indexes.nodes.insert(newNode);
 				let site = this.indexes.findSiteByPoint(realPos);
