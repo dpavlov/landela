@@ -108,7 +108,7 @@ export class Map extends React.Component {
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.activeLayer !== this.state.layer) {
 			this.setState({layer: nextProps.activeLayer});
-			let icons = new NodeIcons(this.props.icons.icons, this.viewport.isScaleInRange.bind(this.viewport));
+			let icons = new NodeIcons(this.props.nodeTypes, this.viewport.isScaleInRange.bind(this.viewport));
 			this.network.activate(nextProps.activeLayer);
 			this.indexes = new Indexes(this.viewport, this.network.active(), icons);
 		}
