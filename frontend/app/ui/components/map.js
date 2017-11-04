@@ -224,7 +224,7 @@ export class Map extends React.Component {
 			if (this._dragging.is('moving')) {
 				this._draggingParams.target.moved && this._draggingParams.target.moved();
 				if (this._draggingParams.target instanceof Node) {
-					let site = this.indexes.findSiteByPoint(this._draggingParams.target.center);
+					let site = this.indexes.findSiteByPoint(this._draggingParams.target.absCenter());
 					if (site) {
 							if (!this._draggingParams.target.isAttached()) {
 								this.network.active().attachNode(site, this._draggingParams.target);
