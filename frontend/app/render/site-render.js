@@ -57,7 +57,7 @@ export default class SiteRender {
       let paddingBottom = this.viewport.withScale(5);
       let sUnderlinePoint = siteCenter.shift(new Offset(- siteSize.halfWidth(), siteSize.halfHeight() + paddingBottom));
       let eUnderlinePoint = siteCenter.shift(new Offset(siteSize.halfWidth(), siteSize.halfHeight() + paddingBottom));
-      let underlineStyle = { lineWidth: 3, strokeStyle: 'yellow' };
+      let underlineStyle = { lineWidth: 3 * this.viewport.scale(), strokeStyle: 'yellow' };
       this.ioCanvas.line(sUnderlinePoint, eUnderlinePoint, underlineStyle);
     }
   }

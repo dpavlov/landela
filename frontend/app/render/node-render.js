@@ -27,7 +27,7 @@ export default class NodeRender {
       let halfHeight = scaledHeight / 2;
       let sUnderlinePoint = nodeCenter.shift(new Offset(- halfWidth, halfHeight));
       let eUnderlinePoint = nodeCenter.shift(new Offset(halfWidth, halfHeight))
-      let underlineStyle = { lineWidth: 3, strokeStyle: 'yellow' };
+      let underlineStyle = { lineWidth: 3 * this.viewport.scale(), strokeStyle: 'yellow' };
       this.ioCanvas.line(sUnderlinePoint, eUnderlinePoint, underlineStyle);
     }
 
