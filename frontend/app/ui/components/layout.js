@@ -1,21 +1,17 @@
 import React from 'react';
 import Toolbar from './toolbar';
 import Map from './map';
-import LeftPanel from './left-panel';
 import MapSet from '../../map/map-set';
 
 export default class Layout extends React.Component {
 	state = {
-		isLeftPanelOpen: false,
 		isDrawMarkerDisplayed: false,
 		mapSet: new MapSet(),
-		activeMapLayer: 'equipments',
-		miniMapSource: null
+		activeMapLayer: 'equipments'
 	}
 	updateMap = () => this.refs.map.getWrappedInstance().forceUpdate();
-	handleLeftPanelStateChanged = (selected) => {
-		let isLeftPanelOpen = !selected.isEmpty();
-		this.setState({mapSet: selected, isLeftPanelOpen: isLeftPanelOpen});
+	handleSelectedSetChanged = (selected) => {
+		this.setState({mapSet: selected});
 	}
 	handleDrawMarkerStateChange = (newState) => {
 		this.setState({isDrawMarkerDisplayed: newState});
@@ -37,19 +33,12 @@ export default class Layout extends React.Component {
 			<div id='layout'>
 			    <Toolbar isDrawMarkerDisplayed={this.state.isDrawMarkerDisplayed} onDrawMarkerStateChanged={this.handleDrawMarkerStateChange} onMapLayerChanged={this.handleMapLayerChanged}/>
 			    <Map
-						ref="map"
-						onSelect={this.handleLeftPanelStateChanged}
-						activeLayer={this.state.activeMapLayer}
-						isLeftPanelOpen={this.state.isLeftPanelOpen}
-						displayDrawMarker={this.state.isDrawMarkerDisplayed}
-						/>
-					<LeftPanel
-						open={this.state.isLeftPanelOpen}
-						mapSet={this.state.mapSet}
-						onMakeLink={this.handleMakeLink}
-						updateMap={this.updateMap}
-						onDeselect={this.handleDeselect}
-						onDelete={this.handleDelete}/>
+					ref="map"
+					onSelect={this.handleSelectedSetChanged}
+					activeLayer={this.state.activeMapLayer}
+					isLeftPanelOpen={this.state.isLeftPanelOpen}
+					displayDrawMarker={this.state.isDrawMarkerDisplayed}
+				/>
 			</div>
 		);
 	}
