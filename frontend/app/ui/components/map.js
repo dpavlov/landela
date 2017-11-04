@@ -128,11 +128,11 @@ export class Map extends React.Component {
 			if (aType === 'site') {
 				let newSite = new Site(Id.generate(), name, 'Unknown Location', realPos, 200, 200);
 				this.network.active().addSites([newSite]);
-				var newNode = new Node(newSite.id, name, aType, realPos.withMultiplier(0.1));
+				var newNode = new Node(newSite.id, name, aType, realPos.withMultiplier(0.6));
 				this.network.active().upLayer.addNodes([newNode]);
 				this.indexes.sites.insert(newSite);
 			} else {
-				var newNode = new Node(Id.generate(), name, aType, realPos);
+				var newNode = new Node(Id.generate(), name, aType, realPos.withMultiplier(0.3));
 				this.network.active().addNodes([newNode]);
 				this.indexes.nodes.insert(newNode);
 				let site = this.indexes.findSiteByPoint(realPos);
